@@ -435,8 +435,6 @@ class ClampVolume: public Volume<float>{
         float maxVal;
 };
 
-
-
-
+//End namespace lux
 }
 #endif

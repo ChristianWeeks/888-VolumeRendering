@@ -106,7 +106,7 @@ class PyroSphereVolume : public Volume<float>{
             lux::Vector n(P.unitvector());
             //float f = r - d + octave_noise_3d(1, 0.5, 1.0, n[0], n[1], n[2]);
             //float f = r - d + std::pow(std::abs(octave_noise_3d(1, 0.5, 1.0, n[0], n[1], n[2])), 2)
-            float f = r - d + std::pow(std::abs(scaled_octave_noise_3d(4, 0.3, 1.5, -1.5, 1.5, n[0], n[1], n[2])), 1);
+            float f = r - d + std::pow(std::abs(scaled_octave_noise_3d(2, 0.4, 0.8, -1.5, 1.5, n[0], n[1], n[2])), 1);
             //std::cout << f << "\n";
             if(f > 0) return 1;
             return 0;};
