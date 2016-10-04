@@ -89,7 +89,11 @@ class SphereVolume : public Volume<U>{
 class PyroSphereVolume : public Volume<float>{
     public:
 
-        PyroSphereVolume(float rad, float d) : r(rad), dBound(d){}
+        PyroSphereVolume(float rad, float d, float e, SimplexNoiseObject s) : 
+            r(rad),
+            exponent(e),
+            dBound(d),
+            simplex(s){}
        ~PyroSphereVolume(){}
 
        const typename Volume<float>::volumeDataType eval( const Vector& P ) const {
@@ -106,15 +110,30 @@ class PyroSphereVolume : public Volume<float>{
             lux::Vector n(P.unitvector());
             //float f = r - d + octave_noise_3d(1, 0.5, 1.0, n[0], n[1], n[2]);
             //float f = r - d + std::pow(std::abs(octave_noise_3d(1, 0.5, 1.0, n[0], n[1], n[2])), 2)
-            float f = r - d + std::pow(std::abs(scaled_octave_noise_3d(2, 0.4, 0.8, -1.5, 1.5, n[0], n[1], n[2])), 1);
-            //std::cout << f << "\n";
+            float f = r - d + std::pow(std::abs(simplex.eval(n[0], n[1], n[2])), exponent);
             if(f > 0) return 1;
             return 0;};
        const typename Volume<float>::volumeGradType grad( const Vector& P ) const { typename Volume<float>::volumeGradType G; return G;};
 
     private:
        float r;
+       float exponent;
        float dBound;
+       SimplexNoiseObject simplex;
+};
+
+class SimplexNoiseVolume : public Volume<float>{
+    public:
+        SimplexNoiseVolume(SimplexNoiseObject s) : simplex(s){};
+        ~SimplexNoiseVolume(){};
+
+       const typename Volume<float>::volumeDataType eval( const Vector& P ) const {
+           return simplex.eval(P[0], P[1], P[2]);};
+       const typename Volume<float>::volumeGradType grad( const Vector& P ) const { typename Volume<float>::volumeGradType G; return G;};
+
+    private:
+       SimplexNoiseObject simplex;
+
 };
 
 template< typename U >

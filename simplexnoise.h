@@ -190,5 +190,25 @@ static const int simplex[64][4] = {
     {2,1,0,3},{0,0,0,0},{0,0,0,0},{0,0,0,0},{3,1,0,2},{0,0,0,0},{3,2,0,1},{3,2,1,0}
 };
 
+//Simple class to store noise attributes
+class SimplexNoiseObject {
+    public:
+        SimplexNoiseObject(int o, float p, float f, float min, float max) :
+            octaves(o),
+            persistence(p),
+            frequency(f),
+            lowBound(min),
+            highBound(max){};
+        ~SimplexNoiseObject(){};
 
+        const float eval(float x, float y, float z) const{
+            return scaled_octave_noise_3d(octaves, persistence, frequency, lowBound, highBound, x, y, z);};
+
+    private:
+        const int octaves;
+        const float persistence;
+        const float frequency;
+        const float lowBound;
+        const float highBound;
+};
 #endif /*SIMPLEX_H_*/

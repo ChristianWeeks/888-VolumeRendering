@@ -1,4 +1,6 @@
 *.exr
 *.log
 *.o
+*.a
 *.sw*
+img
