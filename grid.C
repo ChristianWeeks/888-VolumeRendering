@@ -30,7 +30,7 @@ FloatGrid::FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int 
 }
 
 //Converts a position in 3-D space to an index in our grid
-const int FloatGrid::positionToIndex(const Vector P) const{
+const int FloatGrid::positionToIndex(const Vector& P) const{
     Vector P2 = (P - origin) / voxelLength;
     return (int)P2[2] + ((int)P2[1])*voxels + ((int)P2[0])*voxels*voxels;
 }

@@ -6,49 +6,78 @@
 #include "boundingbox.h"
 #include "Camera.h"
 #include "light.h"
+#include "renderlog.h"
+//#include "colorSlider.h"
 #include <vector>
-#include <string.h>
 #include <stdio.h>
 //#include <boost/shared_ptr.hpp>
 #include <boost/timer.hpp>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <fstream>
 #include <memory>
 
 const double PI  =3.141592653589793238463;
-
+//------------------------------------------------------------------------------
+//GLOBAL SCENE SETTINGS
+//------------------------------------------------------------------------------
 //Light scatter / attentuation coefficient
-double K = 1.0;
-double emissive = 1.0;
+const double K = 1.0;
+const double emissive = 1.0;
 
 //Discrete step for our marching.  Delta S in our equations
-double marchStep = 0.02;
+const double marchStep = 0.07;
+
+const int frameStart = 0;
+const int frameEnd = 168;
+
+//BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
+const float bbSize = 6.0;
+const float gridSize = 4.0;
+const float gridVoxelCount = 300;
+//Width and Height may change based on input
+int w = 480;
+int h = 270;
+int octaves = 5;
+float roughness = 0.7;
+float frequency = 0.3;
+float fjump = 2.2;
+float noiseMin = -2.5;
+float noiseMax = 1.7;
+Camera mainCam;
+
+int color_octaves = 1;
+float color_roughness = 0.7;
+float color_frequency = 0.15;
+float color_fjump = 2.2;
+float color_noiseMin = -0.4; 
+float color_noiseMax = 0.7;
+//------------------------------------------------------------------------------
 
 std::vector<lux::light> lights;
 std::vector<std::shared_ptr<lux::Volume<float> > > volumes;
+std::vector<std::shared_ptr<lux::Volume<lux::Color> > > colorVolumes;
 
 std::vector<float> black = {0.0, 0.0, 0.0, 0.0};
 
-lux::Vector linearInterpolate(float start, float end, float pos, lux::Vector v1, lux::Vector v2){
+lux::Color linearInterpolate(float start, float end, float pos, lux::Color v1, lux::Color v2){
     float len = end - start;
     pos = (pos - start) / len;
     return v1*(1-pos) + v2*pos;
 }
 
-lux::Vector getColor(float density){
-    lux::Vector slowColor(0.2, 0.1, 1.0);    //at weight 0.0
-    lux::Vector medColor(0.7, 0.1, 0.4);     //at weight 0.4
-    lux::Vector medFastColor(0.9, 0.3, 0.2);     //at weight 0.5
-    lux::Vector fastColor(0.95, 1.0, 0.1);    //at weight 0.85
-    lux::Vector fastestColor(1.0, 1.0, 1.0); //at weight 1.0
+lux::Color getColor(float density){
+    lux::Color slowColor(0.1, 0.05, 1.0, 1.0);    //at weight 0.0
+    lux::Color medColor(0.7, 0.1, 0.4, 1.0);     //at weight 0.4
+    lux::Color medFastColor(0.9, 0.3, 0.2, 1.0);     //at weight 0.5
+    lux::Color fastColor(0.95, 1.0, 0.1, 1.0);    //at weight 0.85
+    lux::Color fastestColor(1.0, 1.0, 1.0, 1.0); //at weight 1.0
 
-    lux::Vector newColor;
-    if(density < 0.7)
-        newColor = linearInterpolate(0.0, 0.7, density, slowColor, medColor);
-    else if (density >= 0.7 && density < 0.8)
-        newColor = linearInterpolate(0.7, 0.8, density, medColor, medFastColor);
+    lux::Color newColor;
+    if(density < 0.6)
+        newColor = linearInterpolate(0.0, 0.6, density, slowColor, medColor);
+    else if (density >= 0.6 && density < 0.8)
+        newColor = linearInterpolate(0.6, 0.8, density, medColor, medFastColor);
     else if (density >= 0.8 && density < 0.85)
         newColor = linearInterpolate(0.8, 0.85, density, medFastColor, fastColor);
     else if (density >= 0.85)
@@ -81,7 +110,7 @@ double rayMarchLightScatter(lux::Vector x, lux::light l, lux::Volume<float> *vol
     return T;
 }
 
-std::vector<float> rayMarch(Camera cam, lux::Vector n, float start, float end){
+lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
 
     //extinction coefficient
     double totalMarchLength = end - start;
@@ -89,13 +118,14 @@ std::vector<float> rayMarch(Camera cam, lux::Vector n, float start, float end){
     double marchLen = 0.0;
     double T = 1.0;
     //std::cout << '(' << ray[0] << ", "  << ray[1] << ", " << ray[2] << ")\n";
-    std::vector<float> C {0.0, 0.0, 0.0, 1.0};
+    lux::Color C {0.0, 0.0, 0.0, 1.0};
+    lux::Color fieldColor;
     //if (ray[0] < 0.5){
     //    C[0] = 1.0;
     //}
     //std::vector<float> smokeColor {0.2, 0.3, 0.92, 1.0};
     lux::Vector x = cam.eye() + n*start;
-    lux::Vector color(0.2, 0.3, 0.92);
+    lux::Color color(0.2, 0.3, 0.92, 1.0);
     while (marchLen < totalMarchLength){
         //Check each volume
         for(int j = 0; j < volumes.size(); j++){
@@ -110,17 +140,22 @@ std::vector<float> rayMarch(Camera cam, lux::Vector n, float start, float end){
                 //March to each light
                 for (int i = 0; i < lights.size(); i++){
                     double lightTransmissivity = rayMarchLightScatter(x, lights[i], volumes[j].get());
-                    C[0] += lights[i].c[0] * lightTransmissivity * tVal;
-                    C[1] += lights[i].c[1] * lightTransmissivity * tVal;
-                    C[2] += lights[i].c[2] * lightTransmissivity * tVal;
+                    C += lights[i].c * lightTransmissivity * tVal;
                 }
                 T *= deltaT;
 
                 if (emissive) {
+                    //Boosting the emission of the peaks in our noise function- this makes the star clusters appear brighter 
+                    float em = emissive;
+                    if (density > 0.85){
+                        float diff = density - 0.85;
+                        em += diff * 13;
+                    }
                     color = getColor(density);
-                    C[0] += color[0] * tVal * emissive;
-                    C[1] += color[1] * tVal * emissive;
-                    C[2] += color[2] * tVal * emissive;
+                    //The field color's contribution will be scaled by the density, so sparse areas don't become super bright
+                    fieldColor = colorVolumes[0].get()->eval(x);
+                    color += lux::colorClamp(fieldColor);
+                    C += color * tVal * em;
                 }
             }
         }
@@ -143,7 +178,7 @@ void initLights(){
 void initVolumes(){
 
     //Implicit functions
-    auto sphere = std::make_shared<lux::SphereVolume<float> >(2);
+    auto sphere = std::make_shared<lux::SphereVolume<float> >(4);
     auto sphereUp = std::make_shared<lux::TranslateVolume<float> >(sphere, lux::Vector(0.0, 1.0, 1.0));
     auto sphereDown = std::make_shared<lux::TranslateVolume<float> >(sphere, lux::Vector(0.0, -1.0, 1.0));
     auto sphereUnion = std::make_shared<lux::UnionVolume<float> >(sphereUp, sphereDown);
@@ -155,14 +190,19 @@ void initVolumes(){
     auto leftArm = std::make_shared<lux::TranslateVolume<float> >(arm, lux::Vector(-2.0, 1.0, 0.0));
     auto rightArm = std::make_shared<lux::TranslateVolume<float> >(arm, lux::Vector(2.0, 1.0, 0.0));
 
-    SimplexNoiseObject simplex(5, 0.7, 0.5, -2.5, 1.5);
-    auto noiseVolume = std::make_shared<lux::SimplexNoiseVolume>(simplex);
+    SimplexNoiseObject simplex(octaves, roughness, frequency, fjump, noiseMin, noiseMax);
+    SimplexNoiseObject colorNoise(color_octaves, color_roughness, color_frequency, color_fjump, color_noiseMin, color_noiseMax);
 
+    auto noiseVolume = std::make_shared<lux::SimplexNoiseVolume>(simplex);
+    
+    lux::Color c(1.0, 0.0, 1.0, 1.0);
+    auto colorVolume = std::make_shared<lux::SimplexNoiseColorVolume> (colorNoise, 0.0, 10.0, 20.0);
+    colorVolumes.push_back(colorVolume);
     volumes.push_back(noiseVolume);
     //auto pyroSphere = std::make_shared<lux::PyroSphereVolume>(2.0, 1.0, 1.0, simplex);
 
 
-    //lux::FloatGrid pyroSphereGrid = lux::FloatGrid(pyroSphere, lux::Vector(-4, -4, -4), 8.0, 200);
+    //lux::FloatGrid pyroSphereGrid = lux::FloatGrid(pyroSphere, lux::Vector(-gridSize, -gridSize, -gridSize), gridVoxelCount, 200);
     //auto griddedPyro = std::make_shared<lux::GriddedVolume>(pyroSphereGrid);
 /*
     auto cylinder = std::make_shared<lux::CylinderVolume<float> >(lux::Vector(0.0, 1.0, 0.0), 0.2);
@@ -184,7 +224,7 @@ void initVolumes(){
     //volumes.push_back(new lux::TranslateVolume<float>(cone, lux::Vector(0.0, 0.4, -2.0)));
 }
 
-void renderImage(Camera cam, BoundingBox bb, float bbSize, int w, int h, std::string filepath){
+void renderImage(Camera cam, BoundingBox bb, RenderLog renderLog){
     lux::Image img;
     img.reset(w, h, 4);
     boost::timer t;
@@ -199,8 +239,9 @@ void renderImage(Camera cam, BoundingBox bb, float bbSize, int w, int h, std::st
             Ray ray(cam.eye(), r);
             std::vector<float> intersects = bb.intersect(ray, 0, 50);
             if(intersects[0] != -1.0){
-                std::vector<float> C = rayMarch(cam, r, intersects[0], intersects[1]);
-                img.setPixel( i, j, C);
+                lux::Color C = rayMarch(cam, r, intersects[0], intersects[1]);
+                std::vector<float> colorVector= {static_cast<float>(C[0]), static_cast<float>(C[1]), static_cast<float>(C[2]), static_cast<float>(C[3])};
+                img.setPixel( i, j, colorVector);
             }
             else{
                 img.setPixel(i, j, black);
@@ -217,22 +258,31 @@ void renderImage(Camera cam, BoundingBox bb, float bbSize, int w, int h, std::st
     std::cout << "Time: " << elapsedTime << "\n";
 
     //Write our image
-    std::ofstream logFile;
-    logFile.open(filepath + ".log");
-    logFile << "W: \t\t\t" << w << "\n";
-    logFile << "H: \t\t\t" << h << "\n";
-    logFile << "BB Size: \t\t" << bbSize << "\n";
-    logFile << "TotalTime: \t\t" << elapsedTime << "\n";
-    logFile.close();
+    std::ostringstream ss;
+    //ss << setfill(' ') << setw(20) << "Eye:" << setfill('-')  << setw(30) << mainCam.eye() << "\n";
+    //ss << setfill(' ') << setw(20) << "View:" << setfill('-')  << setw(30) << mainCam.view() << "\n";
+    ss << setfill(' ') << setw(20) << "W:" << setfill('-')  << setw(30) << w << "\n";
+    ss << setfill(' ') << setw(20) << "H:" << setfill('-')  << setw(30)<< h << "\n";
+    ss << setfill(' ') << setw(20) << "MarchStep:" << setfill('-')  << setw(30)<< marchStep << "\n";
+    ss << setfill(' ') << setw(20) << "Bounding Box Size:" << setfill('-')  << setw(30)<< bbSize << "\n";
+    ss << setfill(' ') << setw(20) << "TotalTime:" << setfill('-')  << setw(30)<< elapsedTime << "\n\n";
+    ss << setfill(' ') << setw(20) << "Octaves:" << setfill('-')  << setw(30) << octaves << "\n";
+    ss << setfill(' ') << setw(20) << "Roughness:" << setfill('-')  << setw(30) << roughness << "\n";
+    ss << setfill(' ') << setw(20) << "Frequency:" << setfill('-')  << setw(30) << frequency << "\n";
+    ss << setfill(' ') << setw(20) << "fJump:" << setfill('-')  << setw(30) << fjump << "\n";
+    ss << setfill(' ') << setw(20) << "Noise Minumum:" << setfill('-')  << setw(30) << noiseMin << "\n";
+    ss << setfill(' ') << setw(20) << "Noise Maximum:" << setfill('-')  << setw(30) << noiseMax << "\n";
+    renderLog.addLine(ss.str());
+    renderLog.writeToFile();
+
+    std::string filepath = renderLog.getFilepath();
     filepath += ".exr";
     lux::writeOIIOImage(filepath.c_str(), img, 1.0, 1.0);
+    std::cout << renderLog.getBody();
 }
 
 int main(int argc, char **argv){
 
-    int w = 480;
-    int h = 270;
-    int frames = 1;
     if (argc >= 3){
         if (strcmp(argv[2], "1080") == 0){
             w = 1920;
@@ -244,13 +294,12 @@ int main(int argc, char **argv){
         }
     }
 
-    Camera mainCam;
-    mainCam.setEyeViewUp(lux::Vector(0.0, 0.0, 6.0), lux::Vector(0,0,-1), lux::Vector(0,1,0));
-    float bbSize = 7.0;
+    mainCam.setEyeViewUp(lux::Vector(9.0, 0.0, 9.0), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
     BoundingBox bb(lux::Vector(-bbSize, -bbSize, -bbSize), lux::Vector(bbSize, bbSize, bbSize));
     initVolumes();
 
-    for (int i = 0; i < frames; i++){
+
+    for (int i = frameStart; i < frameEnd; i++){
         std::ostringstream ss;
         ss << setfill('0') << setw(4) << i;
         std::string numPadding = ss.str();
@@ -261,10 +310,14 @@ int main(int argc, char **argv){
         else{
             filepath += std::string("lastOutput");
         }
-        //filepath += ".";
-        //filepath += numPadding;
-        mainCam.setEyeViewUp(lux::Vector(0.0, 0.0, 6.0 - ((float)i * 0.02)), lux::Vector(0,0,-1), lux::Vector(0,1,0));
-        renderImage(mainCam, bb, bbSize, w, h, filepath);
+        if (frameEnd - frameStart > 1){
+            filepath += ".";
+            filepath += numPadding;
+        }
+
+        RenderLog renderLog(filepath);
+        mainCam.setEyeViewUp(lux::Vector(9.0 - ((float)i * 0.02), 0.0, 9.0 - ((float)i * 0.02)), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
+        renderImage(mainCam, bb, renderLog);
         std::cout << filepath << "\n";
     }
     //initLights();

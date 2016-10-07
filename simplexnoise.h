@@ -47,20 +47,21 @@ all look identical.
 
 // Multi-octave Simplex noise
 // For each octave, a higher frequency/lower amplitude function will be added to the original.
-// The higher the persistence [0-1], the more of each succeeding octave will be added.
+// The higher the roughness [0-1], the more of each succeeding octave will be added.
 float octave_noise_2d(const float octaves,
-                    const float persistence,
+                    const float roughness,
                     const float scale,
                     const float x,
                     const float y);
 float octave_noise_3d(const float octaves,
-                    const float persistence,
+                    const float roughness,
                     const float scale,
+                    const float fjump,
                     const float x,
                     const float y,
                     const float z);
 float octave_noise_4d(const float octaves,
-                    const float persistence,
+                    const float roughness,
                     const float scale,
                     const float x,
                     const float y,
@@ -71,22 +72,23 @@ float octave_noise_4d(const float octaves,
 // Scaled Multi-octave Simplex noise
 // The result will be between the two parameters passed.
 float scaled_octave_noise_2d(  const float octaves,
-                            const float persistence,
+                            const float roughness,
                             const float scale,
                             const float loBound,
                             const float hiBound,
                             const float x,
                             const float y);
 float scaled_octave_noise_3d(  const float octaves,
-                            const float persistence,
+                            const float roughness,
                             const float scale,
+                            const float fjump,
                             const float loBound,
                             const float hiBound,
                             const float x,
                             const float y,
                             const float z);
 float scaled_octave_noise_4d(  const float octaves,
-                            const float persistence,
+                            const float roughness,
                             const float scale,
                             const float loBound,
                             const float hiBound,
@@ -193,21 +195,23 @@ static const int simplex[64][4] = {
 //Simple class to store noise attributes
 class SimplexNoiseObject {
     public:
-        SimplexNoiseObject(int o, float p, float f, float min, float max) :
+        SimplexNoiseObject(int o, float p, float f, float fj, float min, float max) :
             octaves(o),
-            persistence(p),
+            roughness(p),
             frequency(f),
+            fjump(fj),
             lowBound(min),
             highBound(max){};
         ~SimplexNoiseObject(){};
 
         const float eval(float x, float y, float z) const{
-            return scaled_octave_noise_3d(octaves, persistence, frequency, lowBound, highBound, x, y, z);};
+            return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x, y, z);};
 
     private:
         const int octaves;
-        const float persistence;
+        const float roughness;
         const float frequency;
+        const float fjump;
         const float lowBound;
         const float highBound;
 };

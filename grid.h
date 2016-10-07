@@ -6,6 +6,7 @@ class FloatGrid{
         FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
         ~FloatGrid(){};
         const float trilinearInterpolate(Vector P) const;
+
     private:
 
         float *values;
@@ -15,7 +16,7 @@ class FloatGrid{
         const float voxelLength;
         const int totalCells;
 
-        const int positionToIndex(const Vector p) const;
+        const int positionToIndex(const Vector& p) const;
         const Vector indexToPosition(const int i) const;
 };
 

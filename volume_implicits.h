@@ -136,6 +136,30 @@ class SimplexNoiseVolume : public Volume<float>{
 
 };
 
+class SimplexNoiseColorVolume : public Volume<Color>{
+    public:
+        SimplexNoiseColorVolume(SimplexNoiseObject s, float x, float y, float z) : 
+            simplex(s),
+            rOffset(x),
+            gOffset(y),
+            bOffset(z){};
+        ~SimplexNoiseColorVolume(){};
+
+       const typename Volume<Color>::volumeDataType eval( const Vector& P ) const {
+           Color c;
+           c[0] = simplex.eval(P[0] + rOffset, P[1] + rOffset, P[2] + rOffset);
+           c[1] = simplex.eval(P[0] + gOffset, P[1] + gOffset, P[2] + gOffset);
+           c[2] = simplex.eval(P[0] + bOffset, P[1] + bOffset, P[2] + bOffset);
+           return c;};
+       const typename Volume<Color>::volumeGradType grad( const Vector& P ) const { typename Volume<Color>::volumeGradType G; return G;};
+
+    private:
+       SimplexNoiseObject simplex;
+       float rOffset;
+       float gOffset;
+       float bOffset;
+
+};
 template< typename U >
 class BoxVolume : public Volume<U>{
     public:

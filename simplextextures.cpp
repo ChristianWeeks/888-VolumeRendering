@@ -29,8 +29,8 @@ float marble_noise_2d( const float octaves, const float persistence, const float
 
 
 // 3D Marble Noise: x-axis.
-float marble_noise_3d( const float octaves, const float persistence, const float scale, const float x, const float y, const float z ) {
-    return cosf( x * scale + octave_noise_3d(octaves, persistence, scale / 3, x, y, z) );
+float marble_noise_3d( const float octaves, const float persistence, const float scale, const float fjump, const float x, const float y, const float z ) {
+    return cosf( x * scale + octave_noise_3d(octaves, persistence, scale / 3, fjump, x, y, z) );
 }
 
 
