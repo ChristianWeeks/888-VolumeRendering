@@ -6,6 +6,7 @@ class FloatGrid{
         FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
         ~FloatGrid(){};
         const float trilinearInterpolate(Vector P) const;
+        int bakeDensity(const Vector& p, const float density);
 
     private:
 

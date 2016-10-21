@@ -195,17 +195,18 @@ static const int simplex[64][4] = {
 //Simple class to store noise attributes
 class SimplexNoiseObject {
     public:
-        SimplexNoiseObject(int o, float p, float f, float fj, float min, float max) :
+        SimplexNoiseObject(int o, float p, float f, float fj, float min, float max, float of) :
             octaves(o),
             roughness(p),
             frequency(f),
             fjump(fj),
             lowBound(min),
-            highBound(max){};
+            highBound(max),
+            offset(of){};
         ~SimplexNoiseObject(){};
 
         const float eval(float x, float y, float z) const{
-            return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x, y, z);};
+            return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x + offset, y + offset, z + offset);};
 
     private:
         const int octaves;
@@ -214,5 +215,6 @@ class SimplexNoiseObject {
         const float fjump;
         const float lowBound;
         const float highBound;
+        const float offset;
 };
 #endif /*SIMPLEX_H_*/

@@ -3,4 +3,7 @@
 *.o
 *.a
 *.sw*
+*.swp
+*.swo
+*.mov
 img

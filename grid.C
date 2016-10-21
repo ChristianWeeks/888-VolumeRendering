@@ -53,7 +53,7 @@ const float FloatGrid::trilinearInterpolate(Vector position) const{
     //(-x, -y, -z)
     c[0] = positionToIndex(position);
     //(-x, -y, z)
-    c[1] = c[0] -+ 1;
+    c[1] = c[0] + 1;
     //(-x, y, -z)
     c[2] = c[0] + voxels;
     //(-x, y, z)
@@ -69,8 +69,9 @@ const float FloatGrid::trilinearInterpolate(Vector position) const{
     //check for edge cases.  If its on the edge, we just don't apply at all
     //+x side
     for(int i = 0; i < 8; i++){
-        if (c[i] > totalCells || c[i] < 0){
-            std::cout << "Out of Bounds: " << c[i] << "\n";
+        if (c[i] > totalCells || c[i] < 0){ 
+            std::cout << position[0] << ", " << position[1] << ", " << position[2] << "\n";
+            std::cout << "Out of Bounds: " << c[i] << "; "  << "\n";
             return 0;
         }
     }
@@ -97,4 +98,48 @@ const float FloatGrid::trilinearInterpolate(Vector position) const{
     //    return vField[c[0]];
     //if (c00 > 0) std::cout << c00 << "\n";
     return c00;
+}
+
+int FloatGrid::bakeDensity(const Vector& P, const float density){
+
+    int c[8];
+    //(-x, -y, -z)
+    c[0] = positionToIndex(P);
+    //(-x, -y, z)
+    c[1] = c[0] + 1;
+    //(-x, y, -z)
+    c[2] = c[0] + voxels;
+    //(-x, y, z)
+    c[3] = c[2] + 1;
+    //(x, -y, -z)
+    c[4] = c[0] + (voxels*voxels);
+    //(x, -y, z)
+    c[5] = c[4] + 1;
+    //(x, y, -z)
+    c[6] = c[4] + voxels;
+    //(x, y, z)
+    c[7] = c[6] + 1;
+
+    Vector d = (P - indexToPosition(c[0])) / voxelLength;
+
+    //Weights
+    float wx1, wx2, wy1, wy2, wz1, wz2;
+
+    wx1 = d[0];
+    wx2 = 1 - d[0];
+    wy1 = d[1];
+    wy2 = 1 - d[1];
+    wz1 = d[2];
+    wz2 = 1 - d[2];
+
+    values[c[0]] += density * wx1 * wy1 * wz1;
+    values[c[1]] += density * wx1 * wy1 * wz2;
+    values[c[2]] += density * wx1 * wy2 * wz1;
+    values[c[3]] += density * wx1 * wy2 * wz2;
+    values[c[4]] += density * wx2 * wy1 * wz1;
+    values[c[5]] += density * wx2 * wy1 * wz2;
+    values[c[6]] += density * wx2 * wy2 * wz1;
+    values[c[7]] += density * wx2 * wy2 * wz2;
+
+    return 1;
 }
