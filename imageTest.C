@@ -1,12 +1,15 @@
 
 //#include "volume_operators.h"
 #include "grid.h"
+#include <Magick++.h>
 //#include "Image.h"
 #include "OIIOFiles.h"
 #include "boundingbox.h"
 #include "Camera.h"
 #include "light.h"
 #include "renderlog.h"
+#include "WedgeAttribute.h"
+
 //#include "colorSlider.h"
 #include <vector>
 #include <stdio.h>
@@ -32,13 +35,13 @@ const double emissive = 0.05;
 const double marchStep = 0.04;
 const double lightMarchStep = 0.12;
 
-const int frameStart = 0;
-const int frameEnd = 1;
+const int frameStart = 1;
+const int frameEnd = 100;
 
 //BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
 const float bbSize = 3.0;
 const float gridSize = 2 * bbSize;
-const float gridVoxelCount = 40;
+const float gridVoxelCount = 300;
 //Width and Height may change based on input
 int w = 480;
 int h = 270;
@@ -56,13 +59,15 @@ float color_frequency = 0.15;
 float color_fjump = 2.2;
 float color_noiseMin = -0.4; 
 float color_noiseMax = 0.7;
+
+float radius = 1.6;
+float numDots = 1000000;
+float clump = 1.0;
 //------------------------------------------------------------------------------
 
 std::vector<lux::light> lights;
 std::vector<std::shared_ptr<lux::Volume<float> > > volumes;
 std::vector<std::shared_ptr<lux::Volume<lux::Color> > > colorVolumes;
-
-std::vector<float> black = {0.0, 0.0, 0.0, 0.0};
 
 lux::Color colorClamp(lux::Color c){
     if (c[0] < 0)
@@ -87,13 +92,8 @@ lux::Color linearInterpolate(float start, float end, float pos, lux::Color v1, l
 }
 
 //Wisp algorithm
-void CreateWisp(const lux::Vector P, lux::FloatGrid f){
+void CreateWisp(const lux::Vector P, lux::FloatGrid f, SimplexNoiseObject noise1, SimplexNoiseObject noise2){
 
-    float radius = 2.0;
-    float numDots = 10000000;
-    float clump = 1.0;
-    SimplexNoiseObject noise1(octaves, roughness, 2.0, fjump, 0, 1, 0);
-    SimplexNoiseObject noise2(octaves, roughness, 2.0, fjump, 0, 1, 0);
     std::random_device rnd;
     std::mt19937 rng(rnd());
     std::uniform_real_distribution<> udist(-radius, radius);
@@ -102,30 +102,29 @@ void CreateWisp(const lux::Vector P, lux::FloatGrid f){
     float y = 2.0 * noise1.eval(P[0] + 10, P[1] + 10, P[2] + 10) - 1.0;
     float z = 2.0 * noise1.eval(P[0] + 20, P[1] + 20, P[2] + 20) - 1.0;*/
     for(int i = 0; i < numDots; i++){
-        lux::Vector d; 
 
         float randX = udist(rng);
         float randY = udist(rng);
         float randZ =  udist(rng);
 
-        d[0] = 2.0 * noise1.eval(randX, randY, randZ) - 1.0;
+        /*d[0] = 2.0 * noise1.eval(randX, randY, randZ) - 1.0;
         d[1] = 2.0 * noise1.eval(randX + 10, randY + 10, randZ + 10) - 1.0;
-        d[2] = 2.0 * noise1.eval(randX + 20, randY + 20, randZ + 20) - 1.0;
-
-        lux::Vector dSphere = d.unitvector();
+        d[2] = 2.0 * noise1.eval(randX + 20, randY + 20, randZ + 20) - 1.0;*/
+        lux::Vector d(randX, randY, randZ);
 
         float radialDisp = std::pow(std::abs(noise1.eval(d[0], d[1], d[2])), clump);
+        lux::Vector dSphere = d.unitvector();
 
         dSphere *= radialDisp;
 
         lux::Vector dot = P + dSphere * radius;
 
-        /*lux::Vector d2;
-        d2[0] = 2.0 * noise2.eval(randX, randY, randZ) - 1.0;
-        d2[1] = 2.0 * noise2.eval(randX + 10, randY + 10, randZ + 10) - 1.0;
-        d2[2] = 2.0 * noise2.eval(randX + 20, randY + 20, randZ + 20) - 1.0;
+        lux::Vector d2;
+        d2[0] = noise2.eval(dSphere[0], dSphere[1], dSphere[2]);
+        d2[1] = noise2.eval(dSphere[0] + 0.1, dSphere[1] + 0.1, dSphere[2] + 0.1);
+        d2[2] = noise2.eval(dSphere[0] - 0.1, dSphere[1] - 0.1, dSphere[2] - 0.1);
 
-        dot += d2;*/
+        dot += d2;
         f.bakeDensity(dot, 0.05);
     }
 
@@ -184,7 +183,7 @@ lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
 
     double marchLen = 0.0;
     double T = 1.0;
-    lux::Color C {0.0, 0.0, 0.0, 1.0};
+    lux::Color C {0.0, 0.0, 0.0, 0.0};
     lux::Color fieldColor;
 
     lux::Vector x = cam.eye() + n*start;
@@ -232,52 +231,10 @@ void initLights(){
     //lights.push_back(lux::light(lux::Color(1.0, 0.4, 0.4, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(2.0, -2.0, -4.0), 1.0));
 }
 
-void initVolumes(){
-
-    //Implicit functions
-    auto sphere = std::make_shared<lux::SphereVolume<float> >(4);
-    auto sphereUp = std::make_shared<lux::TranslateVolume<float> >(sphere, lux::Vector(0.0, 1.0, 1.0));
-    auto sphereDown = std::make_shared<lux::TranslateVolume<float> >(sphere, lux::Vector(0.0, -1.0, 1.0));
-    auto sphereUnion = std::make_shared<lux::UnionVolume<float> >(sphereUp, sphereDown);
-    auto box = std::make_shared<lux::BoxVolume<float> >(2.0, 6.0);
-    auto boxMask = std::make_shared<lux::MaskVolume>(box);
-    auto rotBox1 = std::make_shared<lux::Rotate_S_Volume>(boxMask, lux::Vector(0.0, 0.0, 0.0), lux::Vector(0.0, 1.0, 1.0), -45.0*PI/180.0);
-    //auto rotBox2 = std::make_shared<lux::Rotate_S_Volume>(transTest, lux::Vector(0.0, 0.0, 0.0), lux::Vector(0.0, 0.0, 1.0), -54.0*PI/180.0);
-    auto arm = std::make_shared<lux::Scale_S_Volume>(box, lux::Vector(0.0, 0.0, 0.0), 1.5);
-    auto leftArm = std::make_shared<lux::TranslateVolume<float> >(arm, lux::Vector(-2.0, 1.0, 0.0));
-    auto rightArm = std::make_shared<lux::TranslateVolume<float> >(arm, lux::Vector(2.0, 1.0, 0.0));
-
-   // SimplexNoiseObject simplex(octaves, roughness, frequency, fjump, noiseMin, noiseMax);
-    //SimplexNoiseObject colorNoise(color_octaves, color_roughness, color_frequency, color_fjump, color_noiseMin, color_noiseMax);
-
-   // auto sphere = std::make_shared<lux::SphereVolume<float> >(4);
-
-
-    //lux::FloatGrid pyroSphereGrid = lux::FloatGrid(pyroSphere, lux::Vector(-gridSize, -gridSize, -gridSize), gridVoxelCount, 200);
-    //auto griddedPyro = std::make_shared<lux::GriddedVolume>(pyroSphereGrid);
-/*
-    auto cylinder = std::make_shared<lux::CylinderVolume<float> >(lux::Vector(0.0, 1.0, 0.0), 0.2);
-    auto cone = std::make_shared<lux::ConeVolume<float> >(lux::Vector(0.0, -1.0, 0.0), 1.0, 25.0*PI/180.0);
-
-    //Operators
-    auto scaleTest = std::make_shared<lux::Scale_S_Volume>(cone, lux::Vector(0.0, 0.0, 0.0), 2.0);
-    auto transTest = std::make_shared<lux::TranslateVolume<float> >(scaleTest, lux::Vector(0.0, 1.0, 1.0));
-    auto rotTest = std::make_shared<lux::Rotate_S_Volume>(transTest, lux::Vector(0.0, 0.0, 0.0), lux::Vector(0.0, 0.0, 1.0), -54.0*PI/180.0);
-    auto blendTest = std::make_shared<lux::BlinnBlend_S_Volume>(transTest, rotTest, 0.5, 0.5, 1.0);
-    auto unionTest = std::make_shared<lux::UnionVolume<float> >(transTest, rotTest);
-    */
-    //volumes.push_back(griddedPyro);
-    //volumes.push_back(leftArm);
-    //volumes.push_back(rightArm);
-    //volumes.push_back(new lux::Scale_S_Volume(sphere, lux::Vector(0.0, 0.0, 0.0), 2.0));
-    //volumes.push_back(new lux::Scale_S_Volume(sphere, lux::Vector(0.0, 0.0, 0.0), 2.0));
-    //volumes.push_back(new lux::TranslateVolume<float>(box, lux::Vector(0.0, 0.0, -2.0)));
-    //volumes.push_back(new lux::TranslateVolume<float>(cone, lux::Vector(0.0, 0.4, -2.0)));
-}
-
 void renderImage(Camera cam, BoundingBox bb, RenderLog renderLog){
     lux::Image img;
     img.reset(w, h, 4);
+    std::vector<float> black = {0.5, 0.5, 0.5, 0.0};
     boost::timer t;
     //Fire a ray from eye through every pixel
     int progressMod = w / 10;
@@ -331,7 +288,7 @@ void renderImage(Camera cam, BoundingBox bb, RenderLog renderLog){
     std::string filepath = renderLog.getFilepath();
     filepath += ".exr";
     lux::writeOIIOImage(filepath.c_str(), img, 1.0, 1.0);
-    std::cout << renderLog.getBody();
+    //std::cout << renderLog.getBody();
 }
 
 int main(int argc, char **argv){
@@ -345,9 +302,13 @@ int main(int argc, char **argv){
             w = 1280;
             h = 720;
         }
+        else if (strcmp(argv[2], "540") == 0){
+            w = 960;
+            h = 540;
+        }
     }
 
-    mainCam.setEyeViewUp(lux::Vector(12.0, 0.0, 12.0), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
+    mainCam.setEyeViewUp(lux::Vector(7.0, 0.0, 7.0), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
     BoundingBox bb(lux::Vector(-bbSize, -bbSize, -bbSize), lux::Vector(bbSize, bbSize, bbSize));
     initLights();
     //initVolumes();
@@ -356,16 +317,49 @@ int main(int argc, char **argv){
     auto colorVolume = std::make_shared<lux::SimplexNoiseColorVolume> (colorNoise, 0.0, 10.0, 20.0);
     colorVolumes.push_back(colorVolume);
     
-    auto sphere = std::make_shared<lux::SphereVolume<float> >(2);
-    auto constVol = std::make_shared<lux::ConstantVolume<float> >(0.0);
+    /*auto constVol = std::make_shared<lux::ConstantVolume<float> >(0.0);
     lux::FloatGrid wispGrid = lux::FloatGrid(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.1, 200);
     boost::timer wispTime;
     CreateWisp(lux::Vector(0, 0, 0), wispGrid);
     std::cout << "Wisp Build Time: " << wispTime.elapsed() << "\n";
     auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
-    volumes.push_back(griddedWisp);
+    volumes.push_back(griddedWisp);*/
+
+    //Set up our wedge values
+    int octave1 = 1;
+    float rough1 = 0.5;
+    float freq1 = 0.0;
+    float fjump1 = 2.2;
+
+    int octave2 = 3;
+    float rough2 = 0.5;
+    float freq2 = 2.0;
+    float fjump2 = 2.2;
+
+    float noiseMin = 0.7;
+    float noiseMax = 1.3;
+
+    WedgeAttribute freq1Wedge; 
+    WedgeAttribute octave1Wedge; 
+    WedgeAttribute clumpWedge;
+    clumpWedge.addKeyFrame(1, 0.0);
+    clumpWedge.addKeyFrame(100, 3.0);
+    /*freq1Wedge.addKeyFrame(1, 0.2);
+    freq1Wedge.addKeyFrame(50, 4.0);
+    freq1Wedge.addKeyFrame(51, 0.2);
+    freq1Wedge.addKeyFrame(100, 4.0);
+    freq1Wedge.addKeyFrame(101, 0.2);
+    freq1Wedge.addKeyFrame(150, 4.0);
+
+    octave1Wedge.addKeyFrame(1, 1);
+    octave1Wedge.addKeyFrame(50, 2);
+    octave1Wedge.addKeyFrame(100, 3);*/
+
 
     for (int i = frameStart; i < frameEnd; i++){
+
+
+        //Set up our filepath
         std::ostringstream ss;
         ss << setfill('0') << setw(4) << i;
         std::string numPadding = ss.str();
@@ -380,16 +374,62 @@ int main(int argc, char **argv){
             filepath += ".";
             filepath += numPadding;
         }
+        
 
-        //SimplexNoiseObject simplex(octaves, roughness, frequency, fjump, noiseMin, noiseMax, 0.01 * i);
-        //auto pyroSphere = std::make_shared<lux::PyroSphereVolume>(2.2, 3.0, 2.0, simplex);
-        //volumes.push_back(pyroSphere);
+        //WEDGE----------------------------------------------
+        //freq1 = freq1Wedge.getValueAtFrame(i);
+        //octave1 = octave1Wedge.getValueAtFrame(i);
+        clump = clumpWedge(i);
+        //WEDGE----------------------------------------------
+
+        SimplexNoiseObject wispNoise1(octave1, rough1, freq1, fjump1, noiseMin, noiseMax, 0);
+        SimplexNoiseObject wispNoise2(octave2, rough2, freq2, fjump2, -0.2, 0.2, 0);
+        //Set up our volume
+        auto constVol = std::make_shared<lux::ConstantVolume<float> >(0.0);
+        lux::FloatGrid wispGrid = lux::FloatGrid(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
+        CreateWisp(lux::Vector(0, 0, 0), wispGrid, wispNoise1, wispNoise2);
+        auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
+        volumes.push_back(griddedWisp);
 
         RenderLog renderLog(filepath);
         //mainCam.setEyeViewUp(lux::Vector(9.0 - ((float)i * 0.02), 0.0, 9.0 - ((float)i * 0.02)), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
         renderImage(mainCam, bb, renderLog);
-        std::cout << filepath << "\n";
+
+        //Empty our volume vector for next iteration
         volumes.clear();
+
+        //Annotate our image for the wedge
+        std::ostringstream ssAnno;
+        ssAnno << setfill(' ') << setw(10) << "Radius:" << setfill('.')  << setw(12) << radius << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "Dots:" << setfill('.')  << setw(12)<< numDots << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "Clump:" << setfill('.')  << setw(12)<< clump << "\n\n";
+        ssAnno << "Noise1\n";
+        ssAnno << setfill(' ') << setw(10) << "Octaves:" << setfill('.')  << setw(12)<< octave1 << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "Rough:" << setfill('.')  << setw(12)<< rough1 << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "Freq:" << setfill('.')  << setw(12)<< freq1 << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "noiseMin:" << setfill('.')  << setw(12)<< noiseMin << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "noiseMax:" << setfill('.')  << setw(12)<< noiseMax << "\n\n";
+        ssAnno << "Noise2\n";
+        ssAnno << setfill(' ') << setw(10) << "Octaves:" << setfill('.')  << setw(12)<< octave2 << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "Rough:" << setfill('.')  << setw(12)<< rough2 << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "Freq:" << setfill('.')  << setw(12)<< freq2 << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "fJump:" << setfill('.')  << setw(12)<< fjump2 << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "noiseMin:" << setfill('.')  << setw(12)<< noiseMin << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "noiseMax:" << setfill('.')  << setw(12)<< noiseMax << "\n\n";
+        std::cout << ssAnno.str();
+        Magick::Geometry textBox(200, 200);
+        Magick::GravityType gravity(Magick::NorthWestGravity);
+        Magick::Image image;
+        image.backgroundColor("#000000");
+        image.boxColor("#000000");
+        image.fillColor("#999999");
+        image.read(filepath + ".exr");
+        image.fontPointsize(12);
+        image.font("courier");
+        image.annotate(ssAnno.str(), gravity); 
+        image.write(filepath + ".exr");
+
+        std::cout << filepath << "\n";
     }
     //initLights();
 

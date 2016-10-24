@@ -119,6 +119,13 @@ int FloatGrid::bakeDensity(const Vector& P, const float density){
     c[6] = c[4] + voxels;
     //(x, y, z)
     c[7] = c[6] + 1;
+    for(int i = 0; i < 8; i++){
+
+        if (c[i] > totalCells || c[i] < 0){ 
+            std::cout << "Out of Bounds Index: " << c[i] << "; Position" << P << "\n";
+            return 0;
+        }
+    }
 
     Vector d = (P - indexToPosition(c[0])) / voxelLength;
 
