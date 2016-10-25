@@ -6,4 +6,5 @@
 *.swp
 *.swo
 *.mov
+.nfs*
 img

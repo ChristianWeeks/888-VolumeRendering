@@ -2,32 +2,21 @@
 
 using namespace lux;
 
+//-------------------------------------------------------------------------------------------------------------------------------
+//FloatGrid
+//-------------------------------------------------------------------------------------------------------------------------------
 FloatGrid::FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v) :
+    field(f),
     origin(o),
     size(s),
     voxels(v),
     voxelLength(size / (double)voxels),
     totalCells(v*v*v){
-        values = new float[totalCells];
-        //stamp the values into our grid
-        for(int i = 0; i < voxels; i++){
-            for(int j = 0; j < voxels; j++){
-                for(int k = 0; k < voxels; k++){
-
-                    //First convert our indices to world space
-                    float ii = (float)i * voxelLength + origin[0];
-                    float jj = (float)j * voxelLength + origin[1];
-                    float kk = (float)k * voxelLength + origin[2];
-                    //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
-
-                    //now evaluate the field at that point
-                    values[k + j*voxels + i*voxels*voxels] = f.get()->eval(Vector(ii, jj, kk));
-
-                   // std::cout << values[k + j*voxels + i*voxels*voxels] << "\n";
-                }
-            }
-        }
+    values = new float[totalCells];
 }
+
+//FloatGrid::~FloatGrid(){ delete values;}
+
 
 //Converts a position in 3-D space to an index in our grid
 const int FloatGrid::positionToIndex(const Vector& P) const{
@@ -69,7 +58,7 @@ const float FloatGrid::trilinearInterpolate(Vector position) const{
     //check for edge cases.  If its on the edge, we just don't apply at all
     //+x side
     for(int i = 0; i < 8; i++){
-        if (c[i] > totalCells || c[i] < 0){ 
+        if (c[i] > totalCells || c[i] < 0){
             std::cout << position[0] << ", " << position[1] << ", " << position[2] << "\n";
             std::cout << "Out of Bounds: " << c[i] << "; "  << "\n";
             return 0;
@@ -100,7 +89,32 @@ const float FloatGrid::trilinearInterpolate(Vector position) const{
     return c00;
 }
 
-int FloatGrid::bakeDensity(const Vector& P, const float density){
+//-------------------------------------------------------------------------------------------------------------------------------
+//DensityGrid
+//-------------------------------------------------------------------------------------------------------------------------------
+DensityGrid::DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v)
+    : FloatGrid(f, o, s, v){
+    //stamp the values into our grid
+    for(int i = 0; i < voxels; i++){
+        for(int j = 0; j < voxels; j++){
+            for(int k = 0; k < voxels; k++){
+
+                //First convert our indices to world space
+                float ii = (float)i * voxelLength + origin[0];
+                float jj = (float)j * voxelLength + origin[1];
+                float kk = (float)k * voxelLength + origin[2];
+                //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
+
+                //now evaluate the field at that point
+                values[k + j*voxels + i*voxels*voxels] = field.get()->eval(Vector(ii, jj, kk));
+
+               // std::cout << values[k + j*voxels + i*voxels*voxels] << "\n";
+            }
+        }
+    }
+}
+
+int DensityGrid::bakeDot(const Vector& P, const float density){
 
     int c[8];
     //(-x, -y, -z)
@@ -121,7 +135,7 @@ int FloatGrid::bakeDensity(const Vector& P, const float density){
     c[7] = c[6] + 1;
     for(int i = 0; i < 8; i++){
 
-        if (c[i] > totalCells || c[i] < 0){ 
+        if (c[i] > totalCells || c[i] < 0){
             std::cout << "Out of Bounds Index: " << c[i] << "; Position" << P << "\n";
             return 0;
         }
@@ -150,3 +164,59 @@ int FloatGrid::bakeDensity(const Vector& P, const float density){
 
     return 1;
 }
+//-------------------------------------------------------------------------------------------------------------------------------
+//Deep Shadow Map
+//-------------------------------------------------------------------------------------------------------------------------------
+DeepShadowMap::DeepShadowMap(light l, float m, std::shared_ptr<Volume<float> > f, Vector o, double s, int v)
+    : FloatGrid(f, o, s, v),
+    sourceLight(l),
+    marchStep(m){
+
+    std::cout << "Building Deep Shadow Map\n";
+    //stamp the values into our grid
+    for(int i = 0; i < voxels; i++){
+        for(int j = 0; j < voxels; j++){
+            for(int k = 0; k < voxels; k++){
+
+                //First convert our indices to world space
+                float ii = (float)i * voxelLength + origin[0];
+                float jj = (float)j * voxelLength + origin[1];
+                float kk = (float)k * voxelLength + origin[2];
+                //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
+
+                //now evaluate the field at that point
+                values[k + j*voxels + i*voxels*voxels] = rayMarchLightScatter(Vector(ii, jj, kk));
+
+            }
+        }
+    }
+}
+
+//Returns the denisty integral at this position
+double DeepShadowMap::rayMarchLightScatter(const Vector& x){
+
+    double densityInt = 0.0;
+    double marchLen = 0.0;
+
+    lux::Vector toLight(sourceLight.pos - x);
+    double distanceToLight = toLight.magnitude();
+    toLight.normalize();
+    lux::Vector x1(x);
+    //If density at our grid point is 0, there's no point in calculating the integral, as the point will never be lit
+    if(field.get()->eval(x1) <= 0.0) return 0;
+
+    while (marchLen < distanceToLight){
+
+        double density = field.get()->eval(x1);
+        //Do not add density if it is negative
+        if(density > 0.0){
+            densityInt += density * marchStep;
+
+        }
+        x1 += marchStep * toLight;
+        marchLen += marchStep;
+
+    }
+    return densityInt;
+}
+

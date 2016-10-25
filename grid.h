@@ -1,4 +1,5 @@
 #include "volume_operators.h"
+#include "light.h"
 
 namespace lux {
 class FloatGrid{
@@ -6,10 +7,9 @@ class FloatGrid{
         FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
         ~FloatGrid(){};
         const float trilinearInterpolate(Vector P) const;
-        int bakeDensity(const Vector& p, const float density);
+    protected:
 
-    private:
-
+        std::shared_ptr<Volume<float> > field;
         float *values;
         const Vector origin;
         const double size;
@@ -21,6 +21,28 @@ class FloatGrid{
         const Vector indexToPosition(const int i) const;
 };
 
+class DensityGrid: public FloatGrid{
+    public:
+        DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
+        ~DensityGrid(){};
+
+        //Bake a dot - Used for baking wisps
+        int bakeDot(const Vector& p, const float density);
+
+};
+
+class DeepShadowMap: public FloatGrid{
+    public:
+        DeepShadowMap(light l, float m, std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
+        ~DeepShadowMap(){};
+
+    private:
+        light sourceLight;
+        const float marchStep;
+
+        //Raymarch from position x to the light, return the integrated density
+        double rayMarchLightScatter(const Vector& x);
+};
 //-------------------------------------------------------------------------------------------------------------------------------
 //Gridded Volumes
 //-------------------------------------------------------------------------------------------------------------------------------

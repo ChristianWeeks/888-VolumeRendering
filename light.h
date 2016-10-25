@@ -6,6 +6,12 @@ class light
 {
     public:
         light(){};
+        light(const light& oldLight) :
+            c(oldLight.c),
+            dir(oldLight.dir),
+            pos(oldLight.pos),
+            intensity(oldLight.intensity){};
+
         light(Color C, Vector Dir, Vector Pos, float I) :
             c(C),
             dir(Dir.unitvector()),
