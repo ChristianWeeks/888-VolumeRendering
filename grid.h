@@ -5,12 +5,13 @@ namespace lux {
 class FloatGrid{
     public:
         FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
-        ~FloatGrid(){};
-        const float trilinearInterpolate(Vector P) const;
+        FloatGrid(const FloatGrid& f);
+        ~FloatGrid();
+        const float trilinearInterpolate(const Vector& P) const;
     protected:
 
         std::shared_ptr<Volume<float> > field;
-        float *values;
+        std::unique_ptr<float[]> values;
         const Vector origin;
         const double size;
         const int voxels;
@@ -48,13 +49,13 @@ class DeepShadowMap: public FloatGrid{
 //-------------------------------------------------------------------------------------------------------------------------------
 class GriddedVolume: public Volume<float>{
     public:
-        GriddedVolume(FloatGrid grid) : g(grid){};
+        GriddedVolume(const std::shared_ptr<FloatGrid> grid) : g(grid){};
         ~GriddedVolume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return g.trilinearInterpolate(P);};
+        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return g.get()->trilinearInterpolate(P);};
         const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return Vector(0, 0, 0);};
 
     private:
-        FloatGrid g;
+        std::shared_ptr<FloatGrid> g;
 };
 }

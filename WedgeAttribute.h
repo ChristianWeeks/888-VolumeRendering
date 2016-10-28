@@ -2,7 +2,7 @@
 
 class WedgeAttribute {
     public:
-        WedgeAttribute(){};
+        WedgeAttribute() : keyFrames(0), keyValues(0){};
         ~WedgeAttribute(){};
     void addKeyFrame(int frame, float value){
         if(keyFrames.size() == 0){
@@ -20,8 +20,8 @@ class WedgeAttribute {
         }
         keyFrames.insert(fit, frame);
         keyValues.insert(vit, value);
-        for (int i = 0; i < keyFrames.size(); i++){
-        }
+        //for (int i = 0; i < keyFrames.size(); i++){
+        //}
         return;
     }
 
@@ -47,7 +47,7 @@ class WedgeAttribute {
         //Interpolate between our keyframes
         int endFrame = *fit;
         int startFrame = *(fit - 1);
-        int endValue = *vit;
+        float endValue = *vit;
         float startValue =  *(vit - 1);
 
         return startValue + ((frame - startFrame) * ((endValue - startValue) / (endFrame - startFrame)));

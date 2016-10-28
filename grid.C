@@ -11,11 +11,24 @@ FloatGrid::FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int 
     size(s),
     voxels(v),
     voxelLength(size / (double)voxels),
-    totalCells(v*v*v){
-    values = new float[totalCells];
-}
+    totalCells(v*v*v),
+    values(new float[v*v*v]){}
 
-//FloatGrid::~FloatGrid(){ delete values;}
+FloatGrid::FloatGrid(const FloatGrid& f) :
+    field(f.field),
+    origin(f.origin),
+    size(f.size),
+    voxels(f.voxels),
+    voxelLength(f.voxelLength),
+    totalCells(f.totalCells),
+    values(new float[f.totalCells]){
+    std::cout << "FloatGrid Copy Constructor!\n";
+    for(int i = 0; i < totalCells; i++){
+        values.get()[i] = f.values.get()[i];
+    }
+
+}
+FloatGrid::~FloatGrid(){}
 
 
 //Converts a position in 3-D space to an index in our grid
@@ -33,7 +46,7 @@ const Vector FloatGrid::indexToPosition(int i) const{
     return P * voxelLength + origin;
 }
 
-const float FloatGrid::trilinearInterpolate(Vector position) const{
+const float FloatGrid::trilinearInterpolate(const Vector& position) const{
 
     //First we have to find what grid points are around our given position
 
@@ -59,9 +72,8 @@ const float FloatGrid::trilinearInterpolate(Vector position) const{
     //+x side
     for(int i = 0; i < 8; i++){
         if (c[i] > totalCells || c[i] < 0){
-            std::cout << position[0] << ", " << position[1] << ", " << position[2] << "\n";
-            std::cout << "Out of Bounds: " << c[i] << "; "  << "\n";
-            return 0;
+            std::cout << "Interp: Out of Bounds: " << c[i] << "; "  << "\n";
+            return 1;
         }
     }
     //now we can actually interpolate
@@ -70,10 +82,10 @@ const float FloatGrid::trilinearInterpolate(Vector position) const{
 
     //Interpolate along x
     float c00, c10, c01, c11;
-    c00 = values[c[0]] * (1-d[0]) + values[c[4]] * d[0];
-    c01 = values[c[1]] * (1-d[0]) + values[c[5]] * d[0];
-    c10 = values[c[2]] * (1-d[0]) + values[c[6]] * d[0];
-    c11 = values[c[3]] * (1-d[0]) + values[c[7]] * d[0];
+    c00 = values.get()[c[0]] * (1-d[0]) + values.get()[c[4]] * d[0];
+    c01 = values.get()[c[1]] * (1-d[0]) + values.get()[c[5]] * d[0];
+    c10 = values.get()[c[2]] * (1-d[0]) + values.get()[c[6]] * d[0];
+    c11 = values.get()[c[3]] * (1-d[0]) + values.get()[c[7]] * d[0];
 
     //interpolate along y
     float c0, c1;
@@ -94,7 +106,7 @@ const float FloatGrid::trilinearInterpolate(Vector position) const{
 //-------------------------------------------------------------------------------------------------------------------------------
 DensityGrid::DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v)
     : FloatGrid(f, o, s, v){
-    //stamp the values into our grid
+    //stamp the values.get() into our grid
     for(int i = 0; i < voxels; i++){
         for(int j = 0; j < voxels; j++){
             for(int k = 0; k < voxels; k++){
@@ -106,9 +118,9 @@ DensityGrid::DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, 
                 //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
 
                 //now evaluate the field at that point
-                values[k + j*voxels + i*voxels*voxels] = field.get()->eval(Vector(ii, jj, kk));
+                values.get()[k + j*voxels + i*voxels*voxels] = field.get()->eval(Vector(ii, jj, kk));
 
-               // std::cout << values[k + j*voxels + i*voxels*voxels] << "\n";
+               // std::cout << values.get()[k + j*voxels + i*voxels*voxels] << "\n";
             }
         }
     }
@@ -136,7 +148,7 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     for(int i = 0; i < 8; i++){
 
         if (c[i] > totalCells || c[i] < 0){
-            std::cout << "Out of Bounds Index: " << c[i] << "; Position" << P << "\n";
+            std::cout << "BakeDot: Out of Bounds Index: " << c[i] << "; Position" << P << "\n";
             return 0;
         }
     }
@@ -153,14 +165,15 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     wz1 = d[2];
     wz2 = 1 - d[2];
 
-    values[c[0]] += density * wx1 * wy1 * wz1;
-    values[c[1]] += density * wx1 * wy1 * wz2;
-    values[c[2]] += density * wx1 * wy2 * wz1;
-    values[c[3]] += density * wx1 * wy2 * wz2;
-    values[c[4]] += density * wx2 * wy1 * wz1;
-    values[c[5]] += density * wx2 * wy1 * wz2;
-    values[c[6]] += density * wx2 * wy2 * wz1;
-    values[c[7]] += density * wx2 * wy2 * wz2;
+    values.get()[c[0]] += density * wx1 * wy1 * wz1;
+    values.get()[c[1]] += density * wx1 * wy1 * wz2;
+    values.get()[c[2]] += density * wx1 * wy2 * wz1;
+    values.get()[c[3]] += density * wx1 * wy2 * wz2;
+    values.get()[c[4]] += density * wx2 * wy1 * wz1;
+    values.get()[c[5]] += density * wx2 * wy1 * wz2;
+    values.get()[c[6]] += density * wx2 * wy2 * wz1;
+    values.get()[c[7]] += density * wx2 * wy2 * wz2;
+    //std::cout << c[0] << ":  " << values.get()[c[0]] << "\n";
 
     return 1;
 }
@@ -185,7 +198,7 @@ DeepShadowMap::DeepShadowMap(light l, float m, std::shared_ptr<Volume<float> > f
                 //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
 
                 //now evaluate the field at that point
-                values[k + j*voxels + i*voxels*voxels] = rayMarchLightScatter(Vector(ii, jj, kk));
+                values.get()[k + j*voxels + i*voxels*voxels] = rayMarchLightScatter(Vector(ii, jj, kk));
 
             }
         }

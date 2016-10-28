@@ -29,19 +29,20 @@ const double PI  =3.141592653589793238463;
 //------------------------------------------------------------------------------
 //Light scatter / attentuation coefficient
 const double K = 1.0;
-const double emissive = 0.05;
+double emissive = 0.05;
 
 //Discrete step for our marching.  Delta S in our equations
 const double marchStep = 0.04;
 const double lightMarchStep = 0.12;
 
-const int frameStart = 1;
-const int frameEnd =2; 
+const int frameStart = 9;
+const int frameEnd = 80; 
 
 //BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
-const float bbSize = 3.0;
+const float bbSize = 3.5;
 const float gridSize = 2 * bbSize;
-const float gridVoxelCount = 10;
+const float lightGridVoxelCount = 200;
+const float gridVoxelCount = 200;
 //Width and Height may change based on input
 int w = 480;
 int h = 270;
@@ -60,9 +61,9 @@ float color_fjump = 2.2;
 float color_noiseMin = -0.4; 
 float color_noiseMax = 0.7;
 
-float radius = 1.6;
-float numDots = 2000000;
-float clump = 2.0;
+float radius = 0.4;
+float numDots = 1000000;
+float clump = 1.0;
 
 std::vector<lux::light> lights;
 std::vector<lux::DeepShadowMap> lightGrids;
@@ -94,7 +95,7 @@ lux::Color linearInterpolate(float start, float end, float pos, lux::Color v1, l
 }
 
 //Wisp algorithm
-void CreateWisp(const lux::Vector P, lux::DensityGrid f, SimplexNoiseObject noise1, SimplexNoiseObject noise2){
+void CreateWisp(const lux::Vector P, std::shared_ptr<lux::DensityGrid> f, SimplexNoiseObject noise1, SimplexNoiseObject noise2){
 
     std::random_device rnd;
     std::mt19937 rng(rnd());
@@ -127,7 +128,7 @@ void CreateWisp(const lux::Vector P, lux::DensityGrid f, SimplexNoiseObject nois
         d2[2] = noise2.eval(dSphere[0] - 0.1, dSphere[1] - 0.1, dSphere[2] - 0.1);
 
         dot += d2;
-        f.bakeDot(dot, 0.3);
+        f.get()->bakeDot(dot, 1.0);
     }
 
 }
@@ -136,7 +137,7 @@ void CreateWisp(const lux::Vector P, lux::DensityGrid f, SimplexNoiseObject nois
 lux::Color getColor(float density){
     lux::Color slowColor(0.1, 0.05, 1.0, 1.0);    //at weight 0.0
     lux::Color medColor(0.7, 0.1, 0.4, 1.0);     //at weight 0.4
-    lux::Color medFastColor(0.9, 0.3, 0.2, 1.0);     //at weight 0.5
+    lux::Color medFastColor(0.85, 0.3, 0.2, 1.0);     //at weight 0.5
     lux::Color fastColor(0.95, 1.0, 0.1, 1.0);    //at weight 0.85
     lux::Color fastestColor(1.0, 1.0, 1.0, 1.0); //at weight 1.0
 
@@ -191,13 +192,13 @@ lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
     lux::Color fieldColor;
 
     lux::Vector x = cam.eye() + n*start;
-    lux::Color color(0.2, 0.90, 0.5, 1.0);
+    lux::Color color(0.1, 0.05, 1.0, 1.0);
     while (marchLen < totalMarchLength){
         //Check each volume
         for(int j = 0; j < volumes.size(); j++){
             double density = volumes[j].get()->eval(x);
             if (density > 0.0){
-                //std::cout << density << "\n";
+                
 
                 //step 1
                 double deltaT = exp(-density * marchStep * K);
@@ -213,10 +214,10 @@ lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
 
                 if (emissive) {
                     //Boosting the emission of the peaks in our noise function- this makes the star clusters appear brighter 
-                    //color = getColor(density);
+                    color = getColor(density);
                     //The field color's contribution will be scaled by the density, so sparse areas don't become super bright
-                    fieldColor = colorVolumes[0].get()->eval(x) * 0.2;
-                    color += colorClamp(fieldColor);
+                    //fieldColor = colorVolumes[0].get()->eval(x) * 0.2;
+                    //color += colorClamp(fieldColor);
                     C += color * tVal * emissive;
                 }
             }
@@ -315,40 +316,66 @@ int main(int argc, char **argv){
     }
 
     //Init Camera, Bounding box
-    mainCam.setEyeViewUp(lux::Vector(7.0, 0.0, 7.0), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
+    mainCam.setEyeViewUp(lux::Vector(6.0, 0.0, 6.0), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
     BoundingBox bb(lux::Vector(-bbSize, -bbSize, -bbSize), lux::Vector(bbSize, bbSize, bbSize));
 
     //lux::light l1(lux::light(lux::Color(0.4, 0.80, 1.0, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-2.0, 5.0, 4.0), 1.0));
-    lux::light l1(lux::light(lux::Color(.4, 0.80, 1.0, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-2.0, 5.0, -1.0), 1.0));
+    lux::light l1(lux::Color(0.2, 0.8, 0.95, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-3.0, 4.0, 0.0), 1.0);
+    lux::light l2(lux::Color(0.95, 0.4, 0.4, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(3.0, 4.0, 0.0), 1.0);
     lights.push_back(l1);
+    //lights.push_back(l2);
 
     SimplexNoiseObject colorNoise(color_octaves, color_roughness, color_frequency, color_fjump, color_noiseMin, color_noiseMax, 0);
     auto colorVolume = std::make_shared<lux::SimplexNoiseColorVolume> (colorNoise, 0.0, 10.0, 20.0);
     colorVolumes.push_back(colorVolume);
 
     //Set up our wedge values
-    /*int octave1 = 1;
+    int octave1 = 1;
     float rough1 = 0.5;
     float freq1 = 0.3;
     float fjump1 = 2.2;
+    float noiseMin1 = 0.6;
+    float noiseMax1 = 1.6;
+    float offset1 = 0;
 
     int octave2 = 3;
     float rough2 = 0.5;
     float freq2 = 2.0;
     float fjump2 = 2.2;
-
-    float noiseMin = 0.7;
-    float noiseMax = 1.3;
-
     float noiseMin2 = -0.2;
     float noiseMax2 = 0.2;
+    float offset2 = 0.0;
 
-    WedgeAttribute noiseMinWedge; 
-    WedgeAttribute noiseMaxWedge; 
-    noiseMinWedge.addKeyFrame(1, -0.01);
-    noiseMaxWedge.addKeyFrame(1, 0.01);
+    WedgeAttribute offset1Wedge; 
+    WedgeAttribute offset2Wedge; 
+    WedgeAttribute radiusWedge;
+    WedgeAttribute noiseMinWedge;
+    WedgeAttribute noiseMaxWedge;
+    noiseMinWedge.addKeyFrame(24, -1.0);
+    noiseMinWedge.addKeyFrame(32, -5.0);
+    noiseMinWedge.addKeyFrame(43, -5.0);
+    noiseMinWedge.addKeyFrame(45, 0.0);
+    noiseMaxWedge.addKeyFrame(24, 1.0);
+    noiseMaxWedge.addKeyFrame(32, 5.0);
+    noiseMaxWedge.addKeyFrame(43, 5.0);
+    noiseMaxWedge.addKeyFrame(45, 1.5);
 
-    noiseMinWedge.addKeyFrame(20, -1.0);
+    radiusWedge.addKeyFrame(0, 0.6);
+    radiusWedge.addKeyFrame(24, 0.4);
+    radiusWedge.addKeyFrame(28, 0.3);
+    radiusWedge.addKeyFrame(32, 0.2);
+    radiusWedge.addKeyFrame(45, 0.2);
+    radiusWedge.addKeyFrame(50, 1.0);
+    radiusWedge.addKeyFrame(60, 1.4);
+    radiusWedge.addKeyFrame(65, 1.5);
+    radiusWedge.addKeyFrame(75, 1.6);
+
+    offset1Wedge.addKeyFrame(1, 0.00);
+    offset2Wedge.addKeyFrame(1, 0.00);
+    offset1Wedge.addKeyFrame(200, 8.0);
+    offset2Wedge.addKeyFrame(200, 8.0);
+
+    /*noiseMinWedge.addKeyFrame(20, -1.0);
     noiseMaxWedge.addKeyFrame(20, 1.0);
     noiseMinWedge.addKeyFrame(31, 0.99);
     noiseMaxWedge.addKeyFrame(31, 1.01);
@@ -375,35 +402,34 @@ int main(int argc, char **argv){
         RenderLog renderLog(filepath);
 
         //WEDGE----------------------------------------------
-        //freq1 = freq1Wedge.getValueAtFrame(i);
-        //freq2 = freq2Wedge.getValueAtFrame(i);
-        //octave1 = octave1Wedge.getValueAtFrame(i);
-        //clump = clumpWedge.getValueAtFrame(i);
-        //noiseMin2 = noiseMinWedge.getValueAtFrame(i);
-        //noiseMax2 = noiseMaxWedge.getValueAtFrame(i);
+        offset1 = offset1Wedge.getValueAtFrame(i);
+        offset2 = offset2Wedge.getValueAtFrame(i);
+        //radius = radiusWedge.getValueAtFrame(i);
         //WEDGE----------------------------------------------
 
         //-------------------------------------------------------------------------------------------------------------------------------------
         // SET UP OUR NOISE OBJECT, VOLUMES, GRIDS, AND SHADOW MAPS HERE
         //-------------------------------------------------------------------------------------------------------------------------------------
-        //SimplexNoiseObject wispNoise1(octave1, rough1, freq1, fjump1, noiseMin, noiseMax, 0);
-        //SimplexNoiseObject wispNoise2(octave2, rough2, freq2, fjump2, noiseMin2, noiseMax2, 0);
+        SimplexNoiseObject wispNoise1(octave1, rough1, freq1, fjump1, noiseMin1, noiseMax1, offset1);
+        SimplexNoiseObject wispNoise2(octave2, rough2, freq2, fjump2, noiseMin2, noiseMax2, offset2);
 
         //Set up our volume
-        auto sphereVol = std::make_shared<lux::SphereVolume<float> >(2.0);
-        auto constVol = std::make_shared<lux::ConstantVolume<float> > (4.0);
-        auto multVol = std::make_shared<lux::MultVolume<float> >(sphereVol, constVol);
+        //auto sphereVol = std::make_shared<lux::SphereVolume<float> >(2.0);
+        auto constVol = std::make_shared<lux::ConstantVolume<float> > (0.0);
+        //auto multVol = std::make_shared<lux::MultVolume<float> >(sphereVol, constVol);
 
-        lux::DeepShadowMap dsm1(l1, lightMarchStep, multVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, gridVoxelCount);
+        auto wispGrid = std::make_shared<lux::DensityGrid>(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
+        CreateWisp(lux::Vector(0, 0, 0), wispGrid, wispNoise1, wispNoise2);
+        auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
+
         boost::timer dsmTimer;
-        lightGrids.push_back(dsm1);
-        std::cout << "DSM Construction Time: " << dsmTimer.elapsed() << "\n";
-        //auto constVol = std::make_shared<lux::ConstantVolume<float> >(0.0);
+        //lux::DeepShadowMap dsm1(l1, lightMarchStep, griddedWisp, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
+        //lux::DeepShadowMap dsm2(l2, lightMarchStep, griddedWisp, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
+        //lightGrids.push_back(dsm1);
+        //lightGrids.push_back(dsm2);
+        //std::cout << "DSM Construction Time: " << dsmTimer.elapsed() << "\n";
 
-        //lux::DensityGrid wispGrid = lux::DensityGrid(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
-        //CreateWisp(lux::Vector(0, 0, 0), wispGrid, wispNoise1, wispNoise2);
-        //auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
-        volumes.push_back(multVol);
+        volumes.push_back(griddedWisp);
 
         //mainCam.setEyeViewUp(lux::Vector(9.0 - ((float)i * 0.02), 0.0, 9.0 - ((float)i * 0.02)), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
         //-------------------------------------------------------------------------------------------------------------------------------------
@@ -413,8 +439,8 @@ int main(int argc, char **argv){
         volumes.clear();
 
         //Annotate our image for the wedge
-        std::ostringstream ssAnno;
-        /*ssAnno << setfill(' ') << setw(10) << "Radius:" << setfill('.')  << setw(12) << radius << "\n";
+        /*std::ostringstream ssAnno;
+        ssAnno << setfill(' ') << setw(10) << "Radius:" << setfill('.')  << setw(12) << radius << "\n";
         ssAnno << setfill(' ') << setw(10) << "Dots:" << setfill('.')  << setw(12)<< numDots << "\n";
         ssAnno << setfill(' ') << setw(10) << "Clump:" << setfill('.')  << setw(12)<< clump << "\n\n";
         ssAnno << "Noise1\n";
@@ -441,13 +467,13 @@ int main(int argc, char **argv){
         image.fontPointsize(12);
         image.font("courier");
         image.annotate(ssAnno.str(), gravity); 
-        image.write(filepath + ".exr");*/
+        image.write(filepath + ".exr");
 
-        std::cout << filepath << "\n";
+        std::cout << filepath << "\n";*/
+        std::cout << filepath << " total: " << totalTimer.elapsed() << "\n";
     }
     //initLights();
 
-    std::cout << "Total Time: " << totalTimer.elapsed() << "\n";
 
 
     return 0;
