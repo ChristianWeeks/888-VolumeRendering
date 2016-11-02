@@ -10,7 +10,7 @@
 
 #ifndef __LUX_COLOR_H__
 #define __LUX_COLOR_H__
-
+#include <iostream>
 
 namespace lux
 {
@@ -115,6 +115,7 @@ class Color
   private:
   double xyzw[4];
 };
+std::ostream &operator<< (std::ostream& output, const Color &c);
 
 }
 

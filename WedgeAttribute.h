@@ -4,7 +4,7 @@ class WedgeAttribute {
     public:
         WedgeAttribute() : keyFrames(0), keyValues(0){};
         ~WedgeAttribute(){};
-    void addKeyFrame(int frame, float value){
+    void key(int frame, float value){
         if(keyFrames.size() == 0){
             keyFrames.push_back(frame);
             keyValues.push_back(value);
@@ -25,7 +25,7 @@ class WedgeAttribute {
         return;
     }
 
-    float getValueAtFrame(int frame){
+    float get(int frame){
         std::vector<int>::iterator fit;
         std::vector<float>::iterator vit;
         fit = keyFrames.begin();

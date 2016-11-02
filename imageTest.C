@@ -10,7 +10,7 @@
 #include "renderlog.h"
 #include "WedgeAttribute.h"
 
-//#include "colorSlider.h"
+#include "ColorSlider.h"
 #include <vector>
 #include <stdio.h>
 //#include <boost/shared_ptr.hpp>
@@ -21,49 +21,33 @@
 #include <memory>
 #include <random>
 
-
-
 const double PI  =3.141592653589793238463;
 //------------------------------------------------------------------------------
 //GLOBAL SCENE SETTINGS
 //------------------------------------------------------------------------------
 //Light scatter / attentuation coefficient
 const double K = 1.0;
-double emissive = 0.05;
+double emissive = 2.0;
 
 //Discrete step for our marching.  Delta S in our equations
 const double marchStep = 0.04;
 const double lightMarchStep = 0.12;
 
-const int frameStart = 9;
-const int frameEnd = 80; 
+const int frameStart = 1; 
+const int frameEnd = 2; 
 
 //BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
 const float bbSize = 3.5;
 const float gridSize = 2 * bbSize;
 const float lightGridVoxelCount = 200;
-const float gridVoxelCount = 200;
+const float gridVoxelCount = 1200;
 //Width and Height may change based on input
 int w = 480;
 int h = 270;
-int octaves = 3;
-float roughness = 0.5;
-float frequency = 0.4;
-float fjump = 2.2;
-float noiseMin = -1.8;
-float noiseMax = 1.8;
 Camera mainCam;
 
-int color_octaves = 1;
-float color_roughness = 0.7;
-float color_frequency = 0.15;
-float color_fjump = 2.2;
-float color_noiseMin = -0.4; 
-float color_noiseMax = 0.7;
 
-float radius = 0.4;
-float numDots = 1000000;
-float clump = 1.0;
+lux::ColorSlider cSlider;
 
 std::vector<lux::light> lights;
 std::vector<lux::DeepShadowMap> lightGrids;
@@ -94,65 +78,6 @@ lux::Color linearInterpolate(float start, float end, float pos, lux::Color v1, l
     return v1*(1-pos) + v2*pos;
 }
 
-//Wisp algorithm
-void CreateWisp(const lux::Vector P, std::shared_ptr<lux::DensityGrid> f, SimplexNoiseObject noise1, SimplexNoiseObject noise2){
-
-    std::random_device rnd;
-    std::mt19937 rng(rnd());
-    std::uniform_real_distribution<> udist(-radius, radius);
-
-    /*float x = 2.0 * noise1.eval(P[0], P[1], P[2]) - 1.0;
-    float y = 2.0 * noise1.eval(P[0] + 10, P[1] + 10, P[2] + 10) - 1.0;
-    float z = 2.0 * noise1.eval(P[0] + 20, P[1] + 20, P[2] + 20) - 1.0;*/
-    for(int i = 0; i < numDots; i++){
-
-        float randX = udist(rng);
-        float randY = udist(rng);
-        float randZ =  udist(rng);
-
-        /*d[0] = 2.0 * noise1.eval(randX, randY, randZ) - 1.0;
-        d[1] = 2.0 * noise1.eval(randX + 10, randY + 10, randZ + 10) - 1.0;
-        d[2] = 2.0 * noise1.eval(randX + 20, randY + 20, randZ + 20) - 1.0;*/
-        lux::Vector d(randX, randY, randZ);
-
-        float radialDisp = std::pow(std::abs(noise1.eval(d[0], d[1], d[2])), clump);
-        lux::Vector dSphere = d.unitvector();
-
-        dSphere *= radialDisp;
-
-        lux::Vector dot = P + dSphere * radius;
-
-        lux::Vector d2;
-        d2[0] = noise2.eval(dSphere[0], dSphere[1], dSphere[2]);
-        d2[1] = noise2.eval(dSphere[0] + 0.1, dSphere[1] + 0.1, dSphere[2] + 0.1);
-        d2[2] = noise2.eval(dSphere[0] - 0.1, dSphere[1] - 0.1, dSphere[2] - 0.1);
-
-        dot += d2;
-        f.get()->bakeDot(dot, 1.0);
-    }
-
-}
-
-
-lux::Color getColor(float density){
-    lux::Color slowColor(0.1, 0.05, 1.0, 1.0);    //at weight 0.0
-    lux::Color medColor(0.7, 0.1, 0.4, 1.0);     //at weight 0.4
-    lux::Color medFastColor(0.85, 0.3, 0.2, 1.0);     //at weight 0.5
-    lux::Color fastColor(0.95, 1.0, 0.1, 1.0);    //at weight 0.85
-    lux::Color fastestColor(1.0, 1.0, 1.0, 1.0); //at weight 1.0
-
-    lux::Color newColor;
-    if(density < 0.6)
-        newColor = linearInterpolate(0.0, 0.6, density, slowColor, medColor);
-    else if (density >= 0.6 && density < 0.8)
-        newColor = linearInterpolate(0.6, 0.8, density, medColor, medFastColor);
-    else if (density >= 0.8 && density < 0.85)
-        newColor = linearInterpolate(0.8, 0.85, density, medFastColor, fastColor);
-    else if (density >= 0.85)
-        newColor = linearInterpolate(0.85, 1.00, density, fastColor, fastestColor);
-    //newColor[3] = 1;// - (1-density)*0.4;*/
-    return newColor;
-}
 
 double rayMarchLightScatter(lux::Vector x, lux::light l, lux::Volume<float> *vol){
 
@@ -192,7 +117,7 @@ lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
     lux::Color fieldColor;
 
     lux::Vector x = cam.eye() + n*start;
-    lux::Color color(0.1, 0.05, 1.0, 1.0);
+    lux::Color color(0.5, 1.0, 0.0, 1.0);
     while (marchLen < totalMarchLength){
         //Check each volume
         for(int j = 0; j < volumes.size(); j++){
@@ -214,7 +139,8 @@ lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
 
                 if (emissive) {
                     //Boosting the emission of the peaks in our noise function- this makes the star clusters appear brighter 
-                    color = getColor(density);
+                    color = cSlider.getColor(density);
+                    //std::cout << color << "Density: " << density << "\n";
                     //The field color's contribution will be scaled by the density, so sparse areas don't become super bright
                     //fieldColor = colorVolumes[0].get()->eval(x) * 0.2;
                     //color += colorClamp(fieldColor);
@@ -270,13 +196,12 @@ void renderImage(Camera cam, BoundingBox bb, RenderLog renderLog){
 
     float elapsedTime = t.elapsed();
     std::cout << "Render Time: " << elapsedTime << "\n";
-    SimplexNoiseObject colorNoise(color_octaves, color_roughness, color_frequency, color_fjump, color_noiseMin, color_noiseMax, 0);
 
     //Write our image
     std::ostringstream ss;
     //ss << setfill(' ') << setw(20) << "Eye:" << setfill('-')  << setw(30) << mainCam.eye() << "\n";
     //ss << setfill(' ') << setw(20) << "View:" << setfill('-')  << setw(30) << mainCam.view() << "\n";
-    ss << setfill(' ') << setw(20) << "W:" << setfill('-')  << setw(30) << w << "\n";
+    /*ss << setfill(' ') << setw(20) << "W:" << setfill('-')  << setw(30) << w << "\n";
     ss << setfill(' ') << setw(20) << "H:" << setfill('-')  << setw(30)<< h << "\n";
     ss << setfill(' ') << setw(20) << "March Step:" << setfill('-')  << setw(30)<< marchStep << "\n";
     ss << setfill(' ') << setw(20) << "Light March Step:" << setfill('-')  << setw(30)<< marchStep << "\n";
@@ -289,7 +214,7 @@ void renderImage(Camera cam, BoundingBox bb, RenderLog renderLog){
     ss << setfill(' ') << setw(20) << "Noise Minumum:" << setfill('-')  << setw(30) << noiseMin << "\n";
     ss << setfill(' ') << setw(20) << "Noise Maximum:" << setfill('-')  << setw(30) << noiseMax << "\n";
     renderLog.addLine(ss.str());
-    renderLog.writeToFile();
+    renderLog.writeToFile();*/
 
     std::string filepath = renderLog.getFilepath();
     filepath += ".exr";
@@ -320,17 +245,35 @@ int main(int argc, char **argv){
     BoundingBox bb(lux::Vector(-bbSize, -bbSize, -bbSize), lux::Vector(bbSize, bbSize, bbSize));
 
     //lux::light l1(lux::light(lux::Color(0.4, 0.80, 1.0, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-2.0, 5.0, 4.0), 1.0));
-    lux::light l1(lux::Color(0.2, 0.8, 0.95, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-3.0, 4.0, 0.0), 1.0);
-    lux::light l2(lux::Color(0.95, 0.4, 0.4, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(3.0, 4.0, 0.0), 1.0);
-    lights.push_back(l1);
+    lux::light l1(lux::Color(0.7, 0.9, 0.1, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-3.0, 4.0, 0.0), 1.0);
+    //lux::light l2(lux::Color(0.95, 0.4, 0.4, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(3.0, 4.0, 0.0), 1.0);
+    //lights.push_back(l1);
     //lights.push_back(l2);
+
+    int color_octaves = 1;
+    float color_roughness = 0.7;
+    float color_frequency = 0.15;
+    float color_fjump = 2.2;
+    float color_noiseMin = -0.4; 
+    float color_noiseMax = 0.7;
 
     SimplexNoiseObject colorNoise(color_octaves, color_roughness, color_frequency, color_fjump, color_noiseMin, color_noiseMax, 0);
     auto colorVolume = std::make_shared<lux::SimplexNoiseColorVolume> (colorNoise, 0.0, 10.0, 20.0);
     colorVolumes.push_back(colorVolume);
 
+    lux::Color c_black(0.0, 0.0, 0.0, 0.0);    //at weight 0.0
+    lux::Color c_red(0.8, 0.1, 0.0, 0.0);    //at weight 0.0
+    lux::Color c_orange(1.0, 0.5, 0.1, 0.0);     //at weight 0.5
+    lux::Color c_yellow(1.0, 1.0, 0.1, 0.0);    //at weight 0.85
+    lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0
+    cSlider.addColor(0.0, c_black);
+    cSlider.addColor(0.4, c_red);
+    cSlider.addColor(2.0, c_orange);
+    cSlider.addColor(3.0, c_yellow);
+    cSlider.addColor(10.0, c_white);
+
     //Set up our wedge values
-    int octave1 = 1;
+    int octave1 = 3;
     float rough1 = 0.5;
     float freq1 = 0.3;
     float fjump1 = 2.2;
@@ -340,48 +283,90 @@ int main(int argc, char **argv){
 
     int octave2 = 3;
     float rough2 = 0.5;
-    float freq2 = 2.0;
+    float freq2 = 1.2;
     float fjump2 = 2.2;
-    float noiseMin2 = -0.2;
-    float noiseMax2 = 0.2;
+    float noiseMin2 = -0.001;
+    float noiseMax2 = 0.0;
     float offset2 = 0.0;
 
     WedgeAttribute offset1Wedge; 
     WedgeAttribute offset2Wedge; 
-    WedgeAttribute radiusWedge;
-    WedgeAttribute noiseMinWedge;
-    WedgeAttribute noiseMaxWedge;
-    noiseMinWedge.addKeyFrame(24, -1.0);
-    noiseMinWedge.addKeyFrame(32, -5.0);
-    noiseMinWedge.addKeyFrame(43, -5.0);
-    noiseMinWedge.addKeyFrame(45, 0.0);
-    noiseMaxWedge.addKeyFrame(24, 1.0);
-    noiseMaxWedge.addKeyFrame(32, 5.0);
-    noiseMaxWedge.addKeyFrame(43, 5.0);
-    noiseMaxWedge.addKeyFrame(45, 1.5);
+    WedgeAttribute radius;
 
-    radiusWedge.addKeyFrame(0, 0.6);
-    radiusWedge.addKeyFrame(24, 0.4);
-    radiusWedge.addKeyFrame(28, 0.3);
-    radiusWedge.addKeyFrame(32, 0.2);
-    radiusWedge.addKeyFrame(45, 0.2);
-    radiusWedge.addKeyFrame(50, 1.0);
-    radiusWedge.addKeyFrame(60, 1.4);
-    radiusWedge.addKeyFrame(65, 1.5);
-    radiusWedge.addKeyFrame(75, 1.6);
+    WedgeAttribute nMin1Wedge;
+    WedgeAttribute nMax1Wedge;
 
-    offset1Wedge.addKeyFrame(1, 0.00);
-    offset2Wedge.addKeyFrame(1, 0.00);
-    offset1Wedge.addKeyFrame(200, 8.0);
-    offset2Wedge.addKeyFrame(200, 8.0);
+    WedgeAttribute nMin2Wedge;
+    WedgeAttribute nMax2Wedge;
 
-    /*noiseMinWedge.addKeyFrame(20, -1.0);
-    noiseMaxWedge.addKeyFrame(20, 1.0);
-    noiseMinWedge.addKeyFrame(31, 0.99);
-    noiseMaxWedge.addKeyFrame(31, 1.01);
-    noiseMinWedge.addKeyFrame(50, 0.00);
-    noiseMaxWedge.addKeyFrame(50, 2.00);*/
+    WedgeAttribute freqWedge;
 
+    WedgeAttribute numDots;
+    WedgeAttribute clump;
+    clump.key(1, 0.3);
+    clump.key(120, 2.0);
+    numDots.key(48, 2000000);
+    /*numDots.key(72, 3000000);
+    numDots.key(108, 3000000);
+    numDots.key(115, 17000000);*/
+
+    nMin2Wedge.key(72, -0.3);
+    nMax2Wedge.key(72, 0.3);
+
+   /* nMin2Wedge.key(83, -0.1);
+    nMax2Wedge.key(83, 0.1);
+
+    nMin2Wedge.key(105, -0.1);
+    nMax2Wedge.key(105, 0.1);
+
+    nMin2Wedge.key(110, -0.2);
+    nMax2Wedge.key(110, 0.2);
+
+    nMin2Wedge.key(128, -0.6);
+    nMax2Wedge.key(128, 0.6);*/
+
+    freqWedge.key(75, 1.0);
+
+ 
+    /*nMin1Wedge.key(103, 1.0);
+    nMax1Wedge.key(103, 1.8);
+
+    nMin1Wedge.key(110, 0.8);
+    nMax1Wedge.key(110, 1.2);*/
+
+    radius.key(30, 1.0);
+    /*radius.key(48, 0.8);
+    radius.key(72, 0.25);
+    radius.key(76, 0.2);
+    radius.key(95, 0.2);
+    //radius.key(97, 0.5);
+    radius.key(101, 0.2);
+    radius.key(105, 0.2);
+    radius.key(110, 1.4);
+    radius.key(120, 1.8);
+    radius.key(125, 2.0);
+    radius.key(135, 2.1);*/
+
+    offset1Wedge.key(1, 0.00);
+    offset2Wedge.key(1, 0.00);
+
+/*    offset1Wedge.key(70, 1.5);
+    offset2Wedge.key(70, 1.5);
+
+    offset1Wedge.key(93, 1.8);
+    offset2Wedge.key(93, 1.8);
+
+    offset1Wedge.key(200, 3.0);
+    offset2Wedge.key(200, 3.0);*/
+
+    /*nMin1Wedge.key(20, -1.0);
+    nMax1Wedge.key(20, 1.0);
+    nMin1Wedge.key(31, 0.99);
+    nMax1Wedge.key(31, 1.01);
+    nMin1Wedge.key(50, 0.00);
+    nMax1Wedge.key(50, 2.00);*/
+    nMin1Wedge.key(72, 0.6);
+    nMax1Wedge.key(72, 1.4);
     for (int i = frameStart; i < frameEnd; i++){
 
         //Set up our filepath
@@ -402,9 +387,14 @@ int main(int argc, char **argv){
         RenderLog renderLog(filepath);
 
         //WEDGE----------------------------------------------
-        offset1 = offset1Wedge.getValueAtFrame(i);
-        offset2 = offset2Wedge.getValueAtFrame(i);
-        //radius = radiusWedge.getValueAtFrame(i);
+        offset1 = offset1Wedge.get(i);
+        offset2 = offset2Wedge.get(i);
+        noiseMin1 = nMin1Wedge.get(i);
+        noiseMax1 = nMax1Wedge.get(i);
+        freq1 = freqWedge.get(i);
+
+        noiseMin2 = nMin2Wedge.get(i);
+        noiseMax2 = nMax2Wedge.get(i);
         //WEDGE----------------------------------------------
 
         //-------------------------------------------------------------------------------------------------------------------------------------
@@ -418,11 +408,13 @@ int main(int argc, char **argv){
         auto constVol = std::make_shared<lux::ConstantVolume<float> > (0.0);
         //auto multVol = std::make_shared<lux::MultVolume<float> >(sphereVol, constVol);
 
+        boost::timer wispTimer;
         auto wispGrid = std::make_shared<lux::DensityGrid>(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
-        CreateWisp(lux::Vector(0, 0, 0), wispGrid, wispNoise1, wispNoise2);
+        wispGrid.get()->StampWisp(lux::Vector(0, 0, 0), wispNoise1, wispNoise2, clump.get(i), radius.get(i), numDots.get(i));
         auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
+        std::cout << "Wisp Build Time: " << wispTimer.elapsed() << "\n";
 
-        boost::timer dsmTimer;
+        //boost::timer dsmTimer;
         //lux::DeepShadowMap dsm1(l1, lightMarchStep, griddedWisp, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
         //lux::DeepShadowMap dsm2(l2, lightMarchStep, griddedWisp, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
         //lightGrids.push_back(dsm1);
@@ -431,24 +423,31 @@ int main(int argc, char **argv){
 
         volumes.push_back(griddedWisp);
 
+        boost::timer renderTimer;
         //mainCam.setEyeViewUp(lux::Vector(9.0 - ((float)i * 0.02), 0.0, 9.0 - ((float)i * 0.02)), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
         //-------------------------------------------------------------------------------------------------------------------------------------
         renderImage(mainCam, bb, renderLog);
+        std::cout << filepath << "\n";
+        std::cout << "Render Time: " << renderTimer.elapsed() << "\n";
 
         //Empty our volume vector for next iteration
         volumes.clear();
 
         //Annotate our image for the wedge
-        /*std::ostringstream ssAnno;
-        ssAnno << setfill(' ') << setw(10) << "Radius:" << setfill('.')  << setw(12) << radius << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Dots:" << setfill('.')  << setw(12)<< numDots << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Clump:" << setfill('.')  << setw(12)<< clump << "\n\n";
+        std::ostringstream ssAnno;
+        ssAnno << setfill(' ') << setw(10) << "Frame:" << setfill('.')  << setw(12) << i << "\n";
+        ssAnno << setfill(' ') << setw(10) << "Radius:" << setfill('.')  << setw(12) << radius.get(i) << "\n";
+        ssAnno << setfill(' ') << setw(10) << "Dots:" << setfill('.')  << setw(12)<< numDots.get(i) << "\n";
+        ssAnno << setfill(' ') << setw(10) << "Clump:" << setfill('.')  << setw(12)<< clump.get(i) << "\n";
+        ssAnno << setfill(' ') << setw(10) << "Emissive:" << setfill('.')  << setw(12)<< emissive << "\n";
+        ssAnno << setfill(' ') << setw(10) << "K:" << setfill('.')  << setw(12)<< K << "\n\n";
         ssAnno << "Noise1\n";
         ssAnno << setfill(' ') << setw(10) << "Octaves:" << setfill('.')  << setw(12)<< octave1 << "\n";
         ssAnno << setfill(' ') << setw(10) << "Rough:" << setfill('.')  << setw(12)<< rough1 << "\n";
         ssAnno << setfill(' ') << setw(10) << "Freq:" << setfill('.')  << setw(12)<< freq1 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "noiseMin:" << setfill('.')  << setw(12)<< noiseMin << "\n";
-        ssAnno << setfill(' ') << setw(10) << "noiseMax:" << setfill('.')  << setw(12)<< noiseMax << "\n\n";
+        ssAnno << setfill(' ') << setw(10) << "noiseMin:" << setfill('.')  << setw(12)<< noiseMin1 << "\n";
+        ssAnno << setfill(' ') << setw(10) << "noiseMax:" << setfill('.')  << setw(12)<< noiseMax1 << "\n";
+        ssAnno << setfill(' ') << setw(10) << "Offset:" << setfill('.')  << setw(12)<< offset1 << "\n\n";
         ssAnno << "Noise2\n";
         ssAnno << setfill(' ') << setw(10) << "Octaves:" << setfill('.')  << setw(12)<< octave2 << "\n";
         ssAnno << setfill(' ') << setw(10) << "Rough:" << setfill('.')  << setw(12)<< rough2 << "\n";
@@ -456,7 +455,8 @@ int main(int argc, char **argv){
         ssAnno << setfill(' ') << setw(10) << "fJump:" << setfill('.')  << setw(12)<< fjump2 << "\n";
         ssAnno << setfill(' ') << setw(10) << "noiseMin:" << setfill('.')  << setw(12)<< noiseMin2 << "\n";
         ssAnno << setfill(' ') << setw(10) << "noiseMax:" << setfill('.')  << setw(12)<< noiseMax2 << "\n";
-        std::cout << ssAnno.str();
+        ssAnno << setfill(' ') << setw(10) << "Offset:" << setfill('.')  << setw(12)<< offset2 << "\n\n";
+        //std::cout << ssAnno.str();
         Magick::Geometry textBox(200, 200);
         Magick::GravityType gravity(Magick::NorthWestGravity);
         Magick::Image image;
@@ -469,10 +469,9 @@ int main(int argc, char **argv){
         image.annotate(ssAnno.str(), gravity); 
         image.write(filepath + ".exr");
 
-        std::cout << filepath << "\n";*/
-        std::cout << filepath << " total: " << totalTimer.elapsed() << "\n";
     }
     //initLights();
+    std::cout <<"Total: " << totalTimer.elapsed() << "\n";
 
 
 

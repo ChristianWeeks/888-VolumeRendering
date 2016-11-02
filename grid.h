@@ -1,5 +1,6 @@
 #include "volume_operators.h"
 #include "light.h"
+#include <random>
 
 namespace lux {
 class FloatGrid{
@@ -29,6 +30,7 @@ class DensityGrid: public FloatGrid{
 
         //Bake a dot - Used for baking wisps
         int bakeDot(const Vector& p, const float density);
+        void StampWisp(const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots);
 
 };
 

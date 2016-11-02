@@ -1,6 +1,6 @@
 
 
-OFILES = Matrix.o OIIOFiles.o Camera.o boundingbox.o simplexnoise.o simplextextures.o grid.o Vector.o
+OFILES = Matrix.o OIIOFiles.o Camera.o boundingbox.o simplexnoise.o simplextextures.o grid.o Vector.o Color.o
 
 ROOTDIR = .
 LIB = $(ROOTDIR)/libVR.a 

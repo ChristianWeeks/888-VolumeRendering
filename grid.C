@@ -126,6 +126,41 @@ DensityGrid::DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, 
     }
 }
 
+//Wisp algorithm
+void DensityGrid::StampWisp(const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots){
+
+    std::random_device rnd;
+    std::mt19937 rng(rnd());
+    std::uniform_real_distribution<> udist(-radius, radius);
+
+    for(int i = 0; i < numDots; i++){
+
+        //Generate our random point within the bounding box of our sphere
+        float randX = udist(rng);
+        float randY = udist(rng);
+        float randZ =  udist(rng);
+
+        lux::Vector d(randX, randY, randZ);
+
+        //Displace our dot radially with first level of noise
+        float radialDisp = std::pow(std::abs(noise1.eval(d[0], d[1], d[2])), clump);
+        lux::Vector dSphere = d.unitvector();
+
+        dSphere *= radialDisp;
+
+        lux::Vector dot = P + dSphere * radius;
+
+        //Displace our dot radially with second level of noise
+        lux::Vector d2;
+        d2[0] = noise2.eval(dSphere[0], dSphere[1], dSphere[2]);
+        d2[1] = noise2.eval(dSphere[0] + 0.1, dSphere[1] + 0.1, dSphere[2] + 0.1);
+        d2[2] = noise2.eval(dSphere[0] - 0.1, dSphere[1] - 0.1, dSphere[2] - 0.1);
+
+        dot += d2;
+        bakeDot(dot, 1.0);
+    }
+}
+
 int DensityGrid::bakeDot(const Vector& P, const float density){
 
     int c[8];
@@ -145,8 +180,8 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     c[6] = c[4] + voxels;
     //(x, y, z)
     c[7] = c[6] + 1;
-    for(int i = 0; i < 8; i++){
 
+    for(int i = 0; i < 8; i++){
         if (c[i] > totalCells || c[i] < 0){
             std::cout << "BakeDot: Out of Bounds Index: " << c[i] << "; Position" << P << "\n";
             return 0;
