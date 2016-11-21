@@ -18,14 +18,13 @@
 
 class BoundingBox {
   public:
-    BoundingBox() { }
-    BoundingBox(const lux::Vector &min, const lux::Vector &max) {
-      assert(min[0] < max[0]);
-      assert(min[1] < max[1]);
-      assert(min[2] < max[2]);
-      bounds[0] = min;
-      bounds[1] = max;
-    }
+    BoundingBox();
+
+    BoundingBox(const lux::Vector &min, const lux::Vector &max);
+
+    ~BoundingBox();
+
+    void setBounds(const lux::Vector &min, const lux::Vector &max);
     // (t0, t1) is the interval for valid hits
     std::vector<float> intersect(const Ray &, float t0, float t1) const;
 

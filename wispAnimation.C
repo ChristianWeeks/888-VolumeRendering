@@ -1,25 +1,9 @@
-
-//#include "volume_operators.h"
-#include "grid.h"
-#include <Magick++.h>
-//#include "Image.h"
-#include "OIIOFiles.h"
-#include "boundingbox.h"
-#include "Camera.h"
-//#include "light.h"
-#include "renderlog.h"
+#include "SceneManager.h"
 #include "WedgeAttribute.h"
 
-#include "ColorSlider.h"
 #include <vector>
-#include <stdio.h>
-//#include <boost/shared_ptr.hpp>
+#include <stdlib.h>
 #include <boost/timer.hpp>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <memory>
-#include <random>
 
 const double PI  =3.141592653589793238463;
 //------------------------------------------------------------------------------
@@ -34,183 +18,37 @@ const double marchStep = 0.008;
 const double lightMarchStep = 0.12;
 
 const int frameStart = 0;
-const int frameEnd =  190;
+const int frameEnd =  1;
 
 //BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
 const float bbSize = 3.5;
 const float gridSize = 2 * bbSize;
-const float lightGridVoxelCount = 200;
+const float DSMVoxelCount = 200;
 const float gridVoxelCount = 1000;
 //Width and Height may change based on input
 int w = 480;
 int h = 270;
 Camera mainCam;
 
-
 lux::ColorSlider cSlider;
-
-std::vector<lux::light> lights;
-std::vector<std::shared_ptr<lux::DeepShadowMap> > lightGrids;
-
-std::vector<std::shared_ptr<lux::Volume<float> > > volumes;
-std::vector<std::shared_ptr<lux::Volume<lux::Color> > > colorVolumes;
-//------------------------------------------------------------------------------
-
-double rayMarchLightScatter(lux::Vector x, lux::light l, lux::Volume<float> *vol){
-
-    double marchLen = 0.0;
-    lux::Vector toLight(l.pos - x);
-    double dist = toLight.magnitude();
-    toLight.normalize();
-    double T = 1.0;
-    lux::Vector x1(x);
-
-    while (marchLen < dist){
-
-        double density = vol->eval(x1);
-        if(density > 0.0){
-
-            T *= exp(-density * marchStep * K);
-        }
-        x1 += marchStep * toLight;
-        marchLen += lightMarchStep;
-
-    }
-    return T;
-}
-
-double rayMarchDSM(const lux::Vector& x, const std::shared_ptr<lux::DeepShadowMap > dsm){
-    return exp(-K * dsm.get()->trilinearInterpolate(x));
-}
-
-lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
-
-    //extinction coefficient
-    double totalMarchLength = end - start;
-
-    double marchLen = 0.0;
-    double T = 1.0;
-    lux::Color C {0.0, 0.0, 0.0, 0.0};
-    lux::Color fieldColor;
-
-    lux::Vector x = cam.eye() + n*start;
-    lux::Color color(0.5, 1.0, 0.0, 1.0);
-    while (marchLen < totalMarchLength){
-        //Check each volume
-        for(int j = 0; j < volumes.size(); j++){
-            double density = volumes[j].get()->eval(x);
-            if (density > 0.0){
-
-                //step 1
-                double deltaT = exp(-density * marchStep * K);
-                double tVal = T * (1 - deltaT);
-
-                //March to each light
-                for (int i = 0; i < lightGrids.size(); i++){
-                    //double lightTransmissivity = rayMarchLightScatter(x, lights[i], volumes[j].get());
-                    double lightTransmissivity = rayMarchDSM(x, lightGrids[i]);
-                    C += lights[i].c * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
-                }
-                T *= deltaT;
-
-                if (emissive) {
-                    //Boosting the emission of the peaks in our noise function- this makes the star clusters appear brighter
-                    color = cSlider.getColor(density);
-                    color *= density;
-                    //std::cout << color << "Density: " << density << "\n";
-                    //The field color's contribution will be scaled by the density, so sparse areas don't become super bright
-                    //fieldColor = colorVolumes[0].get()->eval(x) * 0.2;
-                    //color += colorClamp(fieldColor);
-                    C += color * tVal * emissive;
-                }
-            }
-        }
-
-        //step 4
-        x += n * marchStep;
-        marchLen += marchStep;
-    }
-
-    return C;
-}
-
-void renderImage(Camera cam, BoundingBox bb, RenderLog renderLog){
-    lux::Image img;
-    img.reset(w, h, 4);
-    std::vector<float> black = {0.5, 0.5, 0.5, 0.0};
-    //Fire a ray from eye through every pixel
-    int progressMod = w / 10;
-    for(int i = 0; i < w; i++){
-        for(int j = 0; j < h; j++){
-           // std::cout << "3\n";
-            double normalizedPixelCoordX = (double)i / (double)w;
-            double normalizedPixelCoordY = (double)j / (double)h;
-            lux::Vector r = cam.view(normalizedPixelCoordX, normalizedPixelCoordY);
-            Ray ray(cam.eye(), r);
-            std::vector<float> intersects = bb.intersect(ray, 0, 50);
-            if(intersects[0] != -1.0){
-                lux::Color C = rayMarch(cam, r, intersects[0], intersects[1]);
-                std::vector<float> colorVector= {static_cast<float>(C[0]), static_cast<float>(C[1]), static_cast<float>(C[2]), static_cast<float>(C[3])};
-                img.setPixel( i, j, colorVector);
-            }
-            else{
-                img.setPixel(i, j, black);
-            }
-        }
-
-        //Print our progress to make sure we aren't frozen
-        if (i % progressMod == 0){
-            std::cout << (i*100/w) << "%\n";
-        }
-    }
-
-
-    //Write our image
-    std::ostringstream ss;
-    //ss << setfill(' ') << setw(20) << "Eye:" << setfill('-')  << setw(30) << mainCam.eye() << "\n";
-    //ss << setfill(' ') << setw(20) << "View:" << setfill('-')  << setw(30) << mainCam.view() << "\n";
-    /*ss << setfill(' ') << setw(20) << "W:" << setfill('-')  << setw(30) << w << "\n";
-    ss << setfill(' ') << setw(20) << "H:" << setfill('-')  << setw(30)<< h << "\n";
-    ss << setfill(' ') << setw(20) << "March Step:" << setfill('-')  << setw(30)<< marchStep << "\n";
-    ss << setfill(' ') << setw(20) << "Light March Step:" << setfill('-')  << setw(30)<< marchStep << "\n";
-    ss << setfill(' ') << setw(20) << "Bounding Box Size:" << setfill('-')  << setw(30)<< bbSize << "\n";
-    ss << setfill(' ') << setw(20) << "TotalTime:" << setfill('-')  << setw(30)<< elapsedTime << "\n\n";
-    ss << setfill(' ') << setw(20) << "Octaves:" << setfill('-')  << setw(30) << octaves << "\n";
-    ss << setfill(' ') << setw(20) << "Roughness:" << setfill('-')  << setw(30) << roughness << "\n";
-    ss << setfill(' ') << setw(20) << "Frequency:" << setfill('-')  << setw(30) << frequency << "\n";
-    ss << setfill(' ') << setw(20) << "fJump:" << setfill('-')  << setw(30) << fjump << "\n";
-    ss << setfill(' ') << setw(20) << "Noise Minumum:" << setfill('-')  << setw(30) << noiseMin << "\n";
-    ss << setfill(' ') << setw(20) << "Noise Maximum:" << setfill('-')  << setw(30) << noiseMax << "\n";
-    renderLog.addLine(ss.str());
-    renderLog.writeToFile();*/
-
-    std::string filepath = renderLog.getFilepath();
-    filepath += ".exr";
-    lux::writeOIIOImage(filepath.c_str(), img, 1.0, 1.0);
-    //std::cout << renderLog.getBody();
-}
 
 int main(int argc, char **argv){
 
     boost::timer totalTimer;
+    lux::SceneManager scene(argv[1]);
     if (argc >= 3){
-        if (strcmp(argv[2], "1080") == 0){
-            w = 1920;
-            h = 1080;
-        }
-        else if (strcmp(argv[2], "720") == 0){
-            w = 1280;
-            h = 720;
-        }
-        else if (strcmp(argv[2], "540") == 0){
-            w = 960;
-            h = 540;
-        }
+        scene.setResolution(atoi(argv[2]));
     }
 
-    //Init Camera, Bounding box
-    mainCam.setEyeViewUp(lux::Vector(6.0, 0.0, 6.0), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
-    BoundingBox bb(lux::Vector(-bbSize, -bbSize, -bbSize), lux::Vector(bbSize, bbSize, bbSize));
+    scene.K = K;
+    scene.emissive = emissive;
+    scene.marchStep = marchStep;
+    scene.lightMarchStep = lightMarchStep;
+    scene.bbSize = bbSize;
+    scene.gridSize = gridSize;
+    scene.DSMVoxelCount = DSMVoxelCount;
+    scene.gridVoxelCount = gridVoxelCount;
+
 
     //lux::light l1(lux::light(lux::Color(0.4, 0.80, 1.0, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-2.0, 5.0, 4.0), 1.0));
     //lux::light l1(lux::Color(0.7, 0.9, 0.1, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-3.0, 4.0, 0.0), 1.0);
@@ -227,7 +65,7 @@ int main(int argc, char **argv){
 
     SimplexNoiseObject colorNoise(color_octaves, color_roughness, color_frequency, color_fjump, color_noiseMin, color_noiseMax, 0);
     auto colorVolume = std::make_shared<lux::SimplexNoiseColorVolume> (colorNoise, 0.0, 10.0, 20.0);
-    colorVolumes.push_back(colorVolume);
+    scene.colorVolumes.push_back(colorVolume);
 
     /*lux::Color c_black(0.0, 0.0, 0.0, 0.0);    //at weight 0.0
     lux::Color c_red(0.8, 0.1, 0.0, 0.0);    //at weight 0.0
@@ -245,11 +83,11 @@ int main(int argc, char **argv){
     lux::Color c_orange(0.0, 1.0, 0.5, 0.0);     //at weight 0.5
     lux::Color c_yellow(0.1, 1.0, 0.8, 0.0);    //at weight 0.85
     lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0*/
-    cSlider.addColor(0.0, c_black);
-    cSlider.addColor(4.0, c_red);
-    cSlider.addColor(20.0, c_orange);
-    cSlider.addColor(30.0, c_yellow);
-    cSlider.addColor(40.0, c_white);
+    scene.cSlider.addColor(0.0, c_black);
+    scene.cSlider.addColor(4.0, c_red);
+    scene.cSlider.addColor(20.0, c_orange);
+    scene.cSlider.addColor(30.0, c_yellow);
+    scene.cSlider.addColor(40.0, c_white);
 
     /*lux::Color c_deepBlue(0.1, 0.05, 1.0, 0.0);    //at weight 0.0
     lux::Color c_purp(0.95, 0.05, 0.8, 0.0);    //at weight 0.0
@@ -257,10 +95,7 @@ int main(int argc, char **argv){
     lux::Color c_yellow(0.95, 1.0, 0.1, 0.0);    //at weight 0.85
     lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0
 
-    lux::Color c_deepGreen(0.4, 1.0, 0.4, 0.0); //at weight 1.0
-    cSlider.addColor(10.0, c_deepGreen);
-    cSlider.addColor(20.0, c_white);*/
-    //cSlider.addColor(80.0, c_white);
+    lux::Color c_deepGreen(0.4, 1.0, 0.4, 0.0); //at weight 1.0*/
 
     //Set up our wedge values
     int octave1 = 3;
@@ -294,7 +129,7 @@ int main(int argc, char **argv){
     WedgeAttribute numDots;
     WedgeAttribute clump;
     clump.key(1, 0.2);
-    //clump.key(120, 2.0);
+
     numDots.key(48, 6000000);
     numDots.key(72, 3000000);
     numDots.key(108, 3000000);
@@ -360,21 +195,6 @@ int main(int argc, char **argv){
     for (int i = frameStart; i < frameEnd; i+=10){
 
         //Set up our filepath
-        std::ostringstream ss;
-        ss << setfill('0') << setw(4) << i;
-        std::string numPadding = ss.str();
-        std::string filepath("output/");
-        if (argc >= 2){
-            filepath += std::string(argv[1]);
-        }
-        else{
-            filepath += std::string("lastOutput");
-        }
-        if (frameEnd - frameStart > 1){
-            filepath += ".";
-            filepath += numPadding;
-        }
-        RenderLog renderLog(filepath);
 
         //WEDGE----------------------------------------------
         offset1 = offset1Wedge.get(i);
@@ -394,9 +214,6 @@ int main(int argc, char **argv){
         SimplexNoiseObject wispNoise2(octave2, rough2, freq2, fjump2, noiseMin2, noiseMax2, offset2);
 
         //Set up our volume
-        //auto sphereVol = std::make_shared<lux::SphereVolume<float> >(2.0);
-        auto constVol = std::make_shared<lux::ConstantVolume<float> > (0.0);
-        //auto multVol = std::make_shared<lux::MultVolume<float> >(sphereVol, constVol);
 
         boost::timer wispTimer;
         auto wispGrid = std::make_shared<lux::DensityGrid>(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
@@ -411,22 +228,19 @@ int main(int argc, char **argv){
         //lightGrids.push_back(dsm2);
         //std::cout << "DSM Construction Time: " << dsmTimer.elapsed() << "\n";
 
-        volumes.push_back(griddedWisp);
+        scene.volumes.push_back(griddedWisp);
 
-        //boost::timer renderTimer;
-        //mainCam.setEyeViewUp(lux::Vector(9.0 - ((float)i * 0.02), 0.0, 9.0 - ((float)i * 0.02)), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
         //-------------------------------------------------------------------------------------------------------------------------------------
         boost::timer t;
-        renderImage(mainCam, bb, renderLog);
+        scene.renderImage(i);
         float elapsedTime = t.elapsed();
         std::cout << "Render Time: " << elapsedTime << "\n";
-        //std::cout << "Render Time: " << renderTimer.elapsed() << "\n";
 
         //Empty our volume vector for next iteration
-        volumes.clear();
+        scene.volumes.clear();
 
         //Annotate our image for the wedge
-        std::ostringstream ssAnno;
+        /*std::ostringstream ssAnno;
         ssAnno << setfill(' ') << setw(10) << "Frame:" << setfill('.')  << setw(12) << i << "\n";
         ssAnno << setfill(' ') << setw(10) << "March Step:" << setfill('.')  << setw(12) << marchStep << "\n";
         ssAnno << setfill(' ') << setw(10) << "Render Time:" << setfill('.')  << setw(12) << elapsedTime << "\n";
@@ -461,13 +275,11 @@ int main(int argc, char **argv){
         image.fontPointsize(12);
         image.font("courier");
         image.annotate(ssAnno.str(), gravity);
-        image.write(filepath + ".exr");
+        image.write(filepath + ".exr");*/
 
     }
     //initLights();
     std::cout <<"Total: " << totalTimer.elapsed() << "\n";
-
-
 
     return 0;
 }

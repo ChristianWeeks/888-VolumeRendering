@@ -7,6 +7,9 @@ class RenderLog {
         RenderLog(std::string fp) : filepath(fp){};
         ~RenderLog(){};
         void addLine(const std::string& s){ body += s + "\n";};
+        /*void setFilepath(std::string fp){
+            filepath = fp;
+        }*/
 
         //Write our log to file
         void writeToFile(){

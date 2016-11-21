@@ -33,7 +33,7 @@ class ColorSlider {
 
         };
 
-        Color getColor(float position){
+        Color getColor(float position) {
             std::vector<float>::iterator fit;
             std::vector<double>::iterator cit;
             fit = anchors.begin();
@@ -66,7 +66,7 @@ class ColorSlider {
         std::vector<float> anchors;
         std::vector<double> colors;
 
-        const Color interpolate(float start, float end, float pos, Color c1, Color c2) {
+        Color interpolate(float start, float end, float pos, Color c1, Color c2) {
             float len = end - start;
             pos = (pos - start) / len;
             return c1*(1-pos) + c2*pos;

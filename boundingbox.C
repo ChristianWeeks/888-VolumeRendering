@@ -11,6 +11,21 @@
  *
  */
 
+BoundingBox::BoundingBox(){}
+
+BoundingBox::~BoundingBox(){}
+
+BoundingBox::BoundingBox(const lux::Vector &min, const lux::Vector &max) {
+    setBounds(min, max);
+}
+
+void BoundingBox::setBounds(const lux::Vector &min, const lux::Vector &max) {
+    assert(min[0] < max[0]);
+    assert(min[1] < max[1]);
+    assert(min[2] < max[2]);
+    bounds[0] = min;
+    bounds[1] = max;
+}
 std::vector<float> BoundingBox::intersect(const Ray &r, float t0, float t1) const {
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
   std::vector<float> noIntersect = {-1.0};
