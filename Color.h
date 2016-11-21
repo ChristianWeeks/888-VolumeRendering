@@ -48,6 +48,12 @@ class Color
       xyzw[3] = vw;
    }
 
+   void clamp(){
+        for (int i = 0; i < 4; i++){
+            if (xyzw[i] < 0) xyzw[i] = 0;
+            if (xyzw[i] < 0) xyzw[i] = 0;
+        }
+    }
    //! Add two colors together
    const Color operator+        (const Color& v) const
    {

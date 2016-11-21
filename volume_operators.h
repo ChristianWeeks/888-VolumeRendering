@@ -73,6 +73,51 @@ class Mult_SV_Volume: public Volume<Vector>{
         std::shared_ptr<Volume<Vector> > b;
 };
 
+class Advect_SL_Volume: public Volume<float>{
+    public:
+        Advect_SL_Volume(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<Vector> > g) :
+            a(f),
+            b(g){};
+
+        Advect_SL_Volume( std::shared_ptr<Volume<Vector> > g, std::shared_ptr<Volume<float> > f) :
+            a(f),
+            b(g){};
+        Advect_SL_Volume(){};
+
+        const typename Volume<float>::volumeDataType eval( const Vector& P, const double t) const{ return a.get()->eval(P - b.get()->eval(P) * t);};
+        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+
+    private:
+        std::shared_ptr<Volume<float> > a;
+        std::shared_ptr<Volume<Vector> > b;
+};
+
+class Advect_MMC_Volume: public Volume<float>{
+    public:
+        Advect_MMC_Volume(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<Vector> > g, const float newTime) :
+            a(f),
+            b(g),
+            t(newTime){};
+
+        Advect_MMC_Volume( std::shared_ptr<Volume<Vector> > g, std::shared_ptr<Volume<float> > f, const float newTime) :
+            a(f),
+            b(g),
+            t(newTime){};
+        ~Advect_MMC_Volume(){};
+        void setTime(const float newTime){ t = newTime;};
+
+        const typename Volume<float>::volumeDataType eval( const Vector& P) const{
+            float semiLagrangian = a.get()->eval(P - b.get()->eval(P) * t);
+            float errorTerm = a.get()->eval(P) - semiLagrangian; 
+            return semiLagrangian - errorTerm * 0.5;};
+        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+
+    private:
+        float t;
+        std::shared_ptr<Volume<float> > a;
+        std::shared_ptr<Volume<Vector> > b;
+};
+
 
 //TODO: Matrix and Vector Multiplication
 /*class Mult_VM_Volume: public Volume<Vector>{

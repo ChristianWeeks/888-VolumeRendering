@@ -12,12 +12,12 @@ class FloatGrid{
     protected:
 
         std::shared_ptr<Volume<float> > field;
-        std::unique_ptr<float[]> values;
         const Vector origin;
         const double size;
         const int voxels;
         const float voxelLength;
         const int totalCells;
+        std::unique_ptr<float[]> values;
 
         const int positionToIndex(const Vector& p) const;
         const Vector indexToPosition(const int i) const;
@@ -28,9 +28,9 @@ class DensityGrid: public FloatGrid{
         DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
         ~DensityGrid(){};
 
+        void StampWisp(const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots);
         //Bake a dot - Used for baking wisps
         int bakeDot(const Vector& p, const float density);
-        void StampWisp(const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots);
 
 };
 

@@ -26,15 +26,15 @@ const double PI  =3.141592653589793238463;
 //GLOBAL SCENE SETTINGS
 //------------------------------------------------------------------------------
 //Light scatter / attentuation coefficient
-const double K = 6.0;
-double emissive = 0.0;
+const double K = 1.0;
+double emissive = 0.05;
 
 //Discrete step for our marching.  Delta S in our equations
-const double marchStep = 0.04;
+const double marchStep = 0.008;
 const double lightMarchStep = 0.12;
 
-const int frameStart = 1; 
-const int frameEnd =  20; 
+const int frameStart = 0;
+const int frameEnd =  190;
 
 //BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
 const float bbSize = 3.5;
@@ -100,7 +100,7 @@ lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
         for(int j = 0; j < volumes.size(); j++){
             double density = volumes[j].get()->eval(x);
             if (density > 0.0){
-                
+
                 //step 1
                 double deltaT = exp(-density * marchStep * K);
                 double tVal = T * (1 - deltaT);
@@ -114,8 +114,8 @@ lux::Color rayMarch(Camera cam, lux::Vector n, float start, float end){
                 T *= deltaT;
 
                 if (emissive) {
-                    //Boosting the emission of the peaks in our noise function- this makes the star clusters appear brighter 
-                    //color = cSlider.getColor(density);
+                    //Boosting the emission of the peaks in our noise function- this makes the star clusters appear brighter
+                    color = cSlider.getColor(density);
                     color *= density;
                     //std::cout << color << "Density: " << density << "\n";
                     //The field color's contribution will be scaled by the density, so sparse areas don't become super bright
@@ -138,7 +138,6 @@ void renderImage(Camera cam, BoundingBox bb, RenderLog renderLog){
     lux::Image img;
     img.reset(w, h, 4);
     std::vector<float> black = {0.5, 0.5, 0.5, 0.0};
-    boost::timer t;
     //Fire a ray from eye through every pixel
     int progressMod = w / 10;
     for(int i = 0; i < w; i++){
@@ -165,8 +164,6 @@ void renderImage(Camera cam, BoundingBox bb, RenderLog renderLog){
         }
     }
 
-    float elapsedTime = t.elapsed();
-    std::cout << "Render Time: " << elapsedTime << "\n";
 
     //Write our image
     std::ostringstream ss;
@@ -212,32 +209,63 @@ int main(int argc, char **argv){
     }
 
     //Init Camera, Bounding box
-    mainCam.setEyeViewUp(lux::Vector(0.0, 0.0, 6.0), lux::Vector(0,0,-1), lux::Vector(0,1,0));
+    mainCam.setEyeViewUp(lux::Vector(6.0, 0.0, 6.0), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
     BoundingBox bb(lux::Vector(-bbSize, -bbSize, -bbSize), lux::Vector(bbSize, bbSize, bbSize));
 
     //lux::light l1(lux::light(lux::Color(0.4, 0.80, 1.0, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-2.0, 5.0, 4.0), 1.0));
-    lux::light l1(lux::Color(0.7, 0.9, 0.1, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-3.0, 4.0, 0.0), 1.0);
-    lux::light l2(lux::Color(0.95, 0.4, 0.4, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(3.0, 4.0, 0.0), 1.0);
-    lights.push_back(l1);
-    lights.push_back(l2);
+    //lux::light l1(lux::Color(0.7, 0.9, 0.1, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-3.0, 4.0, 0.0), 1.0);
+    //lux::light l2(lux::Color(0.95, 0.4, 0.4, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(3.0, 4.0, 0.0), 1.0);
+    //lights.push_back(l1);
+    //lights.push_back(l2);
 
-    int color_octaves = 5;
+    int color_octaves = 1;
     float color_roughness = 0.7;
-    float color_frequency = 1.5;
+    float color_frequency = 0.15;
     float color_fjump = 2.2;
-    float color_noiseMin = -0.3; 
-    float color_noiseMax = 0.3;
+    float color_noiseMin = -0.4;
+    float color_noiseMax = 0.7;
 
     SimplexNoiseObject colorNoise(color_octaves, color_roughness, color_frequency, color_fjump, color_noiseMin, color_noiseMax, 0);
-    auto colorVol = std::make_shared<lux::SimplexNoiseColorVolume> (colorNoise, 0.0, 10.0, 20.0);
-    auto vectorVol = std::make_shared<lux::SimplexNoiseVectorVolume> (colorNoise, 0.0, 10.0, 20.0);
-    colorVolumes.push_back(colorVol);
+    auto colorVolume = std::make_shared<lux::SimplexNoiseColorVolume> (colorNoise, 0.0, 10.0, 20.0);
+    colorVolumes.push_back(colorVolume);
 
+    /*lux::Color c_black(0.0, 0.0, 0.0, 0.0);    //at weight 0.0
+    lux::Color c_red(0.8, 0.1, 0.0, 0.0);    //at weight 0.0
+    lux::Color c_orange(1.0, 0.5, 0.1, 0.0);     //at weight 0.5
+    lux::Color c_yellow(1.0, 1.0, 0.1, 0.0);    //at weight 0.85
+    lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0*/
+    lux::Color c_black(0.0, 0.0, 0.0, 0.0);    //at weight 0.0
+    lux::Color c_red(0.05, 0.3, 0.9, 0.0);    //at weight 0.0
+    lux::Color c_orange(0.0, 0.5, 1.0, 0.0);     //at weight 0.5
+    lux::Color c_yellow(0.1, 1.0, 1.0, 0.0);    //at weight 0.85
+    lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0
+
+    /*lux::Color c_black(0.0, 0.0, 0.0, 0.0);    //at weight 0.0
+    lux::Color c_red(0.05, 0.9, 0.3, 0.0);    //at weight 0.0
+    lux::Color c_orange(0.0, 1.0, 0.5, 0.0);     //at weight 0.5
+    lux::Color c_yellow(0.1, 1.0, 0.8, 0.0);    //at weight 0.85
+    lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0*/
+    cSlider.addColor(0.0, c_black);
+    cSlider.addColor(4.0, c_red);
+    cSlider.addColor(20.0, c_orange);
+    cSlider.addColor(30.0, c_yellow);
+    cSlider.addColor(40.0, c_white);
+
+    /*lux::Color c_deepBlue(0.1, 0.05, 1.0, 0.0);    //at weight 0.0
+    lux::Color c_purp(0.95, 0.05, 0.8, 0.0);    //at weight 0.0
+    lux::Color c_orange(1.0, 0.5, 0.1, 0.0);     //at weight 0.5
+    lux::Color c_yellow(0.95, 1.0, 0.1, 0.0);    //at weight 0.85
+    lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0
+
+    lux::Color c_deepGreen(0.4, 1.0, 0.4, 0.0); //at weight 1.0
+    cSlider.addColor(10.0, c_deepGreen);
+    cSlider.addColor(20.0, c_white);*/
+    //cSlider.addColor(80.0, c_white);
 
     //Set up our wedge values
-    int octave1 = 4;
+    int octave1 = 3;
     float rough1 = 0.5;
-    float freq1 = 3;
+    float freq1 = 0.3;
     float fjump1 = 2.2;
     float noiseMin1 = 0.6;
     float noiseMax1 = 1.6;
@@ -245,17 +273,91 @@ int main(int argc, char **argv){
 
     int octave2 = 5;
     float rough2 = 0.5;
-    float freq2 = 1.2;
+    float freq2 = 0.5;
     float fjump2 = 2.2;
     float noiseMin2 = -0.001;
     float noiseMax2 = 0.0;
     float offset2 = 0.0;
 
-    WedgeAttribute advectTime;
-    advectTime.key(0, 0.0);
-    advectTime.key(20, 3.0);
+    WedgeAttribute offset1Wedge;
+    WedgeAttribute offset2Wedge;
+    WedgeAttribute radius;
 
-    for (int i = frameStart; i < frameEnd; i++){
+    WedgeAttribute nMin1Wedge;
+    WedgeAttribute nMax1Wedge;
+
+    WedgeAttribute nMin2Wedge;
+    WedgeAttribute nMax2Wedge;
+
+    WedgeAttribute freqWedge;
+
+    WedgeAttribute numDots;
+    WedgeAttribute clump;
+    clump.key(1, 0.2);
+    //clump.key(120, 2.0);
+    numDots.key(48, 6000000);
+    numDots.key(72, 3000000);
+    numDots.key(108, 3000000);
+    numDots.key(115, 17000000);
+
+    nMin2Wedge.key(72, -0.3);
+    nMax2Wedge.key(72, 0.3);
+
+    nMin2Wedge.key(83, -0.1);
+    nMax2Wedge.key(83, 0.1);
+
+    nMin2Wedge.key(105, -0.1);
+    nMax2Wedge.key(105, 0.1);
+
+    nMin2Wedge.key(110, -0.2);
+    nMax2Wedge.key(110, 0.2);
+
+    nMin2Wedge.key(128, -0.6);
+    nMax2Wedge.key(128, 0.6);
+
+    freqWedge.key(75, 1.0);
+
+
+    nMin1Wedge.key(103, 1.0);
+    nMax1Wedge.key(103, 1.8);
+
+    nMin1Wedge.key(110, 0.8);
+    nMax1Wedge.key(110, 1.2);
+
+    radius.key(30, 1.0);
+    radius.key(48, 0.8);
+    radius.key(72, 0.25);
+    radius.key(76, 0.2);
+    radius.key(95, 0.2);
+    //radius.key(97, 0.5);
+    radius.key(101, 0.2);
+    radius.key(105, 0.2);
+    radius.key(110, 1.4);
+    radius.key(120, 1.8);
+    radius.key(125, 2.0);
+    radius.key(135, 2.1);
+
+    offset1Wedge.key(1, 0.00);
+    offset2Wedge.key(1, 0.00);
+
+    offset1Wedge.key(70, 1.5);
+    offset2Wedge.key(70, 1.5);
+
+    offset1Wedge.key(93, 1.8);
+    offset2Wedge.key(93, 1.8);
+
+    offset1Wedge.key(200, 2.3);
+    offset2Wedge.key(200, 2.3);
+
+    nMin1Wedge.key(20, -1.0);
+    nMax1Wedge.key(20, 1.0);
+    nMin1Wedge.key(31, 0.99);
+    nMax1Wedge.key(31, 1.01);
+    nMin1Wedge.key(50, 0.00);
+    nMax1Wedge.key(50, 2.00);
+    nMin1Wedge.key(72, 0.6);
+    nMax1Wedge.key(72, 1.4);
+    for (int i = frameStart; i < frameEnd; i+=10){
 
         //Set up our filepath
         std::ostringstream ss;
@@ -275,39 +377,59 @@ int main(int argc, char **argv){
         RenderLog renderLog(filepath);
 
         //WEDGE----------------------------------------------
+        offset1 = offset1Wedge.get(i);
+        offset2 = offset2Wedge.get(i);
+        noiseMin1 = nMin1Wedge.get(i);
+        noiseMax1 = nMax1Wedge.get(i);
+        freq1 = freqWedge.get(i);
+
+        noiseMin2 = nMin2Wedge.get(i);
+        noiseMax2 = nMax2Wedge.get(i);
         //WEDGE----------------------------------------------
 
         //-------------------------------------------------------------------------------------------------------------------------------------
         // SET UP OUR NOISE OBJECT, VOLUMES, GRIDS, AND SHADOW MAPS HERE
         //-------------------------------------------------------------------------------------------------------------------------------------
+        SimplexNoiseObject wispNoise1(octave1, rough1, freq1, fjump1, noiseMin1, noiseMax1, offset1);
+        SimplexNoiseObject wispNoise2(octave2, rough2, freq2, fjump2, noiseMin2, noiseMax2, offset2);
 
         //Set up our volume
-        auto sphereVol = std::make_shared<lux::SphereVolume<float> >(1.0);
-        auto advectVol = std::make_shared<lux::Advect_MMC_Volume>(sphereVol, vectorVol, advectTime.get(i));
+        //auto sphereVol = std::make_shared<lux::SphereVolume<float> >(2.0);
+        auto constVol = std::make_shared<lux::ConstantVolume<float> > (0.0);
+        //auto multVol = std::make_shared<lux::MultVolume<float> >(sphereVol, constVol);
 
-        boost::timer dsmTimer;
-        auto dsm1 = std::make_shared<lux::DeepShadowMap>(l1, lightMarchStep, advectVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
-        auto dsm2 = std::make_shared<lux::DeepShadowMap>(l2, lightMarchStep, advectVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
-        lightGrids.push_back(dsm1);
-        lightGrids.push_back(dsm2);
-        std::cout << "DSM Construction Time: " << dsmTimer.elapsed() << "\n";
+        boost::timer wispTimer;
+        auto wispGrid = std::make_shared<lux::DensityGrid>(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
+        wispGrid.get()->StampWisp(lux::Vector(0, 0, 0), wispNoise1, wispNoise2, clump.get(i), radius.get(i), numDots.get(i));
+        auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
+        std::cout << "Wisp Build Time: " << wispTimer.elapsed() << "\n";
 
-        volumes.push_back(advectVol);
+        //boost::timer dsmTimer;
+        //lux::DeepShadowMap dsm1(l1, lightMarchStep, griddedWisp, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
+        //lux::DeepShadowMap dsm2(l2, lightMarchStep, griddedWisp, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
+        //lightGrids.push_back(dsm1);
+        //lightGrids.push_back(dsm2);
+        //std::cout << "DSM Construction Time: " << dsmTimer.elapsed() << "\n";
+
+        volumes.push_back(griddedWisp);
 
         //boost::timer renderTimer;
         //mainCam.setEyeViewUp(lux::Vector(9.0 - ((float)i * 0.02), 0.0, 9.0 - ((float)i * 0.02)), lux::Vector(-1,0,-1), lux::Vector(0,1,0));
         //-------------------------------------------------------------------------------------------------------------------------------------
+        boost::timer t;
         renderImage(mainCam, bb, renderLog);
-        std::cout << filepath << "\n";
+        float elapsedTime = t.elapsed();
+        std::cout << "Render Time: " << elapsedTime << "\n";
         //std::cout << "Render Time: " << renderTimer.elapsed() << "\n";
 
         //Empty our volume vector for next iteration
         volumes.clear();
-        lightGrids.clear();
 
         //Annotate our image for the wedge
-        /*std::ostringstream ssAnno;
+        std::ostringstream ssAnno;
         ssAnno << setfill(' ') << setw(10) << "Frame:" << setfill('.')  << setw(12) << i << "\n";
+        ssAnno << setfill(' ') << setw(10) << "March Step:" << setfill('.')  << setw(12) << marchStep << "\n";
+        ssAnno << setfill(' ') << setw(10) << "Render Time:" << setfill('.')  << setw(12) << elapsedTime << "\n";
         ssAnno << setfill(' ') << setw(10) << "Radius:" << setfill('.')  << setw(12) << radius.get(i) << "\n";
         ssAnno << setfill(' ') << setw(10) << "Dots:" << setfill('.')  << setw(12)<< numDots.get(i) << "\n";
         ssAnno << setfill(' ') << setw(10) << "Clump:" << setfill('.')  << setw(12)<< clump.get(i) << "\n";
@@ -338,8 +460,8 @@ int main(int argc, char **argv){
         image.read(filepath + ".exr");
         image.fontPointsize(12);
         image.font("courier");
-        image.annotate(ssAnno.str(), gravity); 
-        image.write(filepath + ".exr");*/
+        image.annotate(ssAnno.str(), gravity);
+        image.write(filepath + ".exr");
 
     }
     //initLights();

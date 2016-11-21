@@ -33,6 +33,9 @@ simplex:  SimplexTest.cpp $(LIB)
 img:  imageTest.C $(LIB)
 	$(CXX) $(INCLUDES) imageTest.C -o img $(LIB) $(LINKS)
 
+wisp:  wispAnimation.C $(LIB)
+	$(CXX) $(INCLUDES) wispAnimation.C -o img $(LIB) $(LINKS)
+
 genswig:	swig/Volume.i $(OFILES)
 	$(SWIGEXEC) -c++ -python -shadow swig/Volume.i
 

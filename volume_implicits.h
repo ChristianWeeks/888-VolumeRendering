@@ -133,6 +133,29 @@ class SimplexNoiseVolume : public Volume<float>{
 
     private:
        SimplexNoiseObject simplex;
+};
+
+class SimplexNoiseVectorVolume : public Volume<Vector>{
+    public:
+        SimplexNoiseVectorVolume(SimplexNoiseObject s, float xO, float yO, float zO) : 
+            simplex(s),
+            xOffset(xO),
+            yOffset(yO),
+            zOffset(zO){};
+        ~SimplexNoiseVectorVolume(){};
+
+       const typename Volume<Vector>::volumeDataType eval( const Vector& P ) const {
+           Vector v;
+           v[0] = simplex.eval(P[0] + xOffset, P[1] + xOffset, P[2] + xOffset);
+           v[1] = simplex.eval(P[0] + yOffset, P[1] + yOffset, P[2] + yOffset);
+           v[2] = simplex.eval(P[0] + zOffset, P[1] + zOffset, P[2] + zOffset);
+
+           return v;};
+       const typename Volume<Vector>::volumeGradType grad( const Vector& P ) const { typename Volume<Vector>::volumeGradType G; return G;};
+
+    private:
+       SimplexNoiseObject simplex;
+       float xOffset, yOffset, zOffset;
 
 };
 
