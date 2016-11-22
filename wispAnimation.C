@@ -17,8 +17,8 @@ double emissive = 0.05;
 const double marchStep = 0.008;
 const double lightMarchStep = 0.12;
 
-const int frameStart = 0;
-const int frameEnd =  1;
+const int frameStart = 40;
+const int frameEnd =  41;
 
 //BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
 const float bbSize = 3.5;
@@ -48,17 +48,11 @@ int main(int argc, char **argv){
     scene.gridSize = gridSize;
     scene.DSMVoxelCount = DSMVoxelCount;
     scene.gridVoxelCount = gridVoxelCount;
-
-
-    //lux::light l1(lux::light(lux::Color(0.4, 0.80, 1.0, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-2.0, 5.0, 4.0), 1.0));
-    //lux::light l1(lux::Color(0.7, 0.9, 0.1, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(-3.0, 4.0, 0.0), 1.0);
-    //lux::light l2(lux::Color(0.95, 0.4, 0.4, 1.0), lux::Vector(0.0, -1.0, 0.0), lux::Vector(3.0, 4.0, 0.0), 1.0);
-    //lights.push_back(l1);
-    //lights.push_back(l2);
+    scene.WRITE_RENDER_ANNOTATION = 1;
 
     int color_octaves = 1;
     float color_roughness = 0.7;
-    float color_frequency = 0.15;
+    float color_frequency = 0.6;
     float color_fjump = 2.2;
     float color_noiseMin = -0.4;
     float color_noiseMax = 0.7;
@@ -77,25 +71,23 @@ int main(int argc, char **argv){
     lux::Color c_orange(0.0, 0.5, 1.0, 0.0);     //at weight 0.5
     lux::Color c_yellow(0.1, 1.0, 1.0, 0.0);    //at weight 0.85
     lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0
-
     /*lux::Color c_black(0.0, 0.0, 0.0, 0.0);    //at weight 0.0
     lux::Color c_red(0.05, 0.9, 0.3, 0.0);    //at weight 0.0
     lux::Color c_orange(0.0, 1.0, 0.5, 0.0);     //at weight 0.5
     lux::Color c_yellow(0.1, 1.0, 0.8, 0.0);    //at weight 0.85
     lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0*/
-    scene.cSlider.addColor(0.0, c_black);
-    scene.cSlider.addColor(4.0, c_red);
-    scene.cSlider.addColor(20.0, c_orange);
-    scene.cSlider.addColor(30.0, c_yellow);
-    scene.cSlider.addColor(40.0, c_white);
 
     /*lux::Color c_deepBlue(0.1, 0.05, 1.0, 0.0);    //at weight 0.0
     lux::Color c_purp(0.95, 0.05, 0.8, 0.0);    //at weight 0.0
     lux::Color c_orange(1.0, 0.5, 0.1, 0.0);     //at weight 0.5
     lux::Color c_yellow(0.95, 1.0, 0.1, 0.0);    //at weight 0.85
     lux::Color c_white(1.0, 1.0, 1.0, 0.0); //at weight 1.0
-
     lux::Color c_deepGreen(0.4, 1.0, 0.4, 0.0); //at weight 1.0*/
+    scene.cSlider.addColor(0.0, c_black);
+    scene.cSlider.addColor(4.0, c_red);
+    scene.cSlider.addColor(20.0, c_orange);
+    scene.cSlider.addColor(30.0, c_yellow);
+    scene.cSlider.addColor(40.0, c_white);
 
     //Set up our wedge values
     int octave1 = 3;
@@ -152,7 +144,6 @@ int main(int argc, char **argv){
 
     freqWedge.key(75, 1.0);
 
-
     nMin1Wedge.key(103, 1.0);
     nMax1Wedge.key(103, 1.8);
 
@@ -192,11 +183,8 @@ int main(int argc, char **argv){
     nMax1Wedge.key(50, 2.00);
     nMin1Wedge.key(72, 0.6);
     nMax1Wedge.key(72, 1.4);
-    for (int i = frameStart; i < frameEnd; i+=10){
+    for (int i = frameStart; i < frameEnd; i++){
 
-        //Set up our filepath
-
-        //WEDGE----------------------------------------------
         offset1 = offset1Wedge.get(i);
         offset2 = offset2Wedge.get(i);
         noiseMin1 = nMin1Wedge.get(i);
@@ -205,28 +193,25 @@ int main(int argc, char **argv){
 
         noiseMin2 = nMin2Wedge.get(i);
         noiseMax2 = nMax2Wedge.get(i);
-        //WEDGE----------------------------------------------
 
         //-------------------------------------------------------------------------------------------------------------------------------------
         // SET UP OUR NOISE OBJECT, VOLUMES, GRIDS, AND SHADOW MAPS HERE
         //-------------------------------------------------------------------------------------------------------------------------------------
         SimplexNoiseObject wispNoise1(octave1, rough1, freq1, fjump1, noiseMin1, noiseMax1, offset1);
         SimplexNoiseObject wispNoise2(octave2, rough2, freq2, fjump2, noiseMin2, noiseMax2, offset2);
+        scene.renderlog.addMap(scene.getAnnotation());
+        scene.renderlog.addMap(wispNoise1.getAnnotation());
+        scene.renderlog.addMap(wispNoise2.getAnnotation());
 
         //Set up our volume
+        auto constVol = std::make_shared<lux::ConstantVolume<float> > (0.0);
 
+        //Stamp our wisps
         boost::timer wispTimer;
         auto wispGrid = std::make_shared<lux::DensityGrid>(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
         wispGrid.get()->StampWisp(lux::Vector(0, 0, 0), wispNoise1, wispNoise2, clump.get(i), radius.get(i), numDots.get(i));
         auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
         std::cout << "Wisp Build Time: " << wispTimer.elapsed() << "\n";
-
-        //boost::timer dsmTimer;
-        //lux::DeepShadowMap dsm1(l1, lightMarchStep, griddedWisp, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
-        //lux::DeepShadowMap dsm2(l2, lightMarchStep, griddedWisp, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize, lightGridVoxelCount);
-        //lightGrids.push_back(dsm1);
-        //lightGrids.push_back(dsm2);
-        //std::cout << "DSM Construction Time: " << dsmTimer.elapsed() << "\n";
 
         scene.volumes.push_back(griddedWisp);
 
@@ -238,45 +223,6 @@ int main(int argc, char **argv){
 
         //Empty our volume vector for next iteration
         scene.volumes.clear();
-
-        //Annotate our image for the wedge
-        /*std::ostringstream ssAnno;
-        ssAnno << setfill(' ') << setw(10) << "Frame:" << setfill('.')  << setw(12) << i << "\n";
-        ssAnno << setfill(' ') << setw(10) << "March Step:" << setfill('.')  << setw(12) << marchStep << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Render Time:" << setfill('.')  << setw(12) << elapsedTime << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Radius:" << setfill('.')  << setw(12) << radius.get(i) << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Dots:" << setfill('.')  << setw(12)<< numDots.get(i) << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Clump:" << setfill('.')  << setw(12)<< clump.get(i) << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Emissive:" << setfill('.')  << setw(12)<< emissive << "\n";
-        ssAnno << setfill(' ') << setw(10) << "K:" << setfill('.')  << setw(12)<< K << "\n\n";
-        ssAnno << "Noise1\n";
-        ssAnno << setfill(' ') << setw(10) << "Octaves:" << setfill('.')  << setw(12)<< octave1 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Rough:" << setfill('.')  << setw(12)<< rough1 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Freq:" << setfill('.')  << setw(12)<< freq1 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "noiseMin:" << setfill('.')  << setw(12)<< noiseMin1 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "noiseMax:" << setfill('.')  << setw(12)<< noiseMax1 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Offset:" << setfill('.')  << setw(12)<< offset1 << "\n\n";
-        ssAnno << "Noise2\n";
-        ssAnno << setfill(' ') << setw(10) << "Octaves:" << setfill('.')  << setw(12)<< octave2 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Rough:" << setfill('.')  << setw(12)<< rough2 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Freq:" << setfill('.')  << setw(12)<< freq2 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "fJump:" << setfill('.')  << setw(12)<< fjump2 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "noiseMin:" << setfill('.')  << setw(12)<< noiseMin2 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "noiseMax:" << setfill('.')  << setw(12)<< noiseMax2 << "\n";
-        ssAnno << setfill(' ') << setw(10) << "Offset:" << setfill('.')  << setw(12)<< offset2 << "\n\n";
-        //std::cout << ssAnno.str();
-        Magick::Geometry textBox(200, 200);
-        Magick::GravityType gravity(Magick::NorthWestGravity);
-        Magick::Image image;
-        image.backgroundColor("#000000");
-        image.boxColor("#000000");
-        image.fillColor("#999999");
-        image.read(filepath + ".exr");
-        image.fontPointsize(12);
-        image.font("courier");
-        image.annotate(ssAnno.str(), gravity);
-        image.write(filepath + ".exr");*/
-
     }
     //initLights();
     std::cout <<"Total: " << totalTimer.elapsed() << "\n";

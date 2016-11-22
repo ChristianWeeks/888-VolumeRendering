@@ -13,11 +13,12 @@ SceneManager::SceneManager(std::string filepath) :
     gridSize(7.2),
     DSMVoxelCount(200),
     gridVoxelCount(1000),
-    outFile(filepath),
+    outFile("output/" + filepath),
     startFrame(0),
     endFrame(1),
     width(480),
-    height(270)
+    height(270),
+    renderlog("output/" + filepath)
     {
     camera.setEyeViewUp(Vector(6.0, 0.0, 6.0), Vector(-1,0,-1), Vector(0,1,0));
     bb.setBounds(Vector(-bbSize, -bbSize, -bbSize), Vector(bbSize, bbSize, bbSize));
@@ -84,8 +85,11 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
                     color *= density;
                     //std::cout << color << "Density: " << density << "\n";
                     //The field color's contribution will be scaled by the density, so sparse areas don't become super bright
-                    //fieldColor = colorVolumes[0].get()->eval(x) * 0.2;
-                    //color += colorClamp(fieldColor);
+                    if (colorVolumes.size()){
+                        fieldColor = colorVolumes[0].get()->eval(x);
+                        fieldColor.clamp();
+                        color += fieldColor;
+                    }
                     C += color * tVal * emissive;
                 }
             }
@@ -175,18 +179,32 @@ void SceneManager::renderImage(int frameNumber){
     ss << setfill(' ') << setw(20) << "Noise Maximum:" << setfill('-')  << setw(30) << noiseMax << "\n";
     renderLog.addLine(ss.str());
     renderLog.writeToFile();*/
-    std::string filepath("output/" + outFile);
     //Don't give it number padding if it is just a single render
     if (startFrame - endFrame > 1){
-        filepath += ".";
+        outFile += ".";
         std::ostringstream ss;
         ss << setfill('0') << setw(4) << frameNumber;
         std::string numPadding = ss.str();
-        filepath += numPadding;
+        outFile += numPadding;
     }
 
-    //std::string filepath = renderLog.getFilepath();
-    filepath += ".exr";
-    writeOIIOImage(filepath.c_str(), img, 1.0, 1.0);
-    //std::cout << renderLog.getBody();
+    //std::string outFile = renderLog.getFilepath();
+    outFile += ".exr";
+    writeOIIOImage(outFile.c_str(), img, 1.0, 1.0);
+
+    if(WRITE_RENDER_LOG)
+        renderlog.writeToFile();
+
+    if(WRITE_RENDER_ANNOTATION)
+        renderlog.writeToImage();
+}
+
+
+std::map<std::string, float> SceneManager::getAnnotation(){
+
+    std::map<std::string, float> annoMap;
+    annoMap.emplace("K", K);
+    annoMap.emplace("Emissive", emissive);
+    annoMap.emplace("March Step", marchStep);
+    return annoMap;
 }

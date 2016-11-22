@@ -5,10 +5,8 @@
 #include "renderlog.h"
 #include "ColorSlider.h"
 
-#include <Magick++.h>
 #include <vector>
 #include <stdio.h>
-#include <sstream>
 #include <iomanip>
 #include <memory>
 #include <random>
@@ -24,6 +22,7 @@ class SceneManager{
         double rayMarchLightScatter(const Vector& x, light l, Volume<float> *vol) const;
         double rayMarchDSM(const Vector& x, const std::shared_ptr<DeepShadowMap> dsm) const;
         void renderImage(int frameNumber);
+        std::map<std::string, float> getAnnotation();
 
         //These contain everything in our scene
         std::vector<light> lights;
@@ -44,6 +43,7 @@ class SceneManager{
         float DSMVoxelCount;
         float gridVoxelCount;
         ColorSlider cSlider;
+        RenderLog renderlog;
     private:
 
         std::string outFile;
@@ -53,7 +53,6 @@ class SceneManager{
         int height;
 
         BoundingBox bb;
-        //RenderLog renderlog;
 
 };
 }

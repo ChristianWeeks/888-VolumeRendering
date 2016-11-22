@@ -14,7 +14,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+#include <map>
+#include <string>
 
 #ifndef SIMPLEX_H_
 #define SIMPLEX_H_
@@ -207,6 +208,18 @@ class SimplexNoiseObject {
 
         const float eval(float x, float y, float z) const{
             return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x + offset, y + offset, z + offset);};
+
+        std::map<std::string, float> getAnnotation(){
+            std::map<std::string, float> annoMap;
+            annoMap.emplace("Octaves", octaves);
+            annoMap.emplace("Roughness", roughness);
+            annoMap.emplace("Frequency", frequency);
+            annoMap.emplace("fJump", fjump);
+            annoMap.emplace("Low Bound", lowBound);
+            annoMap.emplace("High Bound", highBound);
+            annoMap.emplace("Offset", offset);
+            return annoMap;
+        }
 
     private:
         const int octaves;
