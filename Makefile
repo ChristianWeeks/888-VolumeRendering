@@ -36,6 +36,9 @@ img:  imageTest.C $(LIB)
 wisp:  wispAnimation.C $(LIB)
 	$(CXX) $(INCLUDES) wispAnimation.C -o img $(LIB) $(LINKS)
 
+wispw:  wispWedge.C $(LIB)
+	$(CXX) $(INCLUDES) wispWedge.C -o img $(LIB) $(LINKS)
+
 genswig:	swig/Volume.i $(OFILES)
 	$(SWIGEXEC) -c++ -python -shadow swig/Volume.i
 

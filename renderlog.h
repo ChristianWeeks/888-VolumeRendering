@@ -8,23 +8,24 @@
 
 class RenderLog {
     public:
-        RenderLog(std::string fp) : filepath(fp){};
+        RenderLog(){};
         ~RenderLog(){};
-        void addLine(const std::string& s){ body += s + "\n";};
-        /*void setFilepath(std::string fp){
-            filepath = fp;
-        }*/
-        void addMap(const std::map<std::string, float>& annoMap){
+        void addLine(const std::string& s){ annotations.push_back(s);};
+        void addVector(const std::vector<std::string>& annoVec){
             // [] operator automatically inserts the element if it is not found
-            for( auto it = annoMap.begin(); it != annoMap.end(); ++it)
-                annotations[it->first] += it->second;
+            annotations.insert(annotations.end(), annoVec.begin(), annoVec.end());
         }
 
-        void writeToImage(){
+        void writeToImage(std::string filename){
             //Format our map
             std::ostringstream ss;
-            for( auto it = annotations.begin(); it!= annotations.end(); ++it){
-                ss << setfill(' ') << setw(10) << it->first << setfill('.')  << setw(12) << it->second << "\n";
+            for( auto it = annotations.begin(); it != annotations.end(); it+=2){
+                if( *(it + 1) == ""){
+                    ss << setfill(' ') << setw(10) << "\n" << *it << "\n";
+                }
+                else{
+                    ss << setfill(' ') << setw(10) << *it << setfill('.')  << setw(18) << *(it+1) << "\n";
+                }
             }
 
             //Open and write to our image
@@ -34,34 +35,35 @@ class RenderLog {
             image.backgroundColor("#000000");
             image.boxColor("#000000");
             image.fillColor("#999999");
-            image.read(filepath + ".exr");
+            image.read(filename);
             image.fontPointsize(12);
             image.font("courier");
             image.annotate(ss.str(), gravity);
-            image.write(filepath + ".exr");
+            image.write(filename);
         };
 
         //Write our log to file
-        void writeToFile(){
+        void writeToFile(std::string filename){
             //Format our map
             std::ostringstream ss;
-            for( auto it = annotations.begin(); it!= annotations.end(); ++it){
-                ss << setfill(' ') << setw(10) << it->first << setfill('.')  << setw(12) << it->second << "\n";
+            for( auto it = annotations.begin(); it != annotations.end(); it+=2){
+                if( *(it + 1) == ""){
+                    ss << setfill(' ') << setw(10) << "\n" << *it << "\n";
+                }
+                else{
+                    ss << setfill(' ') << setw(10) << *it << setfill('.')  << setw(18) << *(it+1) << "\n";
+                }
             }
 
             //Open and write to our file
             std::ofstream logFile;
-            logFile.open(filepath + ".log");
+            logFile.open(filename + ".log");
             logFile << ss.str();
             logFile.close();
         };
-
-        std::string getFilepath(){ return filepath;};
-        std::string getBody(){ return body;};
-
-    private:
         const std::string filepath;
-        std::map<std::string, float> annotations;
-        std::string body;
+
+
+    std::vector<std::string> annotations;
 
 };

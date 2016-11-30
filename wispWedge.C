@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <boost/timer.hpp>
 
-const double PI  =3.141592653589793238463;
+//const double PI  =3.141592653589793238463;
 //------------------------------------------------------------------------------
 //GLOBAL SCENE SETTINGS
 //------------------------------------------------------------------------------
@@ -14,17 +14,17 @@ const double K = 1.0;
 double emissive = 0.05;
 
 //Discrete step for our marching.  Delta S in our equations
-const double marchStep = 0.008;
+const double marchStep = 0.015;
 const double lightMarchStep = 0.12;
 
-const int frameStart = 40;
-const int frameEnd =  41;
+const int startFrame = 81;
+const int endFrame =  351;
 
 //BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
 const float bbSize = 3.5;
 const float gridSize = 2 * bbSize;
 const float DSMVoxelCount = 200;
-const float gridVoxelCount = 1000;
+const float gridVoxelCount = 800;
 //Width and Height may change based on input
 int w = 480;
 int h = 270;
@@ -50,8 +50,10 @@ int main(int argc, char **argv){
     scene.gridVoxelCount = gridVoxelCount;
     scene.WRITE_RENDER_ANNOTATION = 1;
 
+    scene.setFrameRange(startFrame, endFrame);
+
     //Initialize noise
-    int color_octaves = 1;
+    /*int color_octaves = 1;
     float color_roughness = 0.7;
     float color_frequency = 0.7;
     float color_fjump = 2.2;
@@ -60,25 +62,7 @@ int main(int argc, char **argv){
 
     SimplexNoiseObject colorNoise(color_octaves, color_roughness, color_frequency, color_fjump, color_noiseMin, color_noiseMax, 0);
     auto colorVolume = std::make_shared<lux::SimplexNoiseColorVolume> (colorNoise, 0.0, 10.0, 20.0);
-    scene.colorVolumes.push_back(colorVolume);
-
-    //Init random device for placing clusters in scene
-    std::random_device rnd;
-    std::mt19937 rng(rnd());
-    std::uniform_real_distribution<> udist(-1, 1);
-
-    int numClusters = 1000;
-    lux::Vector clusterCoords[1000];
-    for (int i = 0; i < numClusters; i++){
-        float randX = udist(rng);
-        float randY = udist(rng);
-        float randZ = udist(rng);
-
-        clusterCoords[i][0] = scaled_octave_noise_3d(color_octaves, color_roughness, color_frequency, color_fjump, -(bbSize - 0.2), bbSize - 0.2, randX, randY, randZ);
-        clusterCoords[i][1] = scaled_octave_noise_3d(color_octaves, color_roughness, color_frequency, color_fjump, -(bbSize - 0.2), bbSize - 0.2, randX + 0.5, randY + 0.5, randZ + 0.5);
-        clusterCoords[i][2] = scaled_octave_noise_3d(color_octaves, color_roughness, color_frequency, color_fjump, -(bbSize - 0.2), bbSize - 0.2, randX - 0.5, randY - 0.5, randZ - 0.5);
-
-    }
+    scene.colorVolumes.push_back(colorVolume);*/
 
     lux::Color c_black(0.0, 0.0, 0.0, 0.0);    //at weight 0.0
     lux::Color c_red(0.05, 0.3, 0.9, 0.0);    //at weight 0.0
@@ -91,37 +75,90 @@ int main(int argc, char **argv){
     scene.cSlider.addColor(30.0, c_yellow);
     scene.cSlider.addColor(40.0, c_white);
 
+    WedgeAttribute wClump;
+    WedgeAttribute wFreq1;
+    WedgeAttribute wFreq2;
+    WedgeAttribute wUpBound1;
+    WedgeAttribute wUpBound2;
+    WedgeAttribute wLowBound1;
+    WedgeAttribute wLowBound2; 
+    WedgeAttribute radius;
+
+    wFreq2.key(1, 0.0);
+    wFreq2.key(50, 4.0);
+
+    wFreq1.key(50, 0.0);
+    wFreq1.key(100, 3.0);
+
+    wLowBound2.key(100, -0.4);
+    wUpBound2.key(100, 0.4);
+
+    wLowBound2.key(150, 0.0);
+    wUpBound2.key(150, 0.0);
+
+    wLowBound1.key(150, 0.9);
+    wUpBound1.key(150, 1.1);
+
+    wLowBound1.key(200, -0.5);
+    wUpBound1.key(200, 0.5);
+
+    wLowBound2.key(200, 0.0);
+    wUpBound2.key(200, 0.0);
+
+    wLowBound2.key(250, -0.4);
+    wUpBound2.key(250, 0.4);
+
+    wClump.key(250, 1.0);
+    wClump.key(300, 0.1);
+
+    radius.key(300, 2.0);
+    radius.key(350, 0.3);
+    //wClump.key(80, 2.0);
+
     //Set up our wedge values
     int octave1 = 4;
     float rough1 = 0.5;
-    float freq1 = 4.0;
+    float freq1 = 0.00;
     float fjump1 = 2.2;
     float noiseMin1 = 0.0;
-    float noiseMax1 = 2.0;
+    float noiseMax1 = 1.0;
     float offset1 = 0;
 
-    int octave2 = 4; 
+    int octave2 = 4;
     float rough2 = 0.5;
-    float freq2 = 10.0;
+    float freq2 = 2.0;
     float fjump2 = 2.2;
-    float noiseMin2 = -0.005;
-    float noiseMax2 = 0.005;
-    float offset2 = 0.0;
+    float noiseMin2 = -0.4;
+    float noiseMax2 = 0.4;
+    float offset2 = 0.3;
 
-    float clump = 1.0;
-    float radius = 0.2;
-    float numDots = 400000;
+    float numDots = 10000000;
 
-    for (int i = frameStart; i < frameEnd; i++){
+    for (int i = startFrame; i < endFrame; i++){
 
         //-------------------------------------------------------------------------------------------------------------------------------------
         // SET UP OUR NOISE OBJECT, VOLUMES, GRIDS, AND SHADOW MAPS HERE
         //-------------------------------------------------------------------------------------------------------------------------------------
-        SimplexNoiseObject wispNoise1(octave1, rough1, freq1, fjump1, noiseMin1, noiseMax1, offset1);
-        SimplexNoiseObject wispNoise2(octave2, rough2, freq2, fjump2, noiseMin2, noiseMax2, offset2);
-        scene.renderlog.addMap(scene.getAnnotation());
-        scene.renderlog.addMap(wispNoise1.getAnnotation());
-        scene.renderlog.addMap(wispNoise2.getAnnotation());
+        SimplexNoiseObject wispNoise1(octave1, rough1, freq1, fjump1, wLowBound1.get(i), wUpBound1.get(i), offset1);
+        SimplexNoiseObject wispNoise2(octave2, rough2, wFreq2.get(i), fjump2, wLowBound2.get(i), wUpBound2.get(i), offset2);
+        scene.renderlog.addLine(std::string("GLOBALS"));
+        scene.renderlog.addLine(std::string(""));
+        scene.renderlog.addLine(std::string("Clump"));
+        scene.renderlog.addLine(std::to_string(wClump.get(i)));
+        scene.renderlog.addLine(std::string("Radius"));
+        scene.renderlog.addLine(std::to_string(radius.get(i)));
+        scene.renderlog.addLine(std::string("Radius"));
+        scene.renderlog.addLine(std::to_string(numDots));
+
+        scene.renderlog.addVector(scene.getAnnotation());
+        scene.renderlog.addLine(std::string("NOISE1"));
+        scene.renderlog.addLine(std::string(""));
+
+        scene.renderlog.addVector(wispNoise1.getAnnotation());
+        scene.renderlog.addLine(std::string("NOISE2"));
+        scene.renderlog.addLine(std::string(""));
+
+        scene.renderlog.addVector(wispNoise2.getAnnotation());
 
         //Set up our volume
         auto constVol = std::make_shared<lux::ConstantVolume<float> > (0.0);
@@ -129,9 +166,7 @@ int main(int argc, char **argv){
         //Stamp our wisps
         boost::timer wispTimer;
         auto wispGrid = std::make_shared<lux::DensityGrid>(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
-        for(int j = 0; j < numClusters; j++){
-            wispGrid.get()->StampWisp(clusterCoords[j], wispNoise1, wispNoise2, clump, radius, numDots, udist(rng));
-        }
+        wispGrid.get()->StampWisp(lux::Vector(0, 0, 0), wispNoise1, wispNoise2, wClump.get(i), radius.get(i), numDots, 0);
         auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
         std::cout << "Wisp Build Time: " << wispTimer.elapsed() << "\n";
 

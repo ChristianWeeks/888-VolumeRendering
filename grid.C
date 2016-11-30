@@ -127,11 +127,11 @@ DensityGrid::DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, 
 }
 
 //Wisp algorithm
-void DensityGrid::StampWisp(const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots){
+void DensityGrid::StampWisp(const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset){
 
     std::random_device rnd;
     std::mt19937 rng(rnd());
-    std::uniform_real_distribution<> udist(-radius, radius);
+    std::uniform_real_distribution<> udist(-1, 1);
 
     for(int i = 0; i < numDots; i++){
 
@@ -143,7 +143,7 @@ void DensityGrid::StampWisp(const Vector& P, const SimplexNoiseObject& noise1, c
         lux::Vector d(randX, randY, randZ);
 
         //Displace our dot radially with first level of noise
-        float radialDisp = std::pow(std::abs(noise1.eval(d[0], d[1], d[2])), clump);
+        float radialDisp = std::pow(std::abs(noise1.eval(d[0] + offset, d[1] + offset, d[2] + offset)), clump);
         lux::Vector dSphere = d.unitvector();
 
         dSphere *= radialDisp;
@@ -152,11 +152,15 @@ void DensityGrid::StampWisp(const Vector& P, const SimplexNoiseObject& noise1, c
 
         //Displace our dot radially with second level of noise
         lux::Vector d2;
-        d2[0] = noise2.eval(dSphere[0], dSphere[1], dSphere[2]);
-        d2[1] = noise2.eval(dSphere[0] + 0.1, dSphere[1] + 0.1, dSphere[2] + 0.1);
-        d2[2] = noise2.eval(dSphere[0] - 0.1, dSphere[1] - 0.1, dSphere[2] - 0.1);
+        /*d2[0] = noise2.eval(dSphere[0], dSphere[1], dSphere[2]);
+        d2[1] = noise2.eval(dSphere[0] + offset, dSphere[1] + offset, dSphere[2] + offset);
+        d2[2] = noise2.eval(dSphere[0] + offset*2, dSphere[1] + offset*2, dSphere[2] + offset*2);*/
 
+        d2[0] = noise2.eval(dSphere[0] + 0.3421, dSphere[1] - 1.2313, dSphere[2] + 3.123);
+        d2[1] = noise2.eval(dSphere[0] + 10.231, dSphere[1] + 1923.12, dSphere[2] + 3.31231);
+        d2[2] = noise2.eval(dSphere[0] + 45.323, dSphere[1] + 93.324, dSphere[2] + 102.3142);
         dot += d2;
+
         bakeDot(dot, 1.0);
     }
 }

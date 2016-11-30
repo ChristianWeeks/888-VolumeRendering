@@ -16,6 +16,7 @@
  */
 #include <map>
 #include <string>
+#include <vector>
 
 #ifndef SIMPLEX_H_
 #define SIMPLEX_H_
@@ -209,16 +210,23 @@ class SimplexNoiseObject {
         const float eval(float x, float y, float z) const{
             return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x + offset, y + offset, z + offset);};
 
-        std::map<std::string, float> getAnnotation(){
-            std::map<std::string, float> annoMap;
-            annoMap.emplace("Octaves", octaves);
-            annoMap.emplace("Roughness", roughness);
-            annoMap.emplace("Frequency", frequency);
-            annoMap.emplace("fJump", fjump);
-            annoMap.emplace("Low Bound", lowBound);
-            annoMap.emplace("High Bound", highBound);
-            annoMap.emplace("Offset", offset);
-            return annoMap;
+        std::vector<std::string> getAnnotation(){
+            std::vector<std::string> annoVec;
+            annoVec.push_back("Octaves");
+            annoVec.push_back(std::to_string(octaves));
+            annoVec.push_back("Roughness");
+            annoVec.push_back(std::to_string(roughness));
+            annoVec.push_back("Frequency");
+            annoVec.push_back(std::to_string(frequency));
+            annoVec.push_back("fJump");
+            annoVec.push_back(std::to_string(fjump));
+            annoVec.push_back("Low Bound");
+            annoVec.push_back(std::to_string(lowBound));
+            annoVec.push_back("High Bound");
+            annoVec.push_back(std::to_string(highBound));
+            annoVec.push_back("Offset");
+            annoVec.push_back(std::to_string(offset));
+            return annoVec;
         }
 
     private:

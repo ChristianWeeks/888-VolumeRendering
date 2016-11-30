@@ -113,9 +113,9 @@ class Advect_MMC_Volume: public Volume<float>{
         const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
-        float t;
         std::shared_ptr<Volume<float> > a;
         std::shared_ptr<Volume<Vector> > b;
+        float t;
 };
 
 

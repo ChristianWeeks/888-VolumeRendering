@@ -17,10 +17,9 @@ SceneManager::SceneManager(std::string filepath) :
     startFrame(0),
     endFrame(1),
     width(480),
-    height(270),
-    renderlog("output/" + filepath)
+    height(270)
     {
-    camera.setEyeViewUp(Vector(6.0, 0.0, 6.0), Vector(-1,0,-1), Vector(0,1,0));
+    camera.setEyeViewUp(Vector(0.0, 0.0, 6.0), Vector(0,0,-1), Vector(0,1,0));
     bb.setBounds(Vector(-bbSize, -bbSize, -bbSize), Vector(bbSize, bbSize, bbSize));
 }
 
@@ -160,51 +159,41 @@ void SceneManager::renderImage(int frameNumber){
         }
     }
 
-
     //Write our image
     std::ostringstream ss;
-    //ss << setfill(' ') << setw(20) << "Eye:" << setfill('-')  << setw(30) << mainCam.eye() << "\n";
-    //ss << setfill(' ') << setw(20) << "View:" << setfill('-')  << setw(30) << mainCam.view() << "\n";
-    /*ss << setfill(' ') << setw(20) << "W:" << setfill('-')  << setw(30) << w << "\n";
-    ss << setfill(' ') << setw(20) << "H:" << setfill('-')  << setw(30)<< h << "\n";
-    ss << setfill(' ') << setw(20) << "March Step:" << setfill('-')  << setw(30)<< marchStep << "\n";
-    ss << setfill(' ') << setw(20) << "Light March Step:" << setfill('-')  << setw(30)<< marchStep << "\n";
-    ss << setfill(' ') << setw(20) << "Bounding Box Size:" << setfill('-')  << setw(30)<< bbSize << "\n";
-    ss << setfill(' ') << setw(20) << "TotalTime:" << setfill('-')  << setw(30)<< elapsedTime << "\n\n";
-    ss << setfill(' ') << setw(20) << "Octaves:" << setfill('-')  << setw(30) << octaves << "\n";
-    ss << setfill(' ') << setw(20) << "Roughness:" << setfill('-')  << setw(30) << roughness << "\n";
-    ss << setfill(' ') << setw(20) << "Frequency:" << setfill('-')  << setw(30) << frequency << "\n";
-    ss << setfill(' ') << setw(20) << "fJump:" << setfill('-')  << setw(30) << fjump << "\n";
-    ss << setfill(' ') << setw(20) << "Noise Minumum:" << setfill('-')  << setw(30) << noiseMin << "\n";
-    ss << setfill(' ') << setw(20) << "Noise Maximum:" << setfill('-')  << setw(30) << noiseMax << "\n";
-    renderLog.addLine(ss.str());
-    renderLog.writeToFile();*/
+
     //Don't give it number padding if it is just a single render
-    if (startFrame - endFrame > 1){
-        outFile += ".";
+    std::string filename(outFile);
+    if (endFrame - startFrame > 1){
+        filename += ".";
         std::ostringstream ss;
         ss << setfill('0') << setw(4) << frameNumber;
         std::string numPadding = ss.str();
-        outFile += numPadding;
+        filename += numPadding;
     }
 
-    //std::string outFile = renderLog.getFilepath();
-    outFile += ".exr";
-    writeOIIOImage(outFile.c_str(), img, 1.0, 1.0);
+    filename += ".exr";
+    writeOIIOImage(filename.c_str(), img, 1.0, 1.0);
+    std::cout << filename << "\n";
 
     if(WRITE_RENDER_LOG)
-        renderlog.writeToFile();
+        renderlog.writeToFile(filename);
 
     if(WRITE_RENDER_ANNOTATION)
-        renderlog.writeToImage();
+        renderlog.writeToImage(filename);
+
+    renderlog.annotations.clear();
 }
 
 
-std::map<std::string, float> SceneManager::getAnnotation(){
+std::vector<std::string> SceneManager::getAnnotation(){
 
-    std::map<std::string, float> annoMap;
-    annoMap.emplace("K", K);
-    annoMap.emplace("Emissive", emissive);
-    annoMap.emplace("March Step", marchStep);
-    return annoMap;
+    std::vector<std::string> annoVec;
+    annoVec.push_back("K");
+    annoVec.push_back(std::to_string(K));
+    annoVec.push_back("Emissive");
+    annoVec.push_back(std::to_string(emissive));
+    annoVec.push_back("March Step");
+    annoVec.push_back(std::to_string(marchStep));
+    return annoVec;
 }

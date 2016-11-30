@@ -22,7 +22,7 @@ class SceneManager{
         double rayMarchLightScatter(const Vector& x, light l, Volume<float> *vol) const;
         double rayMarchDSM(const Vector& x, const std::shared_ptr<DeepShadowMap> dsm) const;
         void renderImage(int frameNumber);
-        std::map<std::string, float> getAnnotation();
+        std::vector<std::string> getAnnotation();
 
         //These contain everything in our scene
         std::vector<light> lights;
