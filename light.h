@@ -1,3 +1,6 @@
+#ifndef __LIGHT_H__
+#define __LIGHT_H__
+
 #include "Vector.h"
 #include "Color.h"
 
@@ -25,5 +28,4 @@ class light
 };
 }
 
-
-
+#endif

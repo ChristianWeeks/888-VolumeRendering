@@ -58,6 +58,31 @@ class Volume{
    virtual const volumeGradType grad( const Vector& P ) const;
 };
 
+typedef std::shared_ptr<Volume<float> > FloatVolumePtr;
+typedef std::shared_ptr<Volume<Vector> > VectorVolumePtr;
+typedef std::shared_ptr<Volume<Color> > ColorVolumePtr;
+
+class FloatVolumeBase : public FloatVolumePtr {
+    public:
+        FloatVolumeBase();
+        FloatVolumeBase(Volume<float>* f) : FloatVolumePtr(f){};
+        ~FloatVolumeBase();
+};
+
+class VectorVolumeBase : public VectorVolumePtr {
+    public:
+        VectorVolumeBase();
+        VectorVolumeBase(Volume<Vector>* f) : VectorVolumePtr(f){};
+        ~VectorVolumeBase();
+};
+
+class ColorVolumeBase : public ColorVolumePtr {
+    public:
+        ColorVolumeBase();
+        ColorVolumeBase(Volume<Color>* f) : ColorVolumePtr(f){};
+        ~ColorVolumeBase();
+};
+
 template< typename U >
 class ConstantVolume : public Volume<U>{
     public:
@@ -72,15 +97,14 @@ class ConstantVolume : public Volume<U>{
        U value;
 };
 
-template< typename U >
-class SphereVolume : public Volume<U>{
+class SphereVolume : public Volume<float>{
     public:
 
         SphereVolume(float rad) : r(rad){}
        ~SphereVolume(){}
 
-       const typename Volume<U>::volumeDataType eval( const Vector& P ) const { return r - P.magnitude();};
-       const typename Volume<U>::volumeGradType grad( const Vector& P ) const { typename Volume<U>::volumeGradType G; return G;};
+       const typename Volume<float>::volumeDataType eval( const Vector& P ) const { return r - P.magnitude();};
+       const typename Volume<float>::volumeGradType grad( const Vector& P ) const { typename Volume<float>::volumeGradType G; return G;};
 
     private:
        float r;
@@ -183,25 +207,23 @@ class SimplexNoiseColorVolume : public Volume<Color>{
        float bOffset;
 
 };
-template< typename U >
-class BoxVolume : public Volume<U>{
+class BoxVolume : public Volume<float>{
     public:
 
         BoxVolume(float rad, float c) : r(rad), cExp(c){}
        ~BoxVolume(){}
 
-       const typename Volume<U>::volumeDataType eval( const Vector& P ) const {
+       const typename Volume<float>::volumeDataType eval( const Vector& P ) const {
            float exponent = 2 * cExp;
            return pow(r, exponent) - pow(P[0], exponent) - pow(P[1], exponent) - pow(P[2], exponent);};
-       const typename Volume<U>::volumeGradType grad( const Vector& P ) const { typename Volume<U>::volumeGradType G; return G;};
+       const typename Volume<float>::volumeGradType grad( const Vector& P ) const { typename Volume<float>::volumeGradType G; return G;};
 
     private:
        float r;
        float cExp;
 };
 
-template< typename U >
-class CylinderVolume : public Volume<U>{
+class CylinderVolume : public Volume<float>{
     public:
 
         CylinderVolume(Vector normal, float rad) :
@@ -209,18 +231,17 @@ class CylinderVolume : public Volume<U>{
             r(rad){};
        ~CylinderVolume(){}
 
-       const typename Volume<U>::volumeDataType eval( const Vector& P ) const {
+       const typename Volume<float>::volumeDataType eval( const Vector& P ) const {
             Vector v = P - (P * n)*n;
             return r - v.magnitude();};
-       const typename Volume<U>::volumeGradType grad( const Vector& P ) const { typename Volume<U>::volumeGradType G; return G;};
+       const typename Volume<float>::volumeGradType grad( const Vector& P ) const { typename Volume<float>::volumeGradType G; return G;};
 
     private:
        Vector n;
        float r;
 };
 
-template< typename U >
-class PlaneVolume : public Volume<U>{
+class PlaneVolume : public Volume<float>{
     public:
 
         PlaneVolume(Vector normal, Vector center) :
@@ -228,16 +249,15 @@ class PlaneVolume : public Volume<U>{
             c(center){};
        ~PlaneVolume(){}
 
-       const typename Volume<U>::volumeDataType eval( const Vector& P ) const { return -(P - c) * n;};
-       const typename Volume<U>::volumeGradType grad( const Vector& P ) const { typename Volume<U>::volumeGradType G; return G;};
+       const typename Volume<float>::volumeDataType eval( const Vector& P ) const { return -(P - c) * n;};
+       const typename Volume<float>::volumeGradType grad( const Vector& P ) const { typename Volume<float>::volumeGradType G; return G;};
 
     private:
        Vector n;
        Vector c;
 };
 
-template< typename U >
-class ConeVolume : public Volume<U>{
+class ConeVolume : public Volume<float>{
     public:
 
         ConeVolume(Vector normal, float height, float ang) :
@@ -246,12 +266,12 @@ class ConeVolume : public Volume<U>{
             angle(ang){};
        ~ConeVolume(){}
 
-       const typename Volume<U>::volumeDataType eval( const Vector& P ) const {
+       const typename Volume<float>::volumeDataType eval( const Vector& P ) const {
             float dot = P * n;
             if(dot < 0) return dot;
             else if (dot > h) return h - dot;
             else return dot - P.magnitude()*std::cos(angle);};
-       const typename Volume<U>::volumeGradType grad( const Vector& P ) const { typename Volume<U>::volumeGradType G; return G;};
+       const typename Volume<float>::volumeGradType grad( const Vector& P ) const { typename Volume<float>::volumeGradType G; return G;};
 
     private:
        //axis

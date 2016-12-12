@@ -71,9 +71,10 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
                 double tVal = T * (1 - deltaT);
 
                 //March to each light
+              //  for (int i = 0; i < lights.size(); i++){
                 for (int i = 0; i < lightGrids.size(); i++){
-                    //double lightTransmissivity = rayMarchLightScatter(x, lights[i], volumes[j].get());
-                    double lightTransmissivity = rayMarchDSM(x, lightGrids[i]);
+                //    double lightTransmissivity = rayMarchLightScatter(x, lights[i], volumes[j].get());
+                    double lightTransmissivity = rayMarchDSM(x, lightGrids[i].get());
                     C += lights[i].c * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
                 }
                 T *= deltaT;
@@ -124,8 +125,8 @@ double SceneManager::rayMarchLightScatter(const Vector& x, light l, Volume<float
     return T;
 }
 
-double SceneManager::rayMarchDSM(const Vector& x, std::shared_ptr<DeepShadowMap> dsm) const {
-    return exp(-K * dsm.get()->trilinearInterpolate(x));
+double SceneManager::rayMarchDSM(const Vector& x, const DeepShadowMap* dsm) const {
+    return exp(-K * dsm->trilinearInterpolate(x));
 }
 
 void SceneManager::renderImage(int frameNumber){

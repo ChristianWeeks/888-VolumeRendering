@@ -1,3 +1,6 @@
+#ifndef __SCENE_MANAGER_H__
+#define __SCENE_MANAGER_H__
+
 #include "grid.h"
 #include "OIIOFiles.h"
 #include "boundingbox.h"
@@ -20,15 +23,15 @@ class SceneManager{
         void setResolution(int res);
         Color rayMarch(const Vector& n, float start, float end) ;
         double rayMarchLightScatter(const Vector& x, light l, Volume<float> *vol) const;
-        double rayMarchDSM(const Vector& x, const std::shared_ptr<DeepShadowMap> dsm) const;
+        double rayMarchDSM(const Vector& x, const DeepShadowMap* dsm) const;
         void renderImage(int frameNumber);
         std::vector<std::string> getAnnotation();
 
         //These contain everything in our scene
         std::vector<light> lights;
-        std::vector<std::shared_ptr<DeepShadowMap> >lightGrids;
-        std::vector<std::shared_ptr<Volume<float> > > volumes;
-        std::vector<std::shared_ptr<Volume<Color> > > colorVolumes;
+        std::vector<DSMPtr> lightGrids;
+        std::vector<FloatVolumeBase> volumes;
+        std::vector<ColorVolumeBase> colorVolumes;
 
         Camera camera;
         int WRITE_RENDER_LOG;
@@ -56,3 +59,4 @@ class SceneManager{
 
 };
 }
+#endif

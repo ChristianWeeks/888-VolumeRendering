@@ -1,3 +1,7 @@
+#ifndef __COLORSLIDER_H__
+#define __COLORSLIDER_H__
+
+
 #include "Color.h"
 #include <vector>
 
@@ -73,3 +77,5 @@ class ColorSlider {
         }
 };
 }
+
+#endif

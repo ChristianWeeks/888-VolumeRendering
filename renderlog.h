@@ -1,3 +1,6 @@
+#ifndef __RENDERLOG_H__
+#define __RENDERLOG_H__
+
 #include <string.h>
 #include <map>
 #include <fstream>
@@ -21,10 +24,10 @@ class RenderLog {
             std::ostringstream ss;
             for( auto it = annotations.begin(); it != annotations.end(); it+=2){
                 if( *(it + 1) == ""){
-                    ss << setfill(' ') << setw(10) << "\n" << *it << "\n";
+                    ss << std::setfill(' ') << std::setw(10) << "\n" << *it << "\n";
                 }
                 else{
-                    ss << setfill(' ') << setw(10) << *it << setfill('.')  << setw(18) << *(it+1) << "\n";
+                    ss << std::setfill(' ') << std::setw(10) << *it << std::setfill('.')  << std::setw(18) << *(it+1) << "\n";
                 }
             }
 
@@ -48,10 +51,10 @@ class RenderLog {
             std::ostringstream ss;
             for( auto it = annotations.begin(); it != annotations.end(); it+=2){
                 if( *(it + 1) == ""){
-                    ss << setfill(' ') << setw(10) << "\n" << *it << "\n";
+                    ss << std::setfill(' ') << std::setw(10) << "\n" << *it << "\n";
                 }
                 else{
-                    ss << setfill(' ') << setw(10) << *it << setfill('.')  << setw(18) << *(it+1) << "\n";
+                    ss << std::setfill(' ') << std::setw(10) << *it << std::setfill('.')  << std::setw(18) << *(it+1) << "\n";
                 }
             }
 
@@ -61,9 +64,11 @@ class RenderLog {
             logFile << ss.str();
             logFile.close();
         };
-        const std::string filepath;
+        std::string filepath;
 
 
-    std::vector<std::string> annotations;
+        std::vector<std::string> annotations;
 
 };
+
+#endif

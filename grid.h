@@ -1,17 +1,20 @@
+#ifndef __GRID_H__
+#define __GRID_H__
 #include "volume_operators.h"
 #include "light.h"
 #include <random>
 
 namespace lux {
+
 class FloatGrid{
     public:
-        FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
+        FloatGrid(Volume<float>* f, const Vector& o, const double& s, const int& v);
         FloatGrid(const FloatGrid& f);
         ~FloatGrid();
         const float trilinearInterpolate(const Vector& P) const;
     protected:
 
-        std::shared_ptr<Volume<float> > field;
+        FloatVolumeBase field;
         const Vector origin;
         const double size;
         const int voxels;
@@ -23,9 +26,19 @@ class FloatGrid{
         const Vector indexToPosition(const int i) const;
 };
 
+typedef std::shared_ptr<FloatGrid> FloatGridPtr;
+//typedef std::shared_ptr<GridBase<Vector> > VectorGridPtr;
+
+class FloatGridBase :  public FloatGridPtr{
+    public:
+        FloatGridBase();
+        FloatGridBase(FloatGrid* f) : FloatGridPtr(f){};
+        ~FloatGridBase();
+};
+
 class DensityGrid: public FloatGrid{
     public:
-        DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
+        DensityGrid(Volume<float>* f, Vector o, double s, int v);
         ~DensityGrid(){};
 
         void StampWisp(const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset);
@@ -36,7 +49,7 @@ class DensityGrid: public FloatGrid{
 
 class DeepShadowMap: public FloatGrid{
     public:
-        DeepShadowMap(light l, float m, std::shared_ptr<Volume<float> > f, Vector o, double s, int v);
+        DeepShadowMap(light l, float m, Volume<float>* f, Vector o, double s, int v);
         ~DeepShadowMap(){};
 
     private:
@@ -46,18 +59,22 @@ class DeepShadowMap: public FloatGrid{
         //Raymarch from position x to the light, return the integrated density
         double rayMarchLightScatter(const Vector& x);
 };
+
+typedef std::shared_ptr<DeepShadowMap > DSMPtr;
+
 //-------------------------------------------------------------------------------------------------------------------------------
 //Gridded Volumes
 //-------------------------------------------------------------------------------------------------------------------------------
 class GriddedVolume: public Volume<float>{
     public:
-        GriddedVolume(const std::shared_ptr<FloatGrid> grid) : g(grid){};
+        GriddedVolume(FloatGrid* grid) : g(grid){};
         ~GriddedVolume(){};
 
         const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return g.get()->trilinearInterpolate(P);};
         const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return Vector(0, 0, 0);};
 
     private:
-        std::shared_ptr<FloatGrid> g;
+        FloatGridBase g;
 };
 }
+#endif

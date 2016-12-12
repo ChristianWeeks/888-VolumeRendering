@@ -5,7 +5,7 @@ using namespace lux;
 //-------------------------------------------------------------------------------------------------------------------------------
 //FloatGrid
 //-------------------------------------------------------------------------------------------------------------------------------
-FloatGrid::FloatGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v) :
+FloatGrid::FloatGrid(Volume<float>* f, const Vector& o, const double& s, const int& v) :
     field(f),
     origin(o),
     size(s),
@@ -104,7 +104,7 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
 //-------------------------------------------------------------------------------------------------------------------------------
 //DensityGrid
 //-------------------------------------------------------------------------------------------------------------------------------
-DensityGrid::DensityGrid(std::shared_ptr<Volume<float> > f, Vector o, double s, int v)
+DensityGrid::DensityGrid(Volume<float>* f, Vector o, double s, int v)
     : FloatGrid(f, o, s, v){
     //stamp the values.get() into our grid
     for(int i = 0; i < voxels; i++){
@@ -152,9 +152,9 @@ void DensityGrid::StampWisp(const Vector& P, const SimplexNoiseObject& noise1, c
 
         //Displace our dot radially with second level of noise
         lux::Vector d2;
-        /*d2[0] = noise2.eval(dSphere[0], dSphere[1], dSphere[2]);
-        d2[1] = noise2.eval(dSphere[0] + offset, dSphere[1] + offset, dSphere[2] + offset);
-        d2[2] = noise2.eval(dSphere[0] + offset*2, dSphere[1] + offset*2, dSphere[2] + offset*2);*/
+        /*d2[0] = noise2->eval(dSphere[0], dSphere[1], dSphere[2]);
+        d2[1] = noise2->eval(dSphere[0] + offset, dSphere[1] + offset, dSphere[2] + offset);
+        d2[2] = noise2->eval(dSphere[0] + offset*2, dSphere[1] + offset*2, dSphere[2] + offset*2);*/
 
         d2[0] = noise2.eval(dSphere[0] + 0.3421, dSphere[1] - 1.2313, dSphere[2] + 3.123);
         d2[1] = noise2.eval(dSphere[0] + 10.231, dSphere[1] + 1923.12, dSphere[2] + 3.31231);
@@ -219,7 +219,7 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
 //-------------------------------------------------------------------------------------------------------------------------------
 //Deep Shadow Map
 //-------------------------------------------------------------------------------------------------------------------------------
-DeepShadowMap::DeepShadowMap(light l, float m, std::shared_ptr<Volume<float> > f, Vector o, double s, int v)
+DeepShadowMap::DeepShadowMap(light l, float m, Volume<float>* f, Vector o, double s, int v)
     : FloatGrid(f, o, s, v),
     sourceLight(l),
     marchStep(m){

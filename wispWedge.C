@@ -17,8 +17,8 @@ double emissive = 0.05;
 const double marchStep = 0.015;
 const double lightMarchStep = 0.12;
 
-const int startFrame = 81;
-const int endFrame =  351;
+const int startFrame = 30;
+const int endFrame =  31;
 
 //BBsize is half the length of an edge of the size of our cube. So bSize = 3 means our bounding box is a cube with edges length 6
 const float bbSize = 3.5;
@@ -83,36 +83,23 @@ int main(int argc, char **argv){
     WedgeAttribute wLowBound1;
     WedgeAttribute wLowBound2; 
     WedgeAttribute radius;
+    WedgeAttribute wOffset; 
 
-    wFreq2.key(1, 0.0);
-    wFreq2.key(50, 4.0);
+    wOffset.key(1, 0.0);
+    wOffset.key(400, 3.5);
 
-    wFreq1.key(50, 0.0);
     wFreq1.key(100, 3.0);
+    wFreq2.key(50, 4.0);
 
     wLowBound2.key(100, -0.4);
     wUpBound2.key(100, 0.4);
 
-    wLowBound2.key(150, 0.0);
-    wUpBound2.key(150, 0.0);
-
-    wLowBound1.key(150, 0.9);
-    wUpBound1.key(150, 1.1);
-
     wLowBound1.key(200, -0.5);
     wUpBound1.key(200, 0.5);
 
-    wLowBound2.key(200, 0.0);
-    wUpBound2.key(200, 0.0);
-
-    wLowBound2.key(250, -0.4);
-    wUpBound2.key(250, 0.4);
-
     wClump.key(250, 1.0);
-    wClump.key(300, 0.1);
 
-    radius.key(300, 2.0);
-    radius.key(350, 0.3);
+    radius.key(300, 1.4);
     //wClump.key(80, 2.0);
 
     //Set up our wedge values
@@ -132,22 +119,24 @@ int main(int argc, char **argv){
     float noiseMax2 = 0.4;
     float offset2 = 0.3;
 
-    float numDots = 10000000;
+    int numDots = 10000000;
 
     for (int i = startFrame; i < endFrame; i++){
 
         //-------------------------------------------------------------------------------------------------------------------------------------
         // SET UP OUR NOISE OBJECT, VOLUMES, GRIDS, AND SHADOW MAPS HERE
         //-------------------------------------------------------------------------------------------------------------------------------------
-        SimplexNoiseObject wispNoise1(octave1, rough1, freq1, fjump1, wLowBound1.get(i), wUpBound1.get(i), offset1);
-        SimplexNoiseObject wispNoise2(octave2, rough2, wFreq2.get(i), fjump2, wLowBound2.get(i), wUpBound2.get(i), offset2);
+        SimplexNoiseObject wispNoise1(octave1, rough1, wFreq1.get(i), fjump1, wLowBound1.get(i), wUpBound1.get(i), offset1);
+        SimplexNoiseObject wispNoise2(octave2, rough2, wFreq2.get(i), fjump2, wLowBound2.get(i), wUpBound2.get(i), wOffset.get(i));
         scene.renderlog.addLine(std::string("GLOBALS"));
         scene.renderlog.addLine(std::string(""));
+        scene.renderlog.addLine(std::string("Frame"));
+        scene.renderlog.addLine(std::to_string(i));
         scene.renderlog.addLine(std::string("Clump"));
         scene.renderlog.addLine(std::to_string(wClump.get(i)));
         scene.renderlog.addLine(std::string("Radius"));
         scene.renderlog.addLine(std::to_string(radius.get(i)));
-        scene.renderlog.addLine(std::string("Radius"));
+        scene.renderlog.addLine(std::string("Wisp Dots"));
         scene.renderlog.addLine(std::to_string(numDots));
 
         scene.renderlog.addVector(scene.getAnnotation());
@@ -161,16 +150,16 @@ int main(int argc, char **argv){
         scene.renderlog.addVector(wispNoise2.getAnnotation());
 
         //Set up our volume
-        auto constVol = std::make_shared<lux::ConstantVolume<float> > (0.0);
+        auto constVol = lux::ConstantVolume<float> (0.0);
 
         //Stamp our wisps
         boost::timer wispTimer;
-        auto wispGrid = std::make_shared<lux::DensityGrid>(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
-        wispGrid.get()->StampWisp(lux::Vector(0, 0, 0), wispNoise1, wispNoise2, wClump.get(i), radius.get(i), numDots, 0);
-        auto griddedWisp = std::make_shared<lux::GriddedVolume>(wispGrid);
+        //auto wispGrid = lux::DensityGrid(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
+        //wispGrid.StampWisp(lux::Vector(0, 0, 0), wispNoise1, wispNoise2, wClump.get(i), radius.get(i), numDots, 0);
+        //auto griddedWisp = lux::GriddedVolume(wispGrid);
         std::cout << "Wisp Build Time: " << wispTimer.elapsed() << "\n";
 
-        scene.volumes.push_back(griddedWisp);
+        scene.volumes.push_back(FloatVolumeBase(constantVolume&));
 
         //-------------------------------------------------------------------------------------------------------------------------------------
         boost::timer t;

@@ -3,16 +3,18 @@
 OFILES = Matrix.o OIIOFiles.o Camera.o boundingbox.o simplexnoise.o simplextextures.o grid.o Vector.o Color.o SceneManager.o
 
 ROOTDIR = .
-LIB = $(ROOTDIR)/libVR.a 
+LIB = $(ROOTDIR)/libVoyager.a
 
 LINKS =  `Magick++-config  --cppflags --cxxflags --ldflags --libs` -L/usr/local/lib -lfftw3 -lOpenImageIO
 
-INCLUDES = -I ./ `Magick++-config  --cppflags --cxxflags`
 
-CXX = clang++ -std=c++11 -Wall -g -O2 -D_THREAD_SAFE -pthread
+CXX = g++ -std=c++11 -Wall -g -O2 -fPIC -D_THREAD_SAFE -pthread
 SWIGEXEC = swig
-
-#PYTHONINCLUDE = -I/usr/include/python2.7 -I/usr/lib/python2.7/config
+SWIGLD = $(CXX) -shared -DINCLUDE_TEMPLATES -DDEBUG
+OIIOLIB = /group/dpa/lib/libOpenImageIO.so
+PYTHONINCLUDE = -I/usr/include/python2.7 -I/usr/lib/python2.7/config
+INCLUDES = -I ./ `Magick++-config  --cppflags --cxxflags` $(PYTHONINCLUDE)
+LN_VOYAGER = -L$(ROOTDIR) -lvoyager
 #INCLUDES = -I /usr/local/include/ -I /opt/local/include/ $(PYTHONINCLUDE)
 
 .C.o:
@@ -22,7 +24,7 @@ all: $(OFILES)
 	ar rv $(LIB) $?
 
 $(LIB): $(OFILES)
-	ar rv $(LIB) $?	
+	ar rv $(LIB) $?
 
 run:  volumesTest.C Volume.h Image.h
 	$(CXX) $(INCLUDES) volumesTest.C -o run  $(LINKS) $(PYTHONINCLUDE)
@@ -39,8 +41,10 @@ wisp:  wispAnimation.C $(LIB)
 wispw:  wispWedge.C $(LIB)
 	$(CXX) $(INCLUDES) wispWedge.C -o img $(LIB) $(LINKS)
 
-genswig:	swig/Volume.i $(OFILES)
-	$(SWIGEXEC) -c++ -python -shadow swig/Volume.i
+genswig:	swig/voyager.i $(OFILES)
+	$(SWIGEXEC) -c++ -python -shadow -I. swig/voyager.i
+	$(CXX) -c swig/voyager_wrap.cxx  $(INCLUDES) -o swig/voyager_wrap.o
+	$(SWIGLD) swig/voyager_wrap.o $(LIB) $(OIIOLIB) -ldl -L/usr/local/lib -L/opt/local/lib -lfftw3 -o swig/_voyager.so
 
 clean:
 	rm -f *.o
