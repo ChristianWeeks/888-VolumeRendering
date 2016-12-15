@@ -1,19 +1,23 @@
 
 
-OFILES = Matrix.o OIIOFiles.o Camera.o boundingbox.o simplexnoise.o simplextextures.o grid.o Vector.o Color.o SceneManager.o
+OFILES = Matrix.o OIIOFiles.o Camera.o boundingbox.o simplexnoise.o simplextextures.o Vector.o Color.o grid.o fields.o SceneManager.o 
 
 ROOTDIR = .
 LIB = $(ROOTDIR)/libVoyager.a
 
-LINKS =  `Magick++-config  --cppflags --cxxflags --ldflags --libs` -L/usr/local/lib -lfftw3 -lOpenImageIO
+LINKS = -L/usr/local/lib -lfftw3 -lOpenImageIO 
 
-
-CXX = g++ -std=c++11 -Wall -g -O2 -fPIC -D_THREAD_SAFE -pthread
+CXX = clang++ -std=c++11 -Wall -g -O2 -fPIC -D_THREAD_SAFE -pthread
 SWIGEXEC = swig
 SWIGLD = $(CXX) -shared -DINCLUDE_TEMPLATES -DDEBUG
-OIIOLIB = /group/dpa/lib/libOpenImageIO.so
+OIIOLIB = -L/group/dpa/lib/lib -lOpenImageIO
+CHROMELIB = -ldl
+
 PYTHONINCLUDE = -I/usr/include/python2.7 -I/usr/lib/python2.7/config
-INCLUDES = -I ./ `Magick++-config  --cppflags --cxxflags` $(PYTHONINCLUDE)
+MAGICKINCLUDE = `Magick++-config  --cppflags --cxxflags --ldflags`
+OIIOINCLUDE = -I/group/dpa/include/OpenImageIO
+INCLUDES = -I ./ $(PYTHONINCLUDE) $(MAGICKINCLUDE) $(OIIOINCLUDE)
+
 LN_VOYAGER = -L$(ROOTDIR) -lvoyager
 #INCLUDES = -I /usr/local/include/ -I /opt/local/include/ $(PYTHONINCLUDE)
 
@@ -42,9 +46,9 @@ wispw:  wispWedge.C $(LIB)
 	$(CXX) $(INCLUDES) wispWedge.C -o img $(LIB) $(LINKS)
 
 genswig:	swig/voyager.i $(OFILES)
-	$(SWIGEXEC) -c++ -python -shadow -I. swig/voyager.i
+	$(SWIGEXEC) -c++ -python -shadow -I./ swig/voyager.i
 	$(CXX) -c swig/voyager_wrap.cxx  $(INCLUDES) -o swig/voyager_wrap.o
-	$(SWIGLD) swig/voyager_wrap.o $(LIB) $(OIIOLIB) -ldl -L/usr/local/lib -L/opt/local/lib -lfftw3 -o swig/_voyager.so
-
+	$(SWIGLD) swig/voyager_wrap.o $(OIIOLIB) $(MAGICKINCLUDE) $(CHROMELIB) -L/usr/local/lib -lfftw3 -L./ -lVoyager -o swig/_voyager.so
+#-Wl,-rpath,. -L. -Wl,--whole-archive -lVoyager -Wl,--no-whole-archive 
 clean:
-	rm -f *.o
+	rm -rf *.o swig/*.so swig/*~ swig/*.cxx swig/voyager.py*

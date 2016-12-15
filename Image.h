@@ -1,4 +1,3 @@
-
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
@@ -39,9 +38,9 @@ class Image
     std::vector<float>& pixel(int x ) { return data[x]; }
 
     //! Interpolates a channel
-    const float interpolatedValue( float x, float y, int c ) const;
+    //const float interpolatedValue( float x, float y, int c ) const;
     //! Interpolates a pixel
-    std::vector<float> interpolatedPixel( float x, float y ) const;
+    //std::vector<float> interpolatedPixel( float x, float y ) const {};
 
     // Set the value of a pixel
     void setPixel( int x, int y, std::vector<float>& value ){
@@ -60,12 +59,12 @@ class Image
 
     const size_t index( int x, int y ) const { return (size_t) ( x + width*y ) ; }
 
-    void interpolationCoefficients( float x, float y,
+   /* void interpolationCoefficients( float x, float y,
                                    float& wx, float& wwx,
 				   float& wy, float& wwy,
 				   int& ix, int& iix,
 				   int& iy, int& iiy
-				 ) const;
+				 ) const;*/
 };
 
 

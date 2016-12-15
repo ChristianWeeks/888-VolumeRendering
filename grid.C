@@ -5,7 +5,7 @@ using namespace lux;
 //-------------------------------------------------------------------------------------------------------------------------------
 //FloatGrid
 //-------------------------------------------------------------------------------------------------------------------------------
-FloatGrid::FloatGrid(Volume<float>* f, const Vector& o, const double& s, const int& v) :
+FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& o, const double& s, const int& v) :
     field(f),
     origin(o),
     size(s),
@@ -104,7 +104,7 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
 //-------------------------------------------------------------------------------------------------------------------------------
 //DensityGrid
 //-------------------------------------------------------------------------------------------------------------------------------
-DensityGrid::DensityGrid(Volume<float>* f, Vector o, double s, int v)
+DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, double s, int v)
     : FloatGrid(f, o, s, v){
     //stamp the values.get() into our grid
     for(int i = 0; i < voxels; i++){
@@ -219,7 +219,7 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
 //-------------------------------------------------------------------------------------------------------------------------------
 //Deep Shadow Map
 //-------------------------------------------------------------------------------------------------------------------------------
-DeepShadowMap::DeepShadowMap(light l, float m, Volume<float>* f, Vector o, double s, int v)
+DeepShadowMap::DeepShadowMap(light l, float m, FloatVolume* f, Vector o, double s, int v)
     : FloatGrid(f, o, s, v),
     sourceLight(l),
     marchStep(m){

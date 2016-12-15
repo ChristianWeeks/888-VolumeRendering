@@ -5,6 +5,8 @@ using namespace lux;
 SceneManager::SceneManager(std::string filepath) :
     WRITE_RENDER_LOG(0),
     WRITE_RENDER_ANNOTATION(0),
+    ENABLE_LIGHTS(1),
+    ENABLE_DSM(0),
     K(1.0),
     emissive(0.05),
     marchStep(0.04),
@@ -59,7 +61,7 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
     Color fieldColor;
 
     Vector x = camera.eye() + n*start;
-    Color color(0.5, 1.0, 0.0, 1.0);
+    Color color(1.0, 1.0, 1.0, 1.0);
     while (marchLen < totalMarchLength){
         //Check each volume
         for(int j = 0; j < volumes.size(); j++){
@@ -71,17 +73,22 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
                 double tVal = T * (1 - deltaT);
 
                 //March to each light
-              //  for (int i = 0; i < lights.size(); i++){
-                for (int i = 0; i < lightGrids.size(); i++){
-                //    double lightTransmissivity = rayMarchLightScatter(x, lights[i], volumes[j].get());
-                    double lightTransmissivity = rayMarchDSM(x, lightGrids[i].get());
-                    C += lights[i].c * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
+                if(ENABLE_LIGHTS){
+                    for (int i = 0; i < lights.size(); i++){
+                        double lightTransmissivity = rayMarchLightScatter(x, lights[i], volumes[j]);
+                        C += lights[i].c * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
+                    }
+                }
+                if(ENABLE_DSM){
+                    for (int i = 0; i < lightGrids.size(); i++){
+                        double lightTransmissivity = rayMarchDSM(x, lightGrids[i].get());
+                        C += lights[i].c * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
+                    }
                 }
                 T *= deltaT;
-
                 if (emissive) {
                     //Boosting the emission of the peaks in our noise function- this makes the star clusters appear brighter
-                    color = cSlider.getColor(density);
+                    //color = cSlider.getColor(density);
                     color *= density;
                     //std::cout << color << "Density: " << density << "\n";
                     //The field color's contribution will be scaled by the density, so sparse areas don't become super bright
@@ -99,11 +106,10 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
         x += n * marchStep;
         marchLen += marchStep;
     }
-
     return C;
 }
 
-double SceneManager::rayMarchLightScatter(const Vector& x, light l, Volume<float> *vol) const {
+double SceneManager::rayMarchLightScatter(const Vector& x, light l, const FloatVolumeBase vol) const {
     double marchLen = 0.0;
     Vector toLight(l.pos - x);
     double dist = toLight.magnitude();
@@ -113,7 +119,7 @@ double SceneManager::rayMarchLightScatter(const Vector& x, light l, Volume<float
 
     while (marchLen < dist){
 
-        double density = vol->eval(x1);
+        double density = vol.get()->eval(x1);
         if(density > 0.0){
 
             T *= exp(-density * marchStep * K);

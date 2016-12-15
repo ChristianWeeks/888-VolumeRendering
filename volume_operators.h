@@ -6,268 +6,270 @@ namespace lux{
 //-------------------------------------------------------------------------------------------------------------------------------
 //Basic Arithmetic Operations
 //-------------------------------------------------------------------------------------------------------------------------------
-class AddVolumef: public Volume<float>{
+class AddVolumef: public FloatVolume{
     public:
-        AddVolumef(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<float> > g) :
+        AddVolumef(FloatVolumeBase f, FloatVolumeBase g) :
             a(f),
             b(g){};
         ~AddVolumef(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) + b.get()->eval(P);};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P) + b.get()->grad(P);};
+        const float eval( const Vector& P) const{ return a.get()->eval(P) + b.get()->eval(P);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P) + b.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<float> > b;
+        FloatVolumeBase a;
+        FloatVolumeBase b;
 };
 
-class AddVolumev: public Volume<Vector>{
+class AddVolumev: public VectorVolume{
     public:
-        AddVolumev(std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<Vector> > g) :
+        AddVolumev(VectorVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~AddVolumev(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) + b.get()->eval(P);};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P) + b.get()->grad(P);};
+        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) + b.get()->eval(P);};
+        const Matrix grad( const Vector& P) const{ return a.get()->grad(P) + b.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase a;
+        VectorVolumeBase b;
 };
 
-class SubtractVolumef: public Volume<float>{
+class SubtractVolumef: public FloatVolume{
     public:
-        SubtractVolumef(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<float> > g) :
+        SubtractVolumef(FloatVolumeBase f, FloatVolumeBase g) :
             a(f),
             b(g){};
         ~SubtractVolumef(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) - b.get()->eval(P);};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P) - b.get()->grad(P);};
+        const float eval( const Vector& P) const{ return a.get()->eval(P) - b.get()->eval(P);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P) - b.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<float> > b;
+        FloatVolumeBase a;
+        FloatVolumeBase b;
 };
 
-class SubtractVolumev: public Volume<Vector>{
+class SubtractVolumev: public VectorVolume{
     public:
-        SubtractVolumev(std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<Vector> > g) :
+        SubtractVolumev(VectorVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~SubtractVolumev(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) - b.get()->eval(P);};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P) - b.get()->grad(P);};
+        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) - b.get()->eval(P);};
+        const Matrix grad( const Vector& P) const{ return a.get()->grad(P) - b.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase a;
+        VectorVolumeBase b;
 };
 
-class MultVolumef: public Volume<float>{
+class MultVolumef: public FloatVolume{
     public:
-        MultVolumef(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<float> > g) :
+        MultVolumef(FloatVolumeBase f, FloatVolumeBase g) :
             a(f),
             b(g){};
         ~MultVolumef(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->eval(P) * b.get()->grad(P) + a.get()->grad(P) * b.get()->eval(P);};
+        const float eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
+        const Vector grad( const Vector& P) const{ return a.get()->eval(P) * b.get()->grad(P) + a.get()->grad(P) * b.get()->eval(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<float> > b;
+        FloatVolumeBase a;
+        FloatVolumeBase b;
 };
 
-/*class MultVolumev: public Volume<Vector>{
+/*class MultVolumev: public VectorVolume{
     public:
-        MultVolumev(std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<float> > g) :
+        MultVolumev(VectorVolumeBase f, FloatVolumeBase g) :
             a(f),
             b(g){};
         ~MultVolumev(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return a.get()->eval(P) * b.get()->grad(P) + a.get()->grad(P) * b.get()->eval(P);};
+        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
+        const Matrix grad( const Vector& P) const{ return a.get()->eval(P) * b.get()->grad(P) + a.get()->grad(P) * b.get()->eval(P);};
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase a;
+        VectorVolumeBase b;
 };*/
 
-class Mult_SV_Volume: public Volume<Vector>{
+class Mult_SV_Volume: public VectorVolume{
     public:
-        Mult_SV_Volume(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<Vector> > g) :
+        Mult_SV_Volume(FloatVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
 
-        Mult_SV_Volume( std::shared_ptr<Volume<Vector> > g, std::shared_ptr<Volume<float> > f) :
+        Mult_SV_Volume( VectorVolumeBase g, FloatVolumeBase f) :
             a(f),
             b(g){};
         ~Mult_SV_Volume(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return b.get()->grad(P);};
+        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
+        const Matrix grad( const Vector& P) const{ return b.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        FloatVolumeBase a;
+        VectorVolumeBase b;
 };
 
-class Advect_SL_Volume: public Volume<float>{
+class Advect_SL_Volume: public FloatVolume{
     public:
-        Advect_SL_Volume(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<Vector> > g) :
+        Advect_SL_Volume(FloatVolumeBase f, VectorVolumeBase g, float t) :
             a(f),
-            b(g){};
+            b(g),
+            advectTime(t){};
 
-        Advect_SL_Volume( std::shared_ptr<Volume<Vector> > g, std::shared_ptr<Volume<float> > f) :
+        Advect_SL_Volume( VectorVolumeBase g, FloatVolumeBase f, float t) :
             a(f),
-            b(g){};
+            b(g),
+            advectTime(t){};
         Advect_SL_Volume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P - b.get()->eval(P) * advectTime);};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+        const float eval( const Vector& P) const{ return a.get()->eval(P - b.get()->eval(P) * advectTime);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
         float advectTime;
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        FloatVolumeBase a;
+        VectorVolumeBase b;
 };
 
-class Advect_MMC_Volume: public Volume<float>{
+class Advect_MMC_Volume: public FloatVolume{
     public:
-        Advect_MMC_Volume(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<Vector> > g, const float newTime) :
+        Advect_MMC_Volume(FloatVolumeBase f, VectorVolumeBase g, const float newTime) :
             a(f),
             b(g),
-            t(newTime){};
+            advectTime(newTime){};
 
-        Advect_MMC_Volume( std::shared_ptr<Volume<Vector> > g, std::shared_ptr<Volume<float> > f, const float newTime) :
+        Advect_MMC_Volume( VectorVolumeBase g, FloatVolumeBase f, const float newTime) :
             a(f),
             b(g),
-            t(newTime){};
+            advectTime(newTime){};
         ~Advect_MMC_Volume(){};
-        void setTime(const float newTime){ t = newTime;};
+        void setTime(const float newTime){ advectTime = newTime;};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{
-            float semiLagrangian = a.get()->eval(P - b.get()->eval(P) * t);
+        const float eval( const Vector& P) const{
+            float semiLagrangian = a.get()->eval(P - b.get()->eval(P) * advectTime);
             float errorTerm = a.get()->eval(P) - semiLagrangian;
             return semiLagrangian - errorTerm * 0.5;};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<Vector> > b;
-        float t;
+        FloatVolumeBase a;
+        VectorVolumeBase b;
+        float advectTime;
 };
 
 
 //TODO: Matrix and Vector Multiplication
-/*class Mult_VM_Volume: public Volume<Vector>{
+/*class Mult_VM_Volume: public VectorVolume{
     public:
-        Mult_VM_Volume( std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<Matrix> > g) :
+        Mult_VM_Volume( VectorVolumeBase f, std::shared_ptr<Volume<Matrix> > g) :
             a(f),
             b(g){};
         ~Mult_VM_Volume(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};//TODO
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return b.get()->grad(P);};//TODO
+        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};//TODO
+        const Matrix grad( const Vector& P) const{ return b.get()->grad(P);};//TODO
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
+        VectorVolumeBase a;
         std::shared_ptr<Volume<Matrix> > b;
 };
 
 class Mult_MV_Volume: public Volume<Matrix>{
     public:
-        Mult_MV_Volume( std::shared_ptr<Volume<Matrix> > f, std::shared_ptr<Volume<Vector> > g) :
+        Mult_MV_Volume( std::shared_ptr<Volume<Matrix> > f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~Mult_MV_Volume(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};//TODO
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return b.get()->grad(P);};//TODO: Gradient of matrix does not matter
+        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};//TODO
+        const Matrix grad( const Vector& P) const{ return b.get()->grad(P);};//TODO: Gradient of matrix does not matter
 
     private:
         std::shared_ptr<Volume<Matrix> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase b;
 };*/
 
-class DivideVolume: public Volume<float>{
+class DivideVolume: public FloatVolume{
     public:
-        DivideVolume(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<float> > g) :
+        DivideVolume(FloatVolumeBase f, FloatVolumeBase g) :
             a(f),
             b(g){};
         ~DivideVolume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) / b.get()->eval(P);};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{
+        const float eval( const Vector& P) const{ return a.get()->eval(P) / b.get()->eval(P);};
+        const Vector grad( const Vector& P) const{
             return (a.get()->grad(P) * b.get()->eval(P) - a.get()->eval(P) * b.get()->grad(P)) /
                 (b.get()->grad(P) * b.get()->grad(P));};
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<float> > b;
+        FloatVolumeBase a;
+        FloatVolumeBase b;
 };
 
-class Divide_SV_Volume: public Volume<Vector>{
+class Divide_SV_Volume: public VectorVolume{
     public:
-        Divide_SV_Volume(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<Vector> > g) :
+        Divide_SV_Volume(FloatVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~Divide_SV_Volume(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return b.get()->eval(P) / a.get()->eval(P);};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return b.get()->grad(P);};
+        const  Vector eval( const Vector& P) const{ return b.get()->eval(P) / a.get()->eval(P);};
+        const Matrix grad( const Vector& P) const{ return b.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        FloatVolumeBase a;
+        VectorVolumeBase b;
 };
 
-class ExpVolumef: public Volume<float>{
+class ExpVolumef: public FloatVolume{
     public:
-        ExpVolumef(std::shared_ptr<Volume<float> > f) :
+        ExpVolumef(FloatVolumeBase f) :
             a(f){};
         ~ExpVolumef(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return std::exp(a.get()->eval(P));};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P) * eval(P);};
+        const float eval( const Vector& P) const{ return std::exp(a.get()->eval(P));};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P) * eval(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
+        FloatVolumeBase a;
 };
 
-class ExpVolumev: public Volume<Vector>{
+class ExpVolumev: public VectorVolume{
     public:
-        ExpVolumev(std::shared_ptr<Volume<Vector> > f) :
+        ExpVolumev(VectorVolumeBase f) :
             a(f){};
         ~ExpVolumev(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{
+        const  Vector eval( const Vector& P) const{
             Vector result = a.get()->eval(P);
             result[0] = std::exp(result[0]);
             result[1] = std::exp(result[1]);
             result[2] = std::exp(result[2]);
             return result;};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return /*eval(P) * */a.get()->grad(P);};
+        const Matrix grad( const Vector& P) const{ return /*eval(P) * */a.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
+        VectorVolumeBase a;
 };
 
 //-------------------------------------------------------------------------------------------------------------------------------
 //Union, Intersection, Cutout
 //-------------------------------------------------------------------------------------------------------------------------------
-class UnionVolumef: public Volume<float>{
+class UnionVolumef: public FloatVolume{
     public:
-        UnionVolumef(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<float> > g) :
+        UnionVolumef(FloatVolumeBase f, FloatVolumeBase g) :
             a(f),
             b(g){};
         ~UnionVolumef(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return std::max(a.get()->eval(P), b.get()->eval(P));};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{
+        const float eval( const Vector& P) const{ return std::max(a.get()->eval(P), b.get()->eval(P));};
+        const Vector grad( const Vector& P) const{
             if(a.get()->eval(P) > b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -277,19 +279,19 @@ class UnionVolumef: public Volume<float>{
         };
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<float> > b;
+        FloatVolumeBase a;
+        FloatVolumeBase b;
 };
 
-class UnionVolumev: public Volume<Vector>{
+class UnionVolumev: public VectorVolume{
     public:
-        UnionVolumev(std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<Vector> > g) :
+        UnionVolumev(VectorVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~UnionVolumev(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return std::max(a.get()->eval(P), b.get()->eval(P));};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{
+        const  Vector eval( const Vector& P) const{ return std::max(a.get()->eval(P), b.get()->eval(P));};
+        const Matrix grad( const Vector& P) const{
             if(a.get()->eval(P) > b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -299,19 +301,19 @@ class UnionVolumev: public Volume<Vector>{
         };
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase a;
+        VectorVolumeBase b;
 };
 
-class IntersectVolumef: public Volume<float>{
+class IntersectVolumef: public FloatVolume{
     public:
-        IntersectVolumef(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<float> > g) :
+        IntersectVolumef(FloatVolumeBase f, FloatVolumeBase g) :
             a(f),
             b(g){};
         ~IntersectVolumef(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return std::min(a.get()->eval(P), b.get()->eval(P));};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{
+        const float eval( const Vector& P) const{ return std::min(a.get()->eval(P), b.get()->eval(P));};
+        const Vector grad( const Vector& P) const{
             if(a.get()->eval(P) < b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -321,19 +323,19 @@ class IntersectVolumef: public Volume<float>{
         };
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<float> > b;
+        FloatVolumeBase a;
+        FloatVolumeBase b;
 };
 
-class IntersectVolumev: public Volume<Vector>{
+class IntersectVolumev: public VectorVolume{
     public:
-        IntersectVolumev(std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<Vector> > g) :
+        IntersectVolumev(VectorVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~IntersectVolumev(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return std::min(a.get()->eval(P), b.get()->eval(P));};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{
+        const  Vector eval( const Vector& P) const{ return std::min(a.get()->eval(P), b.get()->eval(P));};
+        const Matrix grad( const Vector& P) const{
             if(a.get()->eval(P) < b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -343,19 +345,19 @@ class IntersectVolumev: public Volume<Vector>{
         };
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase a;
+        VectorVolumeBase b;
 };
 
-class CutoutVolumef: public Volume<float>{
+class CutoutVolumef: public FloatVolume{
     public:
-        CutoutVolumef(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<float> > g) :
+        CutoutVolumef(FloatVolumeBase f, FloatVolumeBase g) :
             a(f),
             b(g){};
         ~CutoutVolumef(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return std::min(a.get()->eval(P), -b.get()->eval(P));};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{
+        const float eval( const Vector& P) const{ return std::min(a.get()->eval(P), -b.get()->eval(P));};
+        const Vector grad( const Vector& P) const{
             if(a.get()->eval(P) < b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -365,19 +367,19 @@ class CutoutVolumef: public Volume<float>{
         };
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<float> > b;
+        FloatVolumeBase a;
+        FloatVolumeBase b;
 };
 
-class CutoutVolumev: public Volume<Vector>{
+class CutoutVolumev: public VectorVolume{
     public:
-        CutoutVolumev(std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<Vector> > g) :
+        CutoutVolumev(VectorVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~CutoutVolumev(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return std::min(a.get()->eval(P), -b.get()->eval(P));};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{
+        const  Vector eval( const Vector& P) const{ return std::min(a.get()->eval(P), -b.get()->eval(P));};
+        const Matrix grad( const Vector& P) const{
             if(a.get()->eval(P) < b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -387,137 +389,137 @@ class CutoutVolumev: public Volume<Vector>{
         };
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase a;
+        VectorVolumeBase b;
 };
 
 //-------------------------------------------------------------------------------------------------------------------------------
-class SinVolume: public Volume<float>{
+class SinVolume: public FloatVolume{
     public:
-        SinVolume(std::shared_ptr<Volume<float> > f) :
+        SinVolume(FloatVolumeBase f) :
             a(f){};
         ~SinVolume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return std::sin(a.get()->eval(P));};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P) * std::cos(a.get()->eval(P));};
+        const float eval( const Vector& P) const{ return std::sin(a.get()->eval(P));};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P) * std::cos(a.get()->eval(P));};
 
     private:
-        std::shared_ptr<Volume<float> > a;
+        FloatVolumeBase a;
 };
 
-class CosVolume: public Volume<float>{
+class CosVolume: public FloatVolume{
     public:
-        CosVolume(std::shared_ptr<Volume<float> > f) :
+        CosVolume(FloatVolumeBase f) :
             a(f){};
         ~CosVolume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return std::cos(a.get()->eval(P));};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P) * -std::sin(a.get()->eval(P));};
+        const float eval( const Vector& P) const{ return std::cos(a.get()->eval(P));};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P) * -std::sin(a.get()->eval(P));};
 
     private:
-        std::shared_ptr<Volume<float> > a;
+        FloatVolumeBase a;
 };
 
 //-------------------------------------------------------------------------------------------------------------------------------
 //Linear Algebra
 //-------------------------------------------------------------------------------------------------------------------------------
-class DotProductVolume: public Volume<float>{
+class DotProductVolume: public FloatVolume{
     public:
-        DotProductVolume(std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<Vector> > g) :
+        DotProductVolume(VectorVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~DotProductVolume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return Vector(0,0,0);};
+        const float eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
+        const Vector grad( const Vector& P) const{ return Vector(0,0,0);};
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase a;
+        VectorVolumeBase b;
 };
 
-class CrossProductVolume: public Volume<Vector>{
+class CrossProductVolume: public VectorVolume{
     public:
-        CrossProductVolume(std::shared_ptr<Volume<Vector> > f, std::shared_ptr<Volume<Vector> > g) :
+        CrossProductVolume(VectorVolumeBase f, VectorVolumeBase g) :
             a(f),
             b(g){};
         ~CrossProductVolume(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P) ^ b.get()->eval(P);};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) ^ b.get()->eval(P);};
+        const Matrix grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
-        std::shared_ptr<Volume<Vector> > b;
+        VectorVolumeBase a;
+        VectorVolumeBase b;
 };
 //-------------------------------------------------------------------------------------------------------------------------------
 //Transformations
 //-------------------------------------------------------------------------------------------------------------------------------
-class TranslateVolumef: public Volume<float>{
+class TranslateVolumef: public FloatVolume{
     public:
-        TranslateVolumef(std::shared_ptr<Volume<float> > f, Vector d) :
+        TranslateVolumef(FloatVolumeBase f, Vector d) :
             a(f),
             delta(d){};
         ~TranslateVolumef(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P - delta);};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P - delta);};
+        const float eval( const Vector& P) const{ return a.get()->eval(P - delta);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P - delta);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
+        FloatVolumeBase a;
         Vector delta;
 };
 
-class TranslateVolumev: public Volume<Vector>{
+class TranslateVolumev: public VectorVolume{
     public:
-        TranslateVolumev(std::shared_ptr<Volume<Vector> > f, Vector d) :
+        TranslateVolumev(VectorVolumeBase f, Vector d) :
             a(f),
             delta(d){};
         ~TranslateVolumev(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(P - delta);};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P - delta);};
+        const  Vector eval( const Vector& P) const{ return a.get()->eval(P - delta);};
+        const Matrix grad( const Vector& P) const{ return a.get()->grad(P - delta);};
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
+        VectorVolumeBase a;
         Vector delta;
 };
 
-class Scale_S_Volume: public Volume<float>{
+class Scale_S_Volume: public FloatVolume{
     public:
-        Scale_S_Volume(std::shared_ptr<Volume<float> > f, Vector p, float s) :
+        Scale_S_Volume(FloatVolumeBase f, Vector p, float s) :
             a(f),
             pivot(p),
             scaleFactor(s){};
         ~Scale_S_Volume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{ return a.get()->eval(((P - pivot) / scaleFactor) + pivot);};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(((P - pivot) / scaleFactor) + pivot);};
+        const float eval( const Vector& P) const{ return a.get()->eval(((P - pivot) / scaleFactor) + pivot);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(((P - pivot) / scaleFactor) + pivot);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
+        FloatVolumeBase a;
         Vector pivot;
         float scaleFactor;
 };
 
-class Scale_V_Volume: public Volume<Vector>{
+class Scale_V_Volume: public VectorVolume{
     public:
-        Scale_V_Volume(std::shared_ptr<Volume<Vector> > f, Vector p, float s) :
+        Scale_V_Volume(VectorVolumeBase f, Vector p, float s) :
             a(f),
             pivot(p),
             scaleFactor(s){};
         ~Scale_V_Volume(){};
 
-        const typename Volume<Vector>::volumeDataType eval( const Vector& P) const{ return scaleFactor * a.get()->eval(((P - pivot) / scaleFactor) + pivot);};
-        const typename Volume<Vector>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(((P - pivot) / scaleFactor) + pivot);};
+        const  Vector eval( const Vector& P) const{ return scaleFactor * a.get()->eval(((P - pivot) / scaleFactor) + pivot);};
+        const Matrix grad( const Vector& P) const{ return a.get()->grad(((P - pivot) / scaleFactor) + pivot);};
 
     private:
-        std::shared_ptr<Volume<Vector> > a;
+        VectorVolumeBase a;
         Vector pivot;
         float scaleFactor;
 };
 
-class Scale_M_Volume: public Volume<Matrix>{
+/*class Scale_M_Volume: public Volume<Matrix>{
     public:
         Scale_M_Volume(std::shared_ptr<Volume<Matrix> > f, Vector p, float s) :
             a(f),
@@ -532,35 +534,35 @@ class Scale_M_Volume: public Volume<Matrix>{
         std::shared_ptr<Volume<Matrix> > a;
         Vector pivot;
         float scaleFactor;
-};
+};*/
 
-class Rotate_S_Volume: public Volume<float>{
+class Rotate_S_Volume: public FloatVolume{
     public:
-        Rotate_S_Volume(std::shared_ptr<Volume<float> > f, Vector p, Vector s, float ang) :
+        Rotate_S_Volume(FloatVolumeBase f, Vector p, Vector s, float ang) :
             a(f),
             pivot(p),
             rotAxis(s.unitvector()),
             angle(ang){};
         ~Rotate_S_Volume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{
+        const float eval( const Vector& P) const{
             Vector rotatedPoint = P * std::cos(angle);
             rotatedPoint += rotAxis * (P * rotAxis * (1 - std::cos(angle)));
             rotatedPoint += P ^ (rotAxis * std::sin(angle));
             return a.get()->eval(rotatedPoint);
         };
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
+        FloatVolumeBase a;
         Vector pivot;
         Vector rotAxis;
         float angle;
 };
 
-class BlinnBlend_S_Volume: public Volume<float>{
+class BlinnBlend_S_Volume: public FloatVolume{
     public:
-        BlinnBlend_S_Volume(std::shared_ptr<Volume<float> > f, std::shared_ptr<Volume<float> > g, float Sf, float Sg, float Beta) :
+        BlinnBlend_S_Volume(FloatVolumeBase f, FloatVolumeBase g, float Sf, float Sg, float Beta) :
             a(f),
             b(g),
             sf(Sf),
@@ -568,51 +570,51 @@ class BlinnBlend_S_Volume: public Volume<float>{
             beta(Beta){};
         ~BlinnBlend_S_Volume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{
+        const float eval( const Vector& P) const{
             return std::exp(a.get()->eval(P) / sf) + std::exp(b.get()->eval(P) / sg) - beta;}
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
-        std::shared_ptr<Volume<float> > b;
+        FloatVolumeBase a;
+        FloatVolumeBase b;
         float sf;
         float sg;
         float beta;
 };
 
 
-class MaskVolume: public Volume<float>{
+class MaskVolume: public FloatVolume{
     public:
-        MaskVolume(std::shared_ptr<Volume<float> > f) :
+        MaskVolume(FloatVolumeBase f) :
             a(f){};
         ~MaskVolume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{
+        const float eval( const Vector& P) const{
             if (a.get()->eval(P) > 0.0) return 1;
             return 0;};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
+        FloatVolumeBase a;
 };
 
-class ClampVolume: public Volume<float>{
+class ClampVolume: public FloatVolume{
     public:
-        ClampVolume(std::shared_ptr<Volume<float> > f, float Min, float Max) :
+        ClampVolume(FloatVolumeBase f, float Min, float Max) :
             a(f),
             minVal(Min),
             maxVal(Max){};
         ~ClampVolume(){};
 
-        const typename Volume<float>::volumeDataType eval( const Vector& P) const{
+        const float eval( const Vector& P) const{
             float val = a.get()->eval(P);
             if (val < minVal) return minVal;
             else if (val > maxVal) return maxVal;
             return val;};
-        const typename Volume<float>::volumeGradType grad( const Vector& P) const{ return a.get()->grad(P);};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
-        std::shared_ptr<Volume<float> > a;
+        FloatVolumeBase a;
         float minVal;
         float maxVal;
 };

@@ -19,7 +19,7 @@ class RenderLog {
             annotations.insert(annotations.end(), annoVec.begin(), annoVec.end());
         }
 
-        void writeToImage(std::string filename){
+       void writeToImage(std::string filename){
             //Format our map
             std::ostringstream ss;
             for( auto it = annotations.begin(); it != annotations.end(); it+=2){
@@ -64,6 +64,8 @@ class RenderLog {
             logFile << ss.str();
             logFile.close();
         };
+
+        void clearAnnotations(){annotations.clear();};
         std::string filepath;
 
 

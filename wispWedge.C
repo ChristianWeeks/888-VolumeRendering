@@ -119,7 +119,7 @@ int main(int argc, char **argv){
     float noiseMax2 = 0.4;
     float offset2 = 0.3;
 
-    int numDots = 10000000;
+    int numDots = 100000;
 
     for (int i = startFrame; i < endFrame; i++){
 
@@ -128,7 +128,7 @@ int main(int argc, char **argv){
         //-------------------------------------------------------------------------------------------------------------------------------------
         SimplexNoiseObject wispNoise1(octave1, rough1, wFreq1.get(i), fjump1, wLowBound1.get(i), wUpBound1.get(i), offset1);
         SimplexNoiseObject wispNoise2(octave2, rough2, wFreq2.get(i), fjump2, wLowBound2.get(i), wUpBound2.get(i), wOffset.get(i));
-        scene.renderlog.addLine(std::string("GLOBALS"));
+        /*scene.renderlog.addLine(std::string("GLOBALS"));
         scene.renderlog.addLine(std::string(""));
         scene.renderlog.addLine(std::string("Frame"));
         scene.renderlog.addLine(std::to_string(i));
@@ -147,19 +147,19 @@ int main(int argc, char **argv){
         scene.renderlog.addLine(std::string("NOISE2"));
         scene.renderlog.addLine(std::string(""));
 
-        scene.renderlog.addVector(wispNoise2.getAnnotation());
+        scene.renderlog.addVector(wispNoise2.getAnnotation());*/
 
         //Set up our volume
-        auto constVol = lux::ConstantVolume<float> (0.0);
+        auto constVol = new lux::ConstantVolumef(0.0);
 
         //Stamp our wisps
         boost::timer wispTimer;
-        //auto wispGrid = lux::DensityGrid(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
-        //wispGrid.StampWisp(lux::Vector(0, 0, 0), wispNoise1, wispNoise2, wClump.get(i), radius.get(i), numDots, 0);
-        //auto griddedWisp = lux::GriddedVolume(wispGrid);
+        auto wispGrid = new lux::DensityGrid(constVol, lux::Vector(-bbSize, -bbSize, -bbSize), gridSize + 0.2, gridVoxelCount);
+        wispGrid->StampWisp(lux::Vector(0, 0, 0), wispNoise1, wispNoise2, wClump.get(i), radius.get(i), numDots, 0);
+        auto griddedWisp = new lux::GriddedVolume(wispGrid);
         std::cout << "Wisp Build Time: " << wispTimer.elapsed() << "\n";
 
-        scene.volumes.push_back(FloatVolumeBase(constantVolume&));
+        scene.volumes.push_back(lux::FloatVolumeBase(griddedWisp));
 
         //-------------------------------------------------------------------------------------------------------------------------------------
         boost::timer t;
