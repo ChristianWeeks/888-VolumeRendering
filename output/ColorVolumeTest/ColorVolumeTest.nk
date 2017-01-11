@@ -1,0 +1,80 @@
+#! /opt/foundry/nuke8/libnuke-8.0.v5.so -nx
+version 8.0 v5
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="43" y="94" w="1686" h="1049" screen="0">
+        <splitter orientation="1">
+            <split size="1062"/>
+            <splitter orientation="1">
+                <split size="40"/>
+                <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                    <page id="Toolbar.1"/>
+                </dock>
+                <split size="1018"/>
+                <splitter orientation="2">
+                    <split size="585"/>
+                    <dock id="" activePageId="Viewer.1">
+                        <page id="Viewer.1"/>
+                    </dock>
+                    <split size="411"/>
+                    <dock id="" activePageId="DAG.1">
+                        <page id="DAG.1"/>
+                        <page id="Curve Editor.1"/>
+                        <page id="DopeSheet.1"/>
+                    </dock>
+                </splitter>
+            </splitter>
+            <split size="614"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/ColorVolumeTest/ColorVolumeTest.nk
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+}
+Read {
+ inputs 0
+ file /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/ColorVolumeTest/ColorVolumeTest.exr
+ format "480 270 0 0 480 270 1 "
+ origset true
+ version 1
+ name Read1
+ selected true
+ xpos -110
+ ypos -191
+}
+set N4a54b90 [stack 0]
+ColorCorrect {
+ contrast 4
+ name ColorCorrect1
+ xpos 162
+ ypos -62
+}
+Glow2 {
+ size 30
+ name Glow1
+ xpos 112
+ ypos 63
+}
+push $N4a54b90
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge1
+ xpos -4
+ ypos 131
+}
+Viewer {
+ frame 1
+ input_process false
+ name Viewer1
+ xpos -48
+ ypos 248
+}

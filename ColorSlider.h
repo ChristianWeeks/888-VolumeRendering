@@ -9,6 +9,7 @@ namespace lux{
 class ColorSlider {
     public:
         ColorSlider() : anchors(0), colors(0){};
+        ColorSlider(const ColorSlider& cSlider) : anchors(cSlider.anchors), colors(cSlider.colors){};
         ~ColorSlider(){};
 
         void addColor(const float& position, const Color& color){
@@ -37,9 +38,9 @@ class ColorSlider {
 
         };
 
-        Color getColor(float position) {
-            std::vector<float>::iterator fit;
-            std::vector<double>::iterator cit;
+        const Color getColor(float position) const {
+            std::vector<float>::const_iterator fit;
+            std::vector<double>::const_iterator cit;
             fit = anchors.begin();
             cit = colors.begin();
 
@@ -66,11 +67,11 @@ class ColorSlider {
             return interpolate(startAnchor, endAnchor, position, startColor, endColor);
         };
 
-    private:
         std::vector<float> anchors;
         std::vector<double> colors;
+    private:
 
-        Color interpolate(float start, float end, float pos, Color c1, Color c2) {
+        const Color interpolate(float start, float end, float pos, Color c1, Color c2) const{
             float len = end - start;
             pos = (pos - start) / len;
             return c1*(1-pos) + c2*pos;

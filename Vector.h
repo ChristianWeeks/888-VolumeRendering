@@ -72,6 +72,12 @@ class Vector
    const Vector operator*        (const double v) const
    { return Vector(xyz[0]*v, xyz[1]*v, xyz[2]*v); }
 
+   const Vector operator-        (const double v) const
+   { return Vector(xyz[0]-v, xyz[1]-v, xyz[2]-v); }
+   
+   const Vector operator+        (const double v) const
+   { return Vector(xyz[0]+v, xyz[1]+v, xyz[2]+v); }
+
    const Vector operator/        (const double v) const
    { return Vector(xyz[0]/v, xyz[1]/v, xyz[2]/v); }
 

@@ -1,0 +1,81 @@
+#! /opt/foundry/nuke8/libnuke-8.0.v5.so -nx
+version 8.0 v5
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="30" w="1820" h="1411" screen="0">
+        <splitter orientation="1">
+            <split size="1147"/>
+            <splitter orientation="1">
+                <split size="43"/>
+                <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                    <page id="Toolbar.1"/>
+                </dock>
+                <split size="1100"/>
+                <splitter orientation="2">
+                    <split size="797"/>
+                    <dock id="" activePageId="Viewer.1">
+                        <page id="Viewer.1"/>
+                    </dock>
+                    <split size="561"/>
+                    <dock id="" activePageId="DAG.1">
+                        <page id="DAG.1"/>
+                        <page id="Curve Editor.1"/>
+                        <page id="DopeSheet.1"/>
+                    </dock>
+                </splitter>
+            </splitter>
+            <split size="663"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/starrySky.nk
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+}
+Read {
+ inputs 0
+ file /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/StarrySky1.png
+ format "640 360 0 0 640 360 1 "
+ origset true
+ name Read1
+ xpos -10
+ ypos -116
+}
+Premult {
+ name Premult1
+ selected true
+ xpos -10
+ ypos -8
+}
+Glint {
+ repeat 4
+ from_color {2 1 1 1}
+ steps 10
+ tolerance 0.53
+ name Glint1
+ xpos -10
+ ypos 32
+ disable true
+}
+Glow2 {
+ size 3.9
+ crop false
+ name Glow1
+ xpos -10
+ ypos 119
+ disable true
+}
+Viewer {
+ frame 1
+ input_process false
+ name Viewer1
+ xpos 162
+ ypos 304
+}

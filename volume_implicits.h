@@ -6,6 +6,7 @@
 #include "Matrix.h"
 #include "Color.h"
 #include "simplexnoise.h"
+#include "boundingbox.h"
 #include <memory>
 
 namespace lux{
@@ -50,8 +51,8 @@ class FloatVolume{
 
    virtual ~FloatVolume(){};
 
-   virtual const float eval( const Vector& P ) const { float base; base = base - base; return base; };
-   virtual const Vector grad( const Vector& P ) const { Vector G; G = G - G; return G;};
+   virtual const float eval( const Vector& P ) const { float base = 0; return base; };
+   virtual const Vector grad( const Vector& P ) const { Vector G; return G;};
 };
 
 class VectorVolume{
@@ -61,7 +62,7 @@ class VectorVolume{
 
    virtual ~VectorVolume(){};
 
-   virtual const Vector eval( const Vector& P ) const { Vector base; base = base - base; return base; };
+   virtual const Vector eval( const Vector& P ) const { Vector base; return base; };
    virtual const Matrix grad( const Vector& P ) const { Matrix G; return G;};
 };
 
@@ -106,17 +107,20 @@ class dumbBase{
 };*/
 class FloatVolumeBase : public FloatVolumePtr {
     public:
-        FloatVolumeBase(){};
-        FloatVolumeBase(FloatVolume* f) : FloatVolumePtr(f){};
+        FloatVolumeBase() : BB(Vector(0, 0, 0), 4){};
+        FloatVolumeBase(FloatVolume* f) : FloatVolumePtr(f), BB(Vector(0, 0, 0), 4){};
         ~FloatVolumeBase(){};
         const FloatVolume* get() const {return FloatVolumePtr::get();};
+        BoundingBox BB;
 };
 
 class VectorVolumeBase : public VectorVolumePtr {
     public:
-        VectorVolumeBase(){};
+        VectorVolumeBase() : BB(Vector(0, 0, 0), 4){};
         VectorVolumeBase(VectorVolume* f) : VectorVolumePtr(f){};
         ~VectorVolumeBase(){};
+        const VectorVolume* get() const {return VectorVolumePtr::get();};
+        BoundingBox BB;
 };
 
 class ColorVolumeBase : public ColorVolumePtr {

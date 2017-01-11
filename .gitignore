@@ -6,5 +6,7 @@
 *.swp
 *.swo
 *.mov
+*.hip
+*.hipnc
 .nfs*
 img

@@ -2,6 +2,7 @@
 #ifndef __VOLUME_OPERATORS_H__
 #define __VOLUME_OPERATORS_H__
 #include "volume_implicits.h"
+#include "ColorSlider.h"
 namespace lux{
 //-------------------------------------------------------------------------------------------------------------------------------
 //Basic Arithmetic Operations
@@ -81,6 +82,27 @@ class MultVolumef: public FloatVolume{
         FloatVolumeBase b;
 };
 
+class ColorVolumeFromDensity: public ColorVolume{
+    public:
+        ColorVolumeFromDensity(FloatVolumeBase f, const ColorSlider& cSlider, float min, float max) :
+            a(f),
+            c(cSlider),
+            cMin(min),
+            cMax(max){};
+       ~ColorVolumeFromDensity(){}; 
+
+        const Color eval( const Vector& P) const{ 
+            float val = (a.get()->eval(P) - cMin) / (cMax - cMin);
+            return c.getColor(val);};
+        const int grad( const Vector& P) const{ return 0;};
+
+    private:
+        FloatVolumeBase a;
+        ColorSlider c;
+        float cMin;
+        float cMax;
+};
+
 /*class MultVolumev: public VectorVolume{
     public:
         MultVolumev(VectorVolumeBase f, FloatVolumeBase g) :
@@ -118,14 +140,14 @@ class Mult_SV_Volume: public VectorVolume{
 class Advect_SL_Volume: public FloatVolume{
     public:
         Advect_SL_Volume(FloatVolumeBase f, VectorVolumeBase g, float t) :
+            advectTime(t),
             a(f),
-            b(g),
-            advectTime(t){};
+            b(g){};
 
         Advect_SL_Volume( VectorVolumeBase g, FloatVolumeBase f, float t) :
+            advectTime(t),
             a(f),
-            b(g),
-            advectTime(t){};
+            b(g){};
         Advect_SL_Volume(){};
 
         const float eval( const Vector& P) const{ return a.get()->eval(P - b.get()->eval(P) * advectTime);};

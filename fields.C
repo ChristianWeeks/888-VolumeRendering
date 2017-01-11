@@ -21,6 +21,12 @@ lux::ColorVolumeBase Noisec(SimplexNoiseObject s, const float xO, const float yO
     return lux::ColorVolumeBase(new lux::SimplexNoiseColorVolume(s, xO, yO, zO));};
 
 //------------------------------------------------------------------------------------------------------------------------------
+// TRANSFORMATIONS
+//------------------------------------------------------------------------------------------------------------------------------
+lux::FloatVolumeBase Translatef( const lux::FloatVolumeBase& f,  const lux::Vector& d)       { return lux::FloatVolumeBase(new lux::TranslateVolumef(f, d));};
+lux::VectorVolumeBase Translatev( const lux::VectorVolumeBase& f,  const lux::Vector& d)       { return lux::VectorVolumeBase(new lux::TranslateVolumev(f, d));};
+
+//------------------------------------------------------------------------------------------------------------------------------
 // OPERATORS
 //------------------------------------------------------------------------------------------------------------------------------
 lux::FloatVolumeBase Addf( const lux::FloatVolumeBase& f,  const lux::FloatVolumeBase& g)       { return lux::FloatVolumeBase(new lux::AddVolumef(f, g));};
@@ -37,10 +43,24 @@ lux::FloatVolumeBase Cutoutf( const lux::FloatVolumeBase& f,  const lux::FloatVo
 lux::FloatVolumeBase Maskf( const lux::FloatVolumeBase& f)                                    { return lux::FloatVolumeBase(new lux::MaskVolume(f));};
 lux::FloatVolumeBase Clampf( const lux::FloatVolumeBase& f, const float Min, const float Max) { return lux::FloatVolumeBase(new lux::ClampVolume(f, Min, Max));};
 
-
 lux::VectorVolumeBase Addv( const lux::VectorVolumeBase& f,  const lux::VectorVolumeBase& g) { return lux::VectorVolumeBase(new lux::AddVolumev(f, g));};
 lux::VectorVolumeBase Subtractv( const lux::VectorVolumeBase& f,  const lux::VectorVolumeBase& g) { return lux::VectorVolumeBase(new lux::SubtractVolumev(f, g));};
+
+lux::ColorVolumeBase ColorFromDensity(const lux::FloatVolumeBase& f, const lux::ColorSlider& cSlider, float min, float max) { return lux::ColorVolumeBase(new lux::ColorVolumeFromDensity(f, cSlider, min, max));};
 //------------------------------------------------------------------------------------------------------------------------------
 // GRIDS
 //-----------------------------------------------------------------------------------------------------------------------------
-lux::FloatGridBase Grid(const lux::FloatVolumeBase f, const lux::Vector& o, double s, double v) { return lux::FloatGridBase(new lux::DensityGrid(f, o, s, v));};
+lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v) { return lux::FloatGridBase(new lux::DensityGrid(f, o, s, v));};
+
+lux::FloatVolumeBase GriddedVolf(const lux::FloatGridBase& g)   { 
+    lux::FloatVolumeBase gridded(new lux::GriddedVolume(g));
+    gridded.BB.setBounds(g->center, g->length);
+    return gridded;
+};
+
+lux::FloatVolumeBase AutoGriddedf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v) { 
+    lux::FloatVolumeBase gridded( new lux::GriddedVolume(lux::FloatGridBase(new lux::DensityGrid(f, o, s, v))));
+    gridded.BB.setBounds(o, s);
+    return gridded;
+};
+lux::DSMBase DSM(const lux::light l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, double s, double v)   { return lux::DSMBase(new lux::DeepShadowMap(l, m, f, c, s, v));};

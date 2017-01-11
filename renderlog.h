@@ -14,7 +14,7 @@ class RenderLog {
         RenderLog(){};
         ~RenderLog(){};
         void addLine(const std::string& s){ annotations.push_back(s);};
-        void addVector(const std::vector<std::string>& annoVec){
+        void addVector(std::vector<std::string> annoVec){
             // [] operator automatically inserts the element if it is not found
             annotations.insert(annotations.end(), annoVec.begin(), annoVec.end());
         }

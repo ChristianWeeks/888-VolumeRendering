@@ -14,7 +14,7 @@ const double K = 1.0;
 double emissive = 0.05;
 
 //Discrete step for our marching.  Delta S in our equations
-const double marchStep = 0.015;
+const double marchStep = 0.08;
 const double lightMarchStep = 0.12;
 
 const int startFrame = 30;

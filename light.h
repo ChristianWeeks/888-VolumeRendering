@@ -2,7 +2,8 @@
 #define __LIGHT_H__
 
 #include "Vector.h"
-#include "Color.h"
+#include "ColorSlider.h"
+#include <iostream>
 
 namespace lux{
 class light
@@ -13,18 +14,31 @@ class light
             c(oldLight.c),
             dir(oldLight.dir),
             pos(oldLight.pos),
-            intensity(oldLight.intensity){};
+            intensity(oldLight.intensity),
+            USE_SLIDER(oldLight.USE_SLIDER),
+            cSlider(oldLight.cSlider){};
 
         light(Color C, Vector Dir, Vector Pos, float I) :
             c(C),
             dir(Dir.unitvector()),
             pos(Pos),
-            intensity(I){};
+            intensity(I),
+            USE_SLIDER(0),
+            cSlider(){};
         ~light(){};
+
+        const Color getColor(float transmission) {
+            //std::cout << "slider1: " << cSlider.get<< "\n";
+            if(1) return cSlider.getColor(transmission);
+            return c;
+        }
+
         Color c;
         Vector dir;
         Vector pos;
         float intensity;
+        int USE_SLIDER;
+        lux::ColorSlider cSlider; 
 };
 }
 

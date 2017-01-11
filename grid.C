@@ -5,19 +5,21 @@ using namespace lux;
 //-------------------------------------------------------------------------------------------------------------------------------
 //FloatGrid
 //-------------------------------------------------------------------------------------------------------------------------------
-FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& o, const double& s, const int& v) :
+FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const double& s, const int& v) :
+    center(c),
+    length(s),
     field(f),
-    origin(o),
-    size(s),
+    origin(c - (s/2.0)),
     voxels(v),
-    voxelLength(size / (double)voxels),
+    voxelLength(length / (double)voxels),
     totalCells(v*v*v),
     values(new float[v*v*v]){}
 
 FloatGrid::FloatGrid(const FloatGrid& f) :
+    center(f.center),
+    length(f.length),
     field(f.field),
     origin(f.origin),
-    size(f.size),
     voxels(f.voxels),
     voxelLength(f.voxelLength),
     totalCells(f.totalCells),
@@ -26,14 +28,16 @@ FloatGrid::FloatGrid(const FloatGrid& f) :
     for(int i = 0; i < totalCells; i++){
         values.get()[i] = f.values.get()[i];
     }
-
 }
-FloatGrid::~FloatGrid(){}
 
+FloatGrid::~FloatGrid(){}
+void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound){std::cout << "FloatGrid can't stamp wisps! Use a density grid.\n";};
 
 //Converts a position in 3-D space to an index in our grid
 const int FloatGrid::positionToIndex(const Vector& P) const{
     Vector P2 = (P - origin) / voxelLength;
+    if(int(P2[0]) <= 0 || int(P2[0]) >= voxels || int(P2[1]) <= 0 || int(P2[1]) >= voxels || int(P2[2]) <= 0 || int(P2[2]) >= voxels)
+        return -1;
     return (int)P2[2] + ((int)P2[1])*voxels + ((int)P2[0])*voxels*voxels;
 }
 
@@ -72,8 +76,8 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     //+x side
     for(int i = 0; i < 8; i++){
         if (c[i] > totalCells || c[i] < 0){
-            std::cout << "Interp: Out of Bounds: " << c[i] << "; "  << "\n";
-            return 1;
+            //std::cout << "Interp: Out of Bounds: " << c[i] << "; "  << "\n";
+            return 0.0;
         }
     }
     //now we can actually interpolate
@@ -98,6 +102,11 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     //if(vecMagn(c00) > 7.0)
     //    return vField[c[0]];
     //if (c00 > 0) std::cout << c00 << "\n";
+    /*if(c00 > 4.0){ 
+        std::cout << "c00: " << c00 << "\n";
+        std::cout << "Pos: " << position << "\n";
+        std::cout << "Index: " << c[0] << "\n";
+    }*/
     return c00;
 }
 
@@ -126,8 +135,10 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, double s, int v)
     }
 }
 
+DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels){std::cout << "Density Grid Copy Constructor!\n";};
+
 //Wisp algorithm
-void DensityGrid::StampWisp(const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset){
+void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset, float dBound){
 
     std::random_device rnd;
     std::mt19937 rng(rnd());
@@ -161,7 +172,11 @@ void DensityGrid::StampWisp(const Vector& P, const SimplexNoiseObject& noise1, c
         d2[2] = noise2.eval(dSphere[0] + 45.323, dSphere[1] + 93.324, dSphere[2] + 102.3142);
         dot += d2;
 
-        bakeDot(dot, 1.0);
+        lux::Vector diff = dot - P;
+        //Only bake out dot if it is within the boundaries
+        if (sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]) < dBound){
+            bakeDot(dot, value);
+        }
     }
 }
 
@@ -187,7 +202,7 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
 
     for(int i = 0; i < 8; i++){
         if (c[i] > totalCells || c[i] < 0){
-            std::cout << "BakeDot: Out of Bounds Index: " << c[i] << "; Position" << P << "\n";
+            //std::cout << "BakeDot: Out of Bounds Index: " << c[i] << "; Position" << P << "\n";
             return 0;
         }
     }
@@ -219,7 +234,7 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
 //-------------------------------------------------------------------------------------------------------------------------------
 //Deep Shadow Map
 //-------------------------------------------------------------------------------------------------------------------------------
-DeepShadowMap::DeepShadowMap(light l, float m, FloatVolume* f, Vector o, double s, int v)
+DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, double s, int v)
     : FloatGrid(f, o, s, v),
     sourceLight(l),
     marchStep(m){
@@ -263,7 +278,6 @@ double DeepShadowMap::rayMarchLightScatter(const Vector& x){
         //Do not add density if it is negative
         if(density > 0.0){
             densityInt += density * marchStep;
-
         }
         x1 += marchStep * toLight;
         marchLen += marchStep;

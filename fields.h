@@ -1,7 +1,6 @@
 #ifndef __FIELDS_WRAP_H__
 #define __FIELDS_WRAP_H__
 #include "grid.h"
-lux::FloatVolumeBase Sphere_v(const float rad);
 
 lux::FloatVolumeBase Constantf(const float value);
 lux::FloatVolumeBase Sphere(const float rad);
@@ -13,6 +12,12 @@ lux::FloatVolumeBase Noisef(SimplexNoiseObject s);
 lux::FloatVolumeBase PyroSphere(const float rad, const float d, const float e, SimplexNoiseObject s);
 lux::VectorVolumeBase Noisev(SimplexNoiseObject s, const float xO, const float yO, const float zO);
 lux::ColorVolumeBase Noisec(SimplexNoiseObject s, const float xO, const float yO, const float zO);
+
+//------------------------------------------------------------------------------------------------------------------------------
+// TRANSFORMATIONS
+//------------------------------------------------------------------------------------------------------------------------------
+lux::FloatVolumeBase Translatef( const lux::FloatVolumeBase& f,  const lux::Vector& d);
+lux::VectorVolumeBase Translatev( const lux::VectorVolumeBase& f,  const lux::Vector& d);
 
 //------------------------------------------------------------------------------------------------------------------------------
 // OPERATORS
@@ -31,7 +36,13 @@ lux::FloatVolumeBase Clampf(const lux::FloatVolumeBase& f, const float Min, cons
 
 lux::VectorVolumeBase Addv(const lux::VectorVolumeBase& f, const lux::VectorVolumeBase& g) ;
 lux::VectorVolumeBase Subtractv(const lux::VectorVolumeBase& f, const lux::VectorVolumeBase& g) ;
+
+lux::ColorVolumeBase ColorFromDensity(const lux::FloatVolumeBase& f, const lux::ColorSlider& cSlider, float min, float max) ;
 //------------------------------------------------------------------------------------------------------------------------------
 // GRIDS
 //------------------------------------------------------------------------------------------------------------------------------
+lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v);
+lux::FloatVolumeBase GriddedVolf(const lux::FloatGridBase& g); 
+lux::FloatVolumeBase AutoGriddedf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v);
+lux::DSMBase DSM(const lux::light l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, double s, double v);
 #endif

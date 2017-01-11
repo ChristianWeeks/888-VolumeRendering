@@ -6,8 +6,9 @@
 #include "boundingbox.h"
 #include "Camera.h"
 #include "renderlog.h"
-#include "ColorSlider.h"
+//#include "ColorSlider.h"
 
+#include <boost/timer.hpp>
 #include <vector>
 #include <stdio.h>
 #include <iomanip>
@@ -22,7 +23,7 @@ class SceneManager{
         void setFrameRange(int start, int end);
         void setResolution(int res);
         Color rayMarch(const Vector& n, float start, float end) ;
-        double rayMarchLightScatter(const Vector& x, light l, const FloatVolumeBase vol) const;
+        double rayMarchLightScatter(const Vector& x, light l) const;
         double rayMarchDSM(const Vector& x, const DeepShadowMap* dsm) const;
         void renderImage(int frameNumber);
         
@@ -34,32 +35,41 @@ class SceneManager{
         void pushLight(light l){ lights.push_back(l);};
         void clearLights(){ lights.clear();};
 
-        std::vector<DSMPtr> lightGrids;
-        void pushDSM(DSMPtr lg){ lightGrids.push_back(lg);};
+        std::vector<DSMBase> lightGrids;
+        void pushDSM(DSMBase lg){ lightGrids.push_back(lg);};
         void clearDSMs(){ lightGrids.clear();};
 
         std::vector<FloatVolumeBase> volumes;
-        void pushFloatVolume(FloatVolumeBase f){ volumes.push_back(f);};
-        void clearFloatVolumes(){ volumes.clear();};
+        void pushFloatVolume(FloatVolumeBase f){ 
+            volumes.push_back(f);
+            boundingboxes.push_back(f.BB);
+            std::cout << "center: " << f.BB.center << "\n";
+            std::cout << "len: " << f.BB.len << "\n";
+            };
+        void clearFloatVolumes(){ 
+            volumes.clear();
+            boundingboxes.clear();
+        
+        };
 
         std::vector<ColorVolumeBase> colorVolumes;
         void pushColorVolume(ColorVolumeBase f){ colorVolumes.push_back(f);};
         void clearColorVolumes(){ colorVolumes.clear();};
+
+        std::vector<BoundingBox> boundingboxes;
 
         Camera camera;
         int WRITE_RENDER_LOG;
         int WRITE_RENDER_ANNOTATION;
         int ENABLE_LIGHTS;
         int ENABLE_DSM;
+        int UNION_COLLISIONS;
+        int ADD_COLLISIONS;
         double K;
         double emissive;
 
         double marchStep;
         double lightMarchStep;
-        float bbSize;
-        float gridSize;
-        float DSMVoxelCount;
-        float gridVoxelCount;
         //ColorSlider cSlider;
         RenderLog renderlog;
     private:
@@ -69,9 +79,6 @@ class SceneManager{
         int endFrame;
         int width;
         int height;
-
-        BoundingBox bb;
-
 };
 }
 #endif
