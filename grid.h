@@ -52,8 +52,13 @@ class SparseGrid : public Grid{
             catch(int e){
                 std::cout << "Error: Voxels must be evenly divisible by partition size\n";
             }
+            setDefaultValue(0.0);
 
             data = new float*[numPartitions*numPartitions*numPartitions];
+            for(int i = 0; i < numPartitions*numPartitions*numPartitions; i++){
+                data[i] = NULL;
+            }
+
         };
         ~SparseGrid(){
             for (int i = 0; i < numPartitions; i++){
@@ -62,27 +67,30 @@ class SparseGrid : public Grid{
         };
 
         const float get(int i, int j, int k) const{
-            int ii = i/numPartitions;
-            int jj = j/numPartitions;
-            int kk = k/numPartitions;
+            int ii = i/partitionSize;
+            int jj = j/partitionSize;
+            int kk = k/partitionSize;
             //Get our partition index first
             int partitionIndex = kk + numPartitions * (jj + numPartitions * ii);
             int iii = (i % partitionSize);
             int jjj = (j % partitionSize);
             int kkk = (k % partitionSize);
+            if(data[partitionIndex] == NULL){
+                return defaultValue;
+            }
             return data[partitionIndex][kkk + partitionSize*(jjj + iii*partitionSize)];
         };
 
         void set(int i, int j, int k, float value){
             if (value == defaultValue) return;
             //ii, jj, kk are our partition indices
-            int ii = i/numPartitions;
-            int jj = j/numPartitions;
-            int kk = k/numPartitions;
+            int ii = i/partitionSize;
+            int jj = j/partitionSize;
+            int kk = k/partitionSize;
             //Get our partition index first
             int partitionIndex = kk + numPartitions * (jj + numPartitions * ii);
 
-            if (data[partitionIndex] == 0){
+            if (data[partitionIndex] == NULL){
                 //if block does not exist, we must create and initialize it
                 data[partitionIndex] = new float[partitionSize*partitionSize*partitionSize];
                 for (int iii = 0; iii < partitionSize; iii++){

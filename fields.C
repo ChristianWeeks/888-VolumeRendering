@@ -63,4 +63,4 @@ lux::FloatVolumeBase AutoGriddedf(const lux::FloatVolumeBase& f, const lux::Vect
     gridded.BB.setBounds(o, s);
     return gridded;
 };
-lux::DSMBase DSM(const lux::light l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, double s,  int v, int p)   { return lux::DSMBase(new lux::DeepShadowMap(l, m, f, c, s, v, p));};
+lux::DSMBase DSM(const lux::light& l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, double s,  int v, int p)   { return lux::DSMBase(new lux::DeepShadowMap(l, m, f, c, s, v, p));};

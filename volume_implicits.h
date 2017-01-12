@@ -150,7 +150,9 @@ class SphereVolume : public FloatVolume{
         SphereVolume(float rad) : r(rad){};
        ~SphereVolume(){};
 
-       const float eval( const Vector& P ) const { return r - P.magnitude();};
+       const float eval( const Vector& P ) const {
+            if ((r - P.magnitude()) <= 0) return 0;
+            return 1;};
        const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:

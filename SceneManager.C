@@ -58,7 +58,7 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
     Color fieldColor;
 
     Vector x = camera.eye() + n*start;
-    Color smokeColor(0.0, 0.0, 0.0, 0.0);
+    Color smokeColor(1.0, 1.0, 1.0, 1.0);
     while (marchLen < totalMarchLength){
         //Check each volume
         float density = 0.0;
