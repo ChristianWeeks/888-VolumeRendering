@@ -31,17 +31,15 @@ def main(args):
         pipeJob = open(scriptName, "w+")
 
         s = " ";
-        execCommand = s.join(["python", executablePath, outDir, str(i), str(i + frameStep)]);
+        execCommand = "export PYTHONPATH=$PYTHONPATH:/DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/swig \ ";
+        execCommand += s.join(["python", executablePath, outDir, str(i), str(i + frameStep)]);
 
         pipeJob.write(execCommand);
         pipeJob.close();
         os.system("chmod 770 " + scriptName);
 
         #now push this job into the queue
-        os.system("cqsubmittask muenster " + scriptName); 
-
-
-
+        os.system("cqsubmittask muenster " + scriptName);
 
 
 if __name__ == '__main__':

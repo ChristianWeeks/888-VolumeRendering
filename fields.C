@@ -50,7 +50,7 @@ lux::ColorVolumeBase ColorFromDensity(const lux::FloatVolumeBase& f, const lux::
 //------------------------------------------------------------------------------------------------------------------------------
 // GRIDS
 //-----------------------------------------------------------------------------------------------------------------------------
-lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v) { return lux::FloatGridBase(new lux::DensityGrid(f, o, s, v));};
+lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s,  int v, int p) { return lux::FloatGridBase(new lux::DensityGrid(f, o, s, v, p));};
 
 lux::FloatVolumeBase GriddedVolf(const lux::FloatGridBase& g)   { 
     lux::FloatVolumeBase gridded(new lux::GriddedVolume(g));
@@ -58,9 +58,9 @@ lux::FloatVolumeBase GriddedVolf(const lux::FloatGridBase& g)   {
     return gridded;
 };
 
-lux::FloatVolumeBase AutoGriddedf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v) { 
-    lux::FloatVolumeBase gridded( new lux::GriddedVolume(lux::FloatGridBase(new lux::DensityGrid(f, o, s, v))));
+lux::FloatVolumeBase AutoGriddedf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s,  int v, int p) { 
+    lux::FloatVolumeBase gridded( new lux::GriddedVolume(lux::FloatGridBase(new lux::DensityGrid(f, o, s, v, p))));
     gridded.BB.setBounds(o, s);
     return gridded;
 };
-lux::DSMBase DSM(const lux::light l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, double s, double v)   { return lux::DSMBase(new lux::DeepShadowMap(l, m, f, c, s, v));};
+lux::DSMBase DSM(const lux::light l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, double s,  int v, int p)   { return lux::DSMBase(new lux::DeepShadowMap(l, m, f, c, s, v, p));};

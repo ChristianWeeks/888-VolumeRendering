@@ -6,9 +6,112 @@
 
 namespace lux {
 
+//-----------------------------------------------------------------------------------------------------
+//Grid Data Structes
+//-----------------------------------------------------------------------------------------------------
+class Grid{
+    public:
+        Grid(int v, float l, int p) : partitionSize(p), voxels(v), length(l){};
+        virtual ~Grid(){};
+
+        void setDefaultValue(float d){defaultValue = d;};
+
+        //virtual void init() = 0;
+        virtual const float get(int i, int j, int k) const = 0;
+        virtual void set(int i, int j, int k, float value) = 0;
+
+        const int partitionSize;
+
+    protected:
+        float defaultValue;
+        const int voxels;
+        const double length;
+
+};
+
+class DenseGrid : public Grid{
+    public:
+        DenseGrid(int v, float l) : Grid(v, l, -1), data(new float[v*v*v]){};
+        ~DenseGrid(){};
+
+        const float get(int i, int j, int k) const{ return data.get()[k + j*voxels + i*voxels*voxels];};
+        void set(int i, int j, int k, float value){ data.get()[k + j*voxels + i*voxels*voxels] = value;};
+
+    private:
+        std::unique_ptr<float[]> data;
+
+};
+
+class SparseGrid : public Grid{
+    public:
+        SparseGrid(int v, float l, int p) : Grid(v, l, p), numPartitions(v / p){
+            try{
+                if ((v) % partitionSize != 0)
+                    throw 10;
+            }
+            catch(int e){
+                std::cout << "Error: Voxels must be evenly divisible by partition size\n";
+            }
+
+            data = new float*[numPartitions*numPartitions*numPartitions];
+        };
+        ~SparseGrid(){
+            for (int i = 0; i < numPartitions; i++){
+                delete data[i];
+            }
+        };
+
+        const float get(int i, int j, int k) const{
+            int ii = i/numPartitions;
+            int jj = j/numPartitions;
+            int kk = k/numPartitions;
+            //Get our partition index first
+            int partitionIndex = kk + numPartitions * (jj + numPartitions * ii);
+            int iii = (i % partitionSize);
+            int jjj = (j % partitionSize);
+            int kkk = (k % partitionSize);
+            return data[partitionIndex][kkk + partitionSize*(jjj + iii*partitionSize)];
+        };
+
+        void set(int i, int j, int k, float value){
+            if (value == defaultValue) return;
+            //ii, jj, kk are our partition indices
+            int ii = i/numPartitions;
+            int jj = j/numPartitions;
+            int kk = k/numPartitions;
+            //Get our partition index first
+            int partitionIndex = kk + numPartitions * (jj + numPartitions * ii);
+
+            if (data[partitionIndex] == 0){
+                //if block does not exist, we must create and initialize it
+                data[partitionIndex] = new float[partitionSize*partitionSize*partitionSize];
+                for (int iii = 0; iii < partitionSize; iii++){
+                    for (int jjj = 0; jjj < partitionSize; jjj++){
+                        for (int kkk = 0; kkk < partitionSize; kkk++){
+                            data[partitionIndex][kkk +  partitionSize*(jjj + iii*partitionSize)] = defaultValue;
+                        }
+                    }
+                }
+            }
+            //Set value now that block definitely exists
+            int iii = (i % partitionSize);
+            int jjj = (j % partitionSize);
+            int kkk = (k % partitionSize);
+            data[partitionIndex][kkk + partitionSize*(jjj + iii*partitionSize)] = value;
+        };
+
+    private:
+        const int numPartitions;
+        float **data;
+
+};
+
+//-----------------------------------------------------------------------------------------------------
+//Grid Objects
+//-----------------------------------------------------------------------------------------------------
 class FloatGrid{
     public:
-        FloatGrid(FloatVolumeBase f, const Vector& c, const double& l, const int& v);
+        FloatGrid(FloatVolumeBase f, const Vector& c, const double& l, const int& v, const int& partitionSize);
         FloatGrid(const FloatGrid& f);
         ~FloatGrid();
         const float trilinearInterpolate(const Vector& P) const;
@@ -22,10 +125,10 @@ class FloatGrid{
         const int voxels;
         const float voxelLength;
         const int totalCells;
-        std::unique_ptr<float[]> values;
+        Grid *data;
 
-        const int positionToIndex(const Vector& p) const;
-        const Vector indexToPosition(const int i) const;
+        const Vector positionToIndex(const Vector& P) const;
+        const Vector indexToPosition(const int i, const int j, const int k) const;
 };
 
 typedef std::shared_ptr<FloatGrid> FloatGridPtr;
@@ -41,7 +144,7 @@ class FloatGridBase :  public FloatGridPtr{
 
 class DensityGrid: public FloatGrid{
     public:
-        DensityGrid(FloatVolumeBase f, Vector c, double s, int v);
+        DensityGrid(FloatVolumeBase f, Vector c, double s, int v, int p);
         DensityGrid(const DensityGrid& f);
         ~DensityGrid(){};
 
@@ -53,7 +156,7 @@ class DensityGrid: public FloatGrid{
 
 class DeepShadowMap: public FloatGrid{
     public:
-        DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, double s, int v);
+        DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, double s, int v, int p);
         ~DeepShadowMap(){};
         light sourceLight;
 
@@ -89,34 +192,4 @@ class GriddedVolume: public FloatVolume{
 };
 }
 
-class Grid{
-
-    public:
-        Grid(int v, int l) : voxels(v), length(l){};
-        ~Grid(){};
-
-
-        void setDefaultValue(float d){defaultValue = d;};
-
-        virtual void init() = 0;
-        virtual float get(int index) const = 0;
-        virtual void set(int index, float value) = 0;
-
-    private:
-
-        float defaultValue;
-        const int voxels;
-        const double length;
-
-}
-
-class DenseGrid : public Grid{
-
-        std::unique_ptr<float[]> values;
-
-}
-
-class SparseGrid : public Grid{
-
-}
 #endif

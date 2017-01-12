@@ -5,15 +5,22 @@ using namespace lux;
 //-------------------------------------------------------------------------------------------------------------------------------
 //FloatGrid
 //-------------------------------------------------------------------------------------------------------------------------------
-FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const double& s, const int& v) :
+FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const double& s, const int& v, const int& partitionSize) :
     center(c),
     length(s),
     field(f),
     origin(c - (s/2.0)),
     voxels(v),
     voxelLength(length / (double)voxels),
-    totalCells(v*v*v),
-    values(new float[v*v*v]){}
+    totalCells(v*v*v){
+
+    if (partitionSize > 0){
+        data = new SparseGrid(v, s, partitionSize);
+    }
+    else{
+        data = new DenseGrid(v, s);
+    }
+};
 
 FloatGrid::FloatGrid(const FloatGrid& f) :
     center(f.center),
@@ -22,31 +29,45 @@ FloatGrid::FloatGrid(const FloatGrid& f) :
     origin(f.origin),
     voxels(f.voxels),
     voxelLength(f.voxelLength),
-    totalCells(f.totalCells),
-    values(new float[f.totalCells]){
+    totalCells(f.totalCells){
     std::cout << "FloatGrid Copy Constructor!\n";
-    for(int i = 0; i < totalCells; i++){
-        values.get()[i] = f.values.get()[i];
-    }
-}
 
-FloatGrid::~FloatGrid(){}
+    if (f.data->partitionSize > 0){
+        data = new SparseGrid(voxels, length, f.data->partitionSize);
+    }
+    else{
+        data = new DenseGrid(voxels, length);
+    }
+
+    for(int i = 0; i < voxels; i++){
+        for(int j = 0; j < voxels; j++){
+            for(int k = 0; k < voxels; k++){
+            data->set(i, j, k, f.data->get(i, j, k));
+            }
+        }
+    }
+};
+
+FloatGrid::~FloatGrid(){
+    delete data;
+};
+
 void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound){std::cout << "FloatGrid can't stamp wisps! Use a density grid.\n";};
 
 //Converts a position in 3-D space to an index in our grid
-const int FloatGrid::positionToIndex(const Vector& P) const{
+const Vector FloatGrid::positionToIndex(const Vector& P) const{
     Vector P2 = (P - origin) / voxelLength;
-    if(int(P2[0]) <= 0 || int(P2[0]) >= voxels || int(P2[1]) <= 0 || int(P2[1]) >= voxels || int(P2[2]) <= 0 || int(P2[2]) >= voxels)
-        return -1;
-    return (int)P2[2] + ((int)P2[1])*voxels + ((int)P2[0])*voxels*voxels;
+    P2[0] = int(P2[0]);
+    P2[1] = int(P2[1]);
+    P2[2] = int(P2[2]);
+    if(P2[0] <= 1 || P2[0] >= (voxels-1) || P2[1] <= 1 || P2[1] >= (voxels-1) || P2[2] <= 1 || P2[2] >= (voxels-1)){
+        return Vector(-1, -1, -1);
+    }
+    return Vector(P2[0], P2[1], P2[2]);
 }
 
-const Vector FloatGrid::indexToPosition(int i) const{
-    Vector P;
-    P[2] = i % voxels;
-    P[1] = (i % (voxels * voxels)) / voxels;
-    P[0] = i / (voxels * voxels);
-//    P[1] = i %
+const Vector FloatGrid::indexToPosition(int i, int j, int k) const{
+    Vector P(i, j, k);
     return P * voxelLength + origin;
 }
 
@@ -55,41 +76,24 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     //First we have to find what grid points are around our given position
 
     //Contains the indices of all the grid points around our position
-    int c[8];
-    //(-x, -y, -z)
-    c[0] = positionToIndex(position);
-    //(-x, -y, z)
-    c[1] = c[0] + 1;
-    //(-x, y, -z)
-    c[2] = c[0] + voxels;
-    //(-x, y, z)
-    c[3] = c[2] + 1;
-    //(x, -y, -z)
-    c[4] = c[0] + (voxels*voxels);
-    //(x, -y, z)
-    c[5] = c[4] + 1;
-    //(x, y, -z)
-    c[6] = c[4] + voxels;
-    //(x, y, z)
-    c[7] = c[6] + 1;
-    //check for edge cases.  If its on the edge, we just don't apply at all
-    //+x side
-    for(int i = 0; i < 8; i++){
-        if (c[i] > totalCells || c[i] < 0){
-            //std::cout << "Interp: Out of Bounds: " << c[i] << "; "  << "\n";
-            return 0.0;
-        }
-    }
+    Vector indices = positionToIndex(position);
+    //If positionToIndex returns a negative value, we are at the border or beyond our grid
+    if (indices[0] == -1)
+        return 0.0;
+
+    int x = indices[0];
+    int y = indices[1];
+    int z = indices[2];
     //now we can actually interpolate
     //d holds values between 0 to 1
-    Vector d = (position - indexToPosition(c[0])) / voxelLength;
+    Vector d = (position - indexToPosition(x, y, z)) / voxelLength;
 
     //Interpolate along x
     float c00, c10, c01, c11;
-    c00 = values.get()[c[0]] * (1-d[0]) + values.get()[c[4]] * d[0];
-    c01 = values.get()[c[1]] * (1-d[0]) + values.get()[c[5]] * d[0];
-    c10 = values.get()[c[2]] * (1-d[0]) + values.get()[c[6]] * d[0];
-    c11 = values.get()[c[3]] * (1-d[0]) + values.get()[c[7]] * d[0];
+    c00 = data->get(x, y, z)    * (1-d[0]) + data->get(x+1, y, z)     * d[0];
+    c01 = data->get(x, y, z+1)  * (1-d[0]) + data->get(x+1, y, z+1)   * d[0];
+    c10 = data->get(x, y+1, z)  * (1-d[0]) + data->get(x+1, y+1, z)   * d[0];
+    c11 = data->get(x, y+1, z+1)* (1-d[0]) + data->get(x+1, y+1, z+1) * d[0];
 
     //interpolate along y
     float c0, c1;
@@ -113,9 +117,9 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
 //-------------------------------------------------------------------------------------------------------------------------------
 //DensityGrid
 //-------------------------------------------------------------------------------------------------------------------------------
-DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, double s, int v)
-    : FloatGrid(f, o, s, v){
-    //stamp the values.get() into our grid
+DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, double s, int v, int p)
+    : FloatGrid(f, o, s, v, p){
+    //stamp the values into our grid
     for(int i = 0; i < voxels; i++){
         for(int j = 0; j < voxels; j++){
             for(int k = 0; k < voxels; k++){
@@ -127,7 +131,7 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, double s, int v)
                 //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
 
                 //now evaluate the field at that point
-                values.get()[k + j*voxels + i*voxels*voxels] = field.get()->eval(Vector(ii, jj, kk));
+                data->set(i, j, k, field.get()->eval(Vector(ii, jj, kk)));
 
                // std::cout << values.get()[k + j*voxels + i*voxels*voxels] << "\n";
             }
@@ -135,7 +139,7 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, double s, int v)
     }
 }
 
-DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels){std::cout << "Density Grid Copy Constructor!\n";};
+DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
 
 //Wisp algorithm
 void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset, float dBound){
@@ -182,10 +186,15 @@ void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObje
 
 int DensityGrid::bakeDot(const Vector& P, const float density){
 
-    int c[8];
     //(-x, -y, -z)
-    c[0] = positionToIndex(P);
-    //(-x, -y, z)
+    Vector indices = positionToIndex(P);
+    int x = indices[0];
+    int y = indices[1];
+    int z = indices[2];
+    //now we can actually interpolate
+    //d holds values between 0 to 1
+    Vector d = (P - indexToPosition(x, y, z)) / voxelLength;
+    /*//(-x, -y, z)
     c[1] = c[0] + 1;
     //(-x, y, -z)
     c[2] = c[0] + voxels;
@@ -198,16 +207,8 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     //(x, y, -z)
     c[6] = c[4] + voxels;
     //(x, y, z)
-    c[7] = c[6] + 1;
+    c[7] = c[6] + 1;*/
 
-    for(int i = 0; i < 8; i++){
-        if (c[i] > totalCells || c[i] < 0){
-            //std::cout << "BakeDot: Out of Bounds Index: " << c[i] << "; Position" << P << "\n";
-            return 0;
-        }
-    }
-
-    Vector d = (P - indexToPosition(c[0])) / voxelLength;
 
     //Weights
     float wx1, wx2, wy1, wy2, wz1, wz2;
@@ -219,14 +220,21 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     wz1 = d[2];
     wz2 = 1 - d[2];
 
-    values.get()[c[0]] += density * wx1 * wy1 * wz1;
-    values.get()[c[1]] += density * wx1 * wy1 * wz2;
-    values.get()[c[2]] += density * wx1 * wy2 * wz1;
-    values.get()[c[3]] += density * wx1 * wy2 * wz2;
-    values.get()[c[4]] += density * wx2 * wy1 * wz1;
-    values.get()[c[5]] += density * wx2 * wy1 * wz2;
-    values.get()[c[6]] += density * wx2 * wy2 * wz1;
-    values.get()[c[7]] += density * wx2 * wy2 * wz2;
+    data->set(x, y, z,      data->get(x, y, z) +     density * wx1 * wy1 * wz1);
+    data->set(x, y, z+1,    data->get(x, y, z+1) +   density * wx1 * wy1 * wz2);
+    data->set(x, y+1, z,    data->get(x, y+1, z) +   density * wx1 * wy2 * wz1);
+    data->set(x, y+1, z+1,  data->get(x, y+1, z+1) + density * wx1 * wy2 * wz2);
+    data->set(x+1, y, z,    data->get(x+1, y, z) +   density * wx2 * wy1 * wz1);
+    data->set(x+1, y, z+1,  data->get(x+1, y, z+1) + density * wx2 * wy1 * wz2);
+    data->set(x+1, y+1, z,  data->get(x+1, y+1, z) + density * wx2 * wy2 * wz1);
+    data->set(x+1, y+1, z+1,data->get(x+1, y+1, z+1)+density * wx2 * wy2 * wz2);
+    /*data->set() += density * wx1 * wy1 * wz2;
+    data->set() += density * wx1 * wy2 * wz1;
+    data->set() += density * wx1 * wy2 * wz2;
+    data->set() += density * wx2 * wy1 * wz1;
+    data->set() += density * wx2 * wy1 * wz2;
+    data->set() += density * wx2 * wy2 * wz1;
+    data->set() += density * wx2 * wy2 * wz2;*/
     //std::cout << c[0] << ":  " << values.get()[c[0]] << "\n";
 
     return 1;
@@ -234,8 +242,8 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
 //-------------------------------------------------------------------------------------------------------------------------------
 //Deep Shadow Map
 //-------------------------------------------------------------------------------------------------------------------------------
-DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, double s, int v)
-    : FloatGrid(f, o, s, v),
+DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, double s, int v, int p)
+    : FloatGrid(f, o, s, v, p),
     sourceLight(l),
     marchStep(m){
 
@@ -252,7 +260,7 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, doub
                 //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
 
                 //now evaluate the field at that point
-                values.get()[k + j*voxels + i*voxels*voxels] = rayMarchLightScatter(Vector(ii, jj, kk));
+                data->set(i, j, k, rayMarchLightScatter(Vector(ii, jj, kk)));
 
             }
         }

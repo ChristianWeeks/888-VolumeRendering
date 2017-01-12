@@ -8,5 +8,6 @@
 *.mov
 *.hip
 *.hipnc
+*.nk
 .nfs*
 img

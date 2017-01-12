@@ -41,8 +41,8 @@ lux::ColorVolumeBase ColorFromDensity(const lux::FloatVolumeBase& f, const lux::
 //------------------------------------------------------------------------------------------------------------------------------
 // GRIDS
 //------------------------------------------------------------------------------------------------------------------------------
-lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v);
+lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v, int partitionSize);
 lux::FloatVolumeBase GriddedVolf(const lux::FloatGridBase& g); 
-lux::FloatVolumeBase AutoGriddedf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v);
-lux::DSMBase DSM(const lux::light l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, double s, double v);
+lux::FloatVolumeBase AutoGriddedf(const lux::FloatVolumeBase& f, const lux::Vector& o, double s, double v, int partitionSize);
+lux::DSMBase DSM(const lux::light l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, double s, double v, int partitionSize);
 #endif
