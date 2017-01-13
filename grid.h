@@ -19,6 +19,7 @@ class Grid{
         //virtual void init() = 0;
         virtual const float get(int i, int j, int k) const = 0;
         virtual void set(int i, int j, int k, float value) = 0;
+        virtual float* getData() = 0;
 
         const int partitionSize;
 
@@ -34,6 +35,7 @@ class DenseGrid : public Grid{
         DenseGrid(int v, float l) : Grid(v, l, -1), data(new float[v*v*v]){};
         ~DenseGrid(){};
 
+        float* getData(){return data.get();};
         const float get(int i, int j, int k) const{ return data.get()[k + j*voxels + i*voxels*voxels];};
         void set(int i, int j, int k, float value){ data.get()[k + j*voxels + i*voxels*voxels] = value;};
 
@@ -66,6 +68,7 @@ class SparseGrid : public Grid{
             }
         };
 
+        float* getData(){return NULL;};
         const float get(int i, int j, int k) const{
             int ii = i/partitionSize;
             int jj = j/partitionSize;

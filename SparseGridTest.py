@@ -109,14 +109,15 @@ def main(args):
         #advectedSphere = voy.AdvectMMCf(sphere, advectField, 0.5);
         griddedVol = voy.AutoGriddedf(sphere, voy.Vector(0.0, 0.0, 0.0), gridLength, gridVoxelCount,0);
         end = time.time()
+
         print "Grid Build Time: " + str(end - gridtime);
 
         #bLight = voy.light(voy.Color(0.7, 0.7, 0.95, 1.0), voy.Vector(0.0, -1.0, 0.0), voy.Vector(-5.0, -2.0, 5.0), 1.0);
-        dsmtime = time.time();
+        #dsmtime = time.time();
         #rDSM = voy.DSM(rLight, lightMarchStep, griddedVol, zeroVector, gridLength, lightVoxelCount);
         #rDSM.get().sourceLight.cSlider.addColor(1.0, voy.Color(1.0, 0.0, 0.0, 1.0));
-        end = time.time()
-        print "DSM Build Time: " + str(end - dsmtime);
+        #end = time.time()
+        #print "DSM Build Time: " + str(end - dsmtime);
 
         ###############################################
         #Push our volumes and lights
@@ -129,9 +130,16 @@ def main(args):
 
         print "---------------------Starting Render----------------------"
         t = time.time();
+
+        scene.renderlog.addLine("Dense grid WITHOUT hacky reference in 'DensityGrid' constructor");
+        scene.renderlog.addLine("");
+        scene.renderlog.addLine("Grid voxels");
+        scene.renderlog.addLine(str(gridVoxelCount));
+        scene.renderlog.addLine("Grid Length");
+        scene.renderlog.addLine(str(gridLength));
+        scene.renderlog.addLine("Grid Build Time");
+        scene.renderlog.addLine(str(end - gridtime));
         scene.renderImage(i);
-        #scene.renderlog.addLine("Render Time");
-        #scene.renderlog.addLine(str(t.time()));
 
         ###############################################
         #Clear for the next iteration

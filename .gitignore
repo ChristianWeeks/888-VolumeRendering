@@ -9,5 +9,9 @@
 *.hip
 *.hipnc
 *.nk
+swig/voyager.py
+swig/*.so
+swig/voyager.pyc
+swig/voyager_wrap.cxx
 .nfs*
 img

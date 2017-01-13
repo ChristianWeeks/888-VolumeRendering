@@ -19557,6 +19557,28 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Grid_getData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::Grid *arg1 = (lux::Grid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Grid_getData",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__Grid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Grid_getData" "', argument " "1"" of type '" "lux::Grid *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::Grid * >(argp1);
+  result = (float *)(arg1)->getData();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_float, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Grid_partitionSize_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   lux::Grid *arg1 = (lux::Grid *) 0 ;
@@ -19632,6 +19654,28 @@ SWIGINTERN PyObject *_wrap_delete_DenseGrid(PyObject *SWIGUNUSEDPARM(self), PyOb
   arg1 = reinterpret_cast< lux::DenseGrid * >(argp1);
   delete arg1;
   resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DenseGrid_getData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::DenseGrid *arg1 = (lux::DenseGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DenseGrid_getData",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__DenseGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DenseGrid_getData" "', argument " "1"" of type '" "lux::DenseGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::DenseGrid * >(argp1);
+  result = (float *)(arg1)->getData();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_float, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -19806,6 +19850,28 @@ SWIGINTERN PyObject *_wrap_delete_SparseGrid(PyObject *SWIGUNUSEDPARM(self), PyO
   arg1 = reinterpret_cast< lux::SparseGrid * >(argp1);
   delete arg1;
   resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SparseGrid_getData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::SparseGrid *arg1 = (lux::SparseGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SparseGrid_getData",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__SparseGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SparseGrid_getData" "', argument " "1"" of type '" "lux::SparseGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::SparseGrid * >(argp1);
+  result = (float *)(arg1)->getData();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_float, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -40347,15 +40413,18 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Grid_setDefaultValue", _wrap_Grid_setDefaultValue, METH_VARARGS, NULL},
 	 { (char *)"Grid_get", _wrap_Grid_get, METH_VARARGS, NULL},
 	 { (char *)"Grid_set", _wrap_Grid_set, METH_VARARGS, NULL},
+	 { (char *)"Grid_getData", _wrap_Grid_getData, METH_VARARGS, NULL},
 	 { (char *)"Grid_partitionSize_get", _wrap_Grid_partitionSize_get, METH_VARARGS, NULL},
 	 { (char *)"Grid_swigregister", Grid_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_DenseGrid", _wrap_new_DenseGrid, METH_VARARGS, NULL},
 	 { (char *)"delete_DenseGrid", _wrap_delete_DenseGrid, METH_VARARGS, NULL},
+	 { (char *)"DenseGrid_getData", _wrap_DenseGrid_getData, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_get", _wrap_DenseGrid_get, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_set", _wrap_DenseGrid_set, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_swigregister", DenseGrid_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_SparseGrid", _wrap_new_SparseGrid, METH_VARARGS, NULL},
 	 { (char *)"delete_SparseGrid", _wrap_delete_SparseGrid, METH_VARARGS, NULL},
+	 { (char *)"SparseGrid_getData", _wrap_SparseGrid_getData, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_get", _wrap_SparseGrid_get, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_set", _wrap_SparseGrid_set, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_swigregister", SparseGrid_swigregister, METH_VARARGS, NULL},

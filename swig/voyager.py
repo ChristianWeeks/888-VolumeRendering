@@ -1279,6 +1279,7 @@ class Grid(_object):
     def setDefaultValue(self, *args): return _voyager.Grid_setDefaultValue(self, *args)
     def get(self, *args): return _voyager.Grid_get(self, *args)
     def set(self, *args): return _voyager.Grid_set(self, *args)
+    def getData(self): return _voyager.Grid_getData(self)
     __swig_getmethods__["partitionSize"] = _voyager.Grid_partitionSize_get
     if _newclass:partitionSize = _swig_property(_voyager.Grid_partitionSize_get)
 Grid_swigregister = _voyager.Grid_swigregister
@@ -1298,6 +1299,7 @@ class DenseGrid(Grid):
         except: self.this = this
     __swig_destroy__ = _voyager.delete_DenseGrid
     __del__ = lambda self : None;
+    def getData(self): return _voyager.DenseGrid_getData(self)
     def get(self, *args): return _voyager.DenseGrid_get(self, *args)
     def set(self, *args): return _voyager.DenseGrid_set(self, *args)
 DenseGrid_swigregister = _voyager.DenseGrid_swigregister
@@ -1317,6 +1319,7 @@ class SparseGrid(Grid):
         except: self.this = this
     __swig_destroy__ = _voyager.delete_SparseGrid
     __del__ = lambda self : None;
+    def getData(self): return _voyager.SparseGrid_getData(self)
     def get(self, *args): return _voyager.SparseGrid_get(self, *args)
     def set(self, *args): return _voyager.SparseGrid_set(self, *args)
 SparseGrid_swigregister = _voyager.SparseGrid_swigregister
