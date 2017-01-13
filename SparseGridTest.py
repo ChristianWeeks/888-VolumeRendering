@@ -131,7 +131,7 @@ def main(args):
         print "---------------------Starting Render----------------------"
         t = time.time();
 
-        scene.renderlog.addLine("Dense grid WITHOUT hacky reference in 'DensityGrid' constructor");
+        scene.renderlog.addLine("Dense grid with methods INLINED in .cpp file");
         scene.renderlog.addLine("");
         scene.renderlog.addLine("Grid voxels");
         scene.renderlog.addLine(str(gridVoxelCount));

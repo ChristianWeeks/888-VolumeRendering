@@ -3,7 +3,83 @@
 using namespace lux;
 
 //-------------------------------------------------------------------------------------------------------------------------------
-//FloatGrid
+//Grid Data Structures
+//-------------------------------------------------------------------------------------------------------------------------------
+DenseGrid::DenseGrid(int v, float l) : Grid(v, l, -1), data(new float[v*v*v]){};
+DenseGrid::~DenseGrid(){};
+
+inline const float DenseGrid::get(int i, int j, int k) const{ return data.get()[k + j*voxels + i*voxels*voxels];};
+inline void DenseGrid::set(int i, int j, int k, float value){ data.get()[k + j*voxels + i*voxels*voxels] = value;};
+inline const float DenseGrid::trilinearInterpolate(const Vector& position) const { return 1.0;};
+
+SparseGrid::SparseGrid(int v, float l, int p) : Grid(v, l, p), numPartitions(v / p){
+    try{
+        if ((v) % partitionSize != 0)
+            throw 10;
+    }
+    catch(int e){
+        std::cout << "Error: Voxels must be evenly divisible by partition size\n";
+    }
+    setDefaultValue(0.0);
+
+    data = new float*[numPartitions*numPartitions*numPartitions];
+    for(int i = 0; i < numPartitions*numPartitions*numPartitions; i++){
+        data[i] = NULL;
+    }
+
+};
+
+SparseGrid::~SparseGrid(){
+    for (int i = 0; i < numPartitions; i++){
+        delete data[i];
+    }
+};
+
+const float SparseGrid::get(int i, int j, int k) const{
+    int ii = i/partitionSize;
+    int jj = j/partitionSize;
+    int kk = k/partitionSize;
+    //Get our partition index first
+    int partitionIndex = kk + numPartitions * (jj + numPartitions * ii);
+    int iii = (i % partitionSize);
+    int jjj = (j % partitionSize);
+    int kkk = (k % partitionSize);
+    if(data[partitionIndex] == NULL){
+        return defaultValue;
+    }
+    return data[partitionIndex][kkk + partitionSize*(jjj + iii*partitionSize)];
+};
+
+void SparseGrid::set(int i, int j, int k, float value){
+    if (value == defaultValue) return;
+    //ii, jj, kk are our partition indices
+    int ii = i/partitionSize;
+    int jj = j/partitionSize;
+    int kk = k/partitionSize;
+    //Get our partition index first
+    int partitionIndex = kk + numPartitions * (jj + numPartitions * ii);
+
+    if (data[partitionIndex] == NULL){
+        //if block does not exist, we must create and initialize it
+        data[partitionIndex] = new float[partitionSize*partitionSize*partitionSize];
+        for (int iii = 0; iii < partitionSize; iii++){
+            for (int jjj = 0; jjj < partitionSize; jjj++){
+                for (int kkk = 0; kkk < partitionSize; kkk++){
+                    data[partitionIndex][kkk +  partitionSize*(jjj + iii*partitionSize)] = defaultValue;
+                }
+            }
+        }
+    }
+    //Set value now that block definitely exists
+    int iii = (i % partitionSize);
+    int jjj = (j % partitionSize);
+    int kkk = (k % partitionSize);
+    data[partitionIndex][kkk + partitionSize*(jjj + iii*partitionSize)] = value;
+};
+
+const float SparseGrid::trilinearInterpolate(const Vector& position) const{ return 1.0;};
+//-------------------------------------------------------------------------------------------------------------------------------
+//floatgrid
 //-------------------------------------------------------------------------------------------------------------------------------
 FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const double& s, const int& v, const int& partitionSize) :
     center(c),
@@ -86,7 +162,7 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     int z = indices[2];
     //now we can actually interpolate
     //d holds values between 0 to 1
-    Vector d = (position - indexToPosition(x, y, z)) / voxelLength;
+    Vector d = (position - (indices * voxelLength + origin)) / voxelLength;
 
     //Interpolate along x
     float c00, c10, c01, c11;
@@ -193,7 +269,8 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     int z = indices[2];
     //now we can actually interpolate
     //d holds values between 0 to 1
-    Vector d = (P - indexToPosition(x, y, z)) / voxelLength;
+    //Vector d = (P - indexToPosition(x, y, z)) / voxelLength;
+    Vector d = (P - (indices * voxelLength + origin)) / voxelLength;
     /*//(-x, -y, z)
     c[1] = c[0] + 1;
     //(-x, y, -z)

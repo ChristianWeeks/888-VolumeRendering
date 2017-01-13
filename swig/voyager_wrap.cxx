@@ -19557,22 +19557,34 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Grid_getData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Grid_trilinearInterpolate(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   lux::Grid *arg1 = (lux::Grid *) 0 ;
+  lux::Vector *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
   PyObject * obj0 = 0 ;
-  float *result = 0 ;
+  PyObject * obj1 = 0 ;
+  float result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Grid_getData",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:Grid_trilinearInterpolate",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__Grid, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Grid_getData" "', argument " "1"" of type '" "lux::Grid *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Grid_trilinearInterpolate" "', argument " "1"" of type '" "lux::Grid const *""'"); 
   }
   arg1 = reinterpret_cast< lux::Grid * >(argp1);
-  result = (float *)(arg1)->getData();
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_float, 0 |  0 );
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Grid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Grid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  result = (float)((lux::Grid const *)arg1)->trilinearInterpolate((lux::Vector const &)*arg2);
+  resultobj = SWIG_From_float(static_cast< float >(result));
   return resultobj;
 fail:
   return NULL;
@@ -19654,28 +19666,6 @@ SWIGINTERN PyObject *_wrap_delete_DenseGrid(PyObject *SWIGUNUSEDPARM(self), PyOb
   arg1 = reinterpret_cast< lux::DenseGrid * >(argp1);
   delete arg1;
   resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_DenseGrid_getData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  lux::DenseGrid *arg1 = (lux::DenseGrid *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  float *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:DenseGrid_getData",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__DenseGrid, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DenseGrid_getData" "', argument " "1"" of type '" "lux::DenseGrid *""'"); 
-  }
-  arg1 = reinterpret_cast< lux::DenseGrid * >(argp1);
-  result = (float *)(arg1)->getData();
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_float, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -19788,6 +19778,40 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_DenseGrid_trilinearInterpolate(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::DenseGrid *arg1 = (lux::DenseGrid *) 0 ;
+  lux::Vector *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:DenseGrid_trilinearInterpolate",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__DenseGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DenseGrid_trilinearInterpolate" "', argument " "1"" of type '" "lux::DenseGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::DenseGrid * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DenseGrid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DenseGrid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  result = (float)((lux::DenseGrid const *)arg1)->trilinearInterpolate((lux::Vector const &)*arg2);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *DenseGrid_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
@@ -19850,28 +19874,6 @@ SWIGINTERN PyObject *_wrap_delete_SparseGrid(PyObject *SWIGUNUSEDPARM(self), PyO
   arg1 = reinterpret_cast< lux::SparseGrid * >(argp1);
   delete arg1;
   resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_SparseGrid_getData(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  lux::SparseGrid *arg1 = (lux::SparseGrid *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  float *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:SparseGrid_getData",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__SparseGrid, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SparseGrid_getData" "', argument " "1"" of type '" "lux::SparseGrid *""'"); 
-  }
-  arg1 = reinterpret_cast< lux::SparseGrid * >(argp1);
-  result = (float *)(arg1)->getData();
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_float, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -19978,6 +19980,40 @@ SWIGINTERN PyObject *_wrap_SparseGrid_set(PyObject *SWIGUNUSEDPARM(self), PyObje
   arg5 = static_cast< float >(val5);
   (arg1)->set(arg2,arg3,arg4,arg5);
   resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SparseGrid_trilinearInterpolate(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::SparseGrid *arg1 = (lux::SparseGrid *) 0 ;
+  lux::Vector *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SparseGrid_trilinearInterpolate",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__SparseGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SparseGrid_trilinearInterpolate" "', argument " "1"" of type '" "lux::SparseGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::SparseGrid * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SparseGrid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SparseGrid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  result = (float)((lux::SparseGrid const *)arg1)->trilinearInterpolate((lux::Vector const &)*arg2);
+  resultobj = SWIG_From_float(static_cast< float >(result));
   return resultobj;
 fail:
   return NULL;
@@ -40413,20 +40449,20 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Grid_setDefaultValue", _wrap_Grid_setDefaultValue, METH_VARARGS, NULL},
 	 { (char *)"Grid_get", _wrap_Grid_get, METH_VARARGS, NULL},
 	 { (char *)"Grid_set", _wrap_Grid_set, METH_VARARGS, NULL},
-	 { (char *)"Grid_getData", _wrap_Grid_getData, METH_VARARGS, NULL},
+	 { (char *)"Grid_trilinearInterpolate", _wrap_Grid_trilinearInterpolate, METH_VARARGS, NULL},
 	 { (char *)"Grid_partitionSize_get", _wrap_Grid_partitionSize_get, METH_VARARGS, NULL},
 	 { (char *)"Grid_swigregister", Grid_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_DenseGrid", _wrap_new_DenseGrid, METH_VARARGS, NULL},
 	 { (char *)"delete_DenseGrid", _wrap_delete_DenseGrid, METH_VARARGS, NULL},
-	 { (char *)"DenseGrid_getData", _wrap_DenseGrid_getData, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_get", _wrap_DenseGrid_get, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_set", _wrap_DenseGrid_set, METH_VARARGS, NULL},
+	 { (char *)"DenseGrid_trilinearInterpolate", _wrap_DenseGrid_trilinearInterpolate, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_swigregister", DenseGrid_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_SparseGrid", _wrap_new_SparseGrid, METH_VARARGS, NULL},
 	 { (char *)"delete_SparseGrid", _wrap_delete_SparseGrid, METH_VARARGS, NULL},
-	 { (char *)"SparseGrid_getData", _wrap_SparseGrid_getData, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_get", _wrap_SparseGrid_get, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_set", _wrap_SparseGrid_set, METH_VARARGS, NULL},
+	 { (char *)"SparseGrid_trilinearInterpolate", _wrap_SparseGrid_trilinearInterpolate, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_swigregister", SparseGrid_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_FloatGrid", _wrap_new_FloatGrid, METH_VARARGS, NULL},
 	 { (char *)"delete_FloatGrid", _wrap_delete_FloatGrid, METH_VARARGS, NULL},
