@@ -7,7 +7,7 @@ LIB = $(ROOTDIR)/libVoyager.a
 
 LINKS = -L/usr/local/lib -lfftw3 -lOpenImageIO 
 
-CXX = clang++ -std=c++11 -Wall -g -O0 -fPIC -D_THREAD_SAFE -pthread
+CXX = clang++ -std=c++11 -Wall -g -O2 -fPIC -D_THREAD_SAFE -pthread
 SWIGEXEC = swig
 SWIGLD = $(CXX) -shared -DINCLUDE_TEMPLATES -DDEBUG
 OIIOLIB = -L/group/dpa/lib/lib -lOpenImageIO

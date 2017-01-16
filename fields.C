@@ -5,7 +5,9 @@
 //IMPLICIT VOLUMES 
 //------------------------------------------------------------------------------------------------------------------------------
 lux::FloatVolumeBase Constantf(const float value)               { return lux::FloatVolumeBase(new lux::ConstantVolumef(value));};
+lux::VectorVolumeBase Constantv(const float x, const float y, const float z){return lux::VectorVolumeBase(new lux::ConstantVolumev(x, y, z));};
 lux::FloatVolumeBase Sphere(const float rad)                    { return lux::FloatVolumeBase(new lux::SphereVolume(rad));};
+lux::FloatVolumeBase Spheredf(const float rad)                    { return lux::FloatVolumeBase(new lux::SphereDistVolume(rad));};
 lux::FloatVolumeBase Box(const float rad, const float c)        { return lux::FloatVolumeBase(new lux::BoxVolume(rad, c));};
 lux::FloatVolumeBase Cylinder(const lux::Vector& n, const float rad) { return lux::FloatVolumeBase(new lux::CylinderVolume(n, rad));};
 lux::FloatVolumeBase Plane(const lux::Vector& n, const lux::Vector& c)    { return lux::FloatVolumeBase(new lux::PlaneVolume(n, c));};

@@ -3,7 +3,9 @@
 #include "grid.h"
 
 lux::FloatVolumeBase Constantf(const float value);
+lux::VectorVolumeBase Constantv(const float x, const float y, const float z);
 lux::FloatVolumeBase Sphere(const float rad);
+lux::FloatVolumeBase Spheredf(const float rad);
 lux::FloatVolumeBase Box(const float rad, const float c);
 lux::FloatVolumeBase Cylinder(const lux::Vector& n, const float rad);
 lux::FloatVolumeBase Plane(const lux::Vector& n, const lux::Vector& c);

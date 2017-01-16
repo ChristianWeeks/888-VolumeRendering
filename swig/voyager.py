@@ -446,6 +446,44 @@ class ConstantVolumef(FloatVolume):
 ConstantVolumef_swigregister = _voyager.ConstantVolumef_swigregister
 ConstantVolumef_swigregister(ConstantVolumef)
 
+class ConstantVolumev(VectorVolume):
+    __swig_setmethods__ = {}
+    for _s in [VectorVolume]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ConstantVolumev, name, value)
+    __swig_getmethods__ = {}
+    for _s in [VectorVolume]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, ConstantVolumev, name)
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = _voyager.new_ConstantVolumev(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _voyager.delete_ConstantVolumev
+    __del__ = lambda self : None;
+    def eval(self, *args): return _voyager.ConstantVolumev_eval(self, *args)
+    def grad(self, *args): return _voyager.ConstantVolumev_grad(self, *args)
+ConstantVolumev_swigregister = _voyager.ConstantVolumev_swigregister
+ConstantVolumev_swigregister(ConstantVolumev)
+
+class SphereDistVolume(FloatVolume):
+    __swig_setmethods__ = {}
+    for _s in [FloatVolume]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, SphereDistVolume, name, value)
+    __swig_getmethods__ = {}
+    for _s in [FloatVolume]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, SphereDistVolume, name)
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = _voyager.new_SphereDistVolume(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _voyager.delete_SphereDistVolume
+    __del__ = lambda self : None;
+    def eval(self, *args): return _voyager.SphereDistVolume_eval(self, *args)
+    def grad(self, *args): return _voyager.SphereDistVolume_grad(self, *args)
+SphereDistVolume_swigregister = _voyager.SphereDistVolume_swigregister
+SphereDistVolume_swigregister(SphereDistVolume)
+
 class SphereVolume(FloatVolume):
     __swig_setmethods__ = {}
     for _s in [FloatVolume]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
@@ -1440,9 +1478,17 @@ def Constantf(*args):
   return _voyager.Constantf(*args)
 Constantf = _voyager.Constantf
 
+def Constantv(*args):
+  return _voyager.Constantv(*args)
+Constantv = _voyager.Constantv
+
 def Sphere(*args):
   return _voyager.Sphere(*args)
 Sphere = _voyager.Sphere
+
+def Spheredf(*args):
+  return _voyager.Spheredf(*args)
+Spheredf = _voyager.Spheredf
 
 def Box(*args):
   return _voyager.Box(*args)

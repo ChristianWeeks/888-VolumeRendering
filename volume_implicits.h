@@ -143,7 +143,35 @@ class ConstantVolumef : public FloatVolume{
        float value;
 };
 
+class ConstantVolumev : public VectorVolume{
+    public:
 
+        ConstantVolumev(float x, float y, float z) : value(x, y, z){}
+       ~ConstantVolumev(){}
+
+       const Vector eval( const Vector& P ) const { return value;};
+       const Matrix grad( const Vector& P ) const { Matrix G; return G;};
+
+    private:
+       Vector value;
+};
+
+
+class SphereDistVolume : public FloatVolume{
+    public:
+
+        SphereDistVolume(float rad) : r(rad){};
+       ~SphereDistVolume(){};
+
+       const float eval( const Vector& P ) const {
+           float d = r - P.magnitude();
+            if (d <= 0) return 0;
+            return d;};
+       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+
+    private:
+       float r;
+};
 class SphereVolume : public FloatVolume{
     public:
 

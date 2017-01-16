@@ -9,6 +9,7 @@
 *.hip
 *.hipnc
 *.nk
+vdbTests
 swig/voyager.py
 swig/*.so
 swig/voyager.pyc

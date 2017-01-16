@@ -2965,91 +2965,93 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 #define SWIGTYPE_p_lux__ColorVolumeFromDensity swig_types[25]
 #define SWIGTYPE_p_lux__ConeVolume swig_types[26]
 #define SWIGTYPE_p_lux__ConstantVolumef swig_types[27]
-#define SWIGTYPE_p_lux__CosVolume swig_types[28]
-#define SWIGTYPE_p_lux__CrossProductVolume swig_types[29]
-#define SWIGTYPE_p_lux__CutoutVolumef swig_types[30]
-#define SWIGTYPE_p_lux__CutoutVolumev swig_types[31]
-#define SWIGTYPE_p_lux__CylinderVolume swig_types[32]
-#define SWIGTYPE_p_lux__DSMBase swig_types[33]
-#define SWIGTYPE_p_lux__DeepShadowMap swig_types[34]
-#define SWIGTYPE_p_lux__DenseGrid swig_types[35]
-#define SWIGTYPE_p_lux__DensityGrid swig_types[36]
-#define SWIGTYPE_p_lux__DivideVolume swig_types[37]
-#define SWIGTYPE_p_lux__Divide_SV_Volume swig_types[38]
-#define SWIGTYPE_p_lux__DotProductVolume swig_types[39]
-#define SWIGTYPE_p_lux__ExpVolumef swig_types[40]
-#define SWIGTYPE_p_lux__ExpVolumev swig_types[41]
-#define SWIGTYPE_p_lux__FloatGrid swig_types[42]
-#define SWIGTYPE_p_lux__FloatGridBase swig_types[43]
-#define SWIGTYPE_p_lux__FloatVolume swig_types[44]
-#define SWIGTYPE_p_lux__FloatVolumeBase swig_types[45]
-#define SWIGTYPE_p_lux__Grid swig_types[46]
-#define SWIGTYPE_p_lux__GriddedVolume swig_types[47]
-#define SWIGTYPE_p_lux__Image swig_types[48]
-#define SWIGTYPE_p_lux__IntersectVolumef swig_types[49]
-#define SWIGTYPE_p_lux__IntersectVolumev swig_types[50]
-#define SWIGTYPE_p_lux__MaskVolume swig_types[51]
-#define SWIGTYPE_p_lux__Matrix swig_types[52]
-#define SWIGTYPE_p_lux__MultVolumef swig_types[53]
-#define SWIGTYPE_p_lux__Mult_SV_Volume swig_types[54]
-#define SWIGTYPE_p_lux__PlaneVolume swig_types[55]
-#define SWIGTYPE_p_lux__PyroSphereVolume swig_types[56]
-#define SWIGTYPE_p_lux__Rotate_S_Volume swig_types[57]
-#define SWIGTYPE_p_lux__Scale_S_Volume swig_types[58]
-#define SWIGTYPE_p_lux__Scale_V_Volume swig_types[59]
-#define SWIGTYPE_p_lux__SceneManager swig_types[60]
-#define SWIGTYPE_p_lux__SimplexNoiseColorVolume swig_types[61]
-#define SWIGTYPE_p_lux__SimplexNoiseVectorVolume swig_types[62]
-#define SWIGTYPE_p_lux__SimplexNoiseVolume swig_types[63]
-#define SWIGTYPE_p_lux__SinVolume swig_types[64]
-#define SWIGTYPE_p_lux__SparseGrid swig_types[65]
-#define SWIGTYPE_p_lux__SphereVolume swig_types[66]
-#define SWIGTYPE_p_lux__SubtractVolumef swig_types[67]
-#define SWIGTYPE_p_lux__SubtractVolumev swig_types[68]
-#define SWIGTYPE_p_lux__TranslateVolumef swig_types[69]
-#define SWIGTYPE_p_lux__TranslateVolumev swig_types[70]
-#define SWIGTYPE_p_lux__UnionVolumef swig_types[71]
-#define SWIGTYPE_p_lux__UnionVolumev swig_types[72]
-#define SWIGTYPE_p_lux__Vector swig_types[73]
-#define SWIGTYPE_p_lux__VectorVolume swig_types[74]
-#define SWIGTYPE_p_lux__VectorVolumeBase swig_types[75]
-#define SWIGTYPE_p_lux__light swig_types[76]
-#define SWIGTYPE_p_mapT_std__string_std__string_t swig_types[77]
-#define SWIGTYPE_p_p_PyObject swig_types[78]
-#define SWIGTYPE_p_size_type swig_types[79]
-#define SWIGTYPE_p_std__allocatorT_BoundingBox_t swig_types[80]
-#define SWIGTYPE_p_std__allocatorT_double_t swig_types[81]
-#define SWIGTYPE_p_std__allocatorT_float_t swig_types[82]
-#define SWIGTYPE_p_std__allocatorT_lux__ColorVolumeBase_t swig_types[83]
-#define SWIGTYPE_p_std__allocatorT_lux__Color_t swig_types[84]
-#define SWIGTYPE_p_std__allocatorT_lux__FloatVolumeBase_t swig_types[85]
-#define SWIGTYPE_p_std__allocatorT_std__string_t swig_types[86]
-#define SWIGTYPE_p_std__invalid_argument swig_types[87]
-#define SWIGTYPE_p_std__ostream swig_types[88]
-#define SWIGTYPE_p_std__shared_ptrT_ColorVolumePtr_t swig_types[89]
-#define SWIGTYPE_p_std__shared_ptrT_DSMPtr_t swig_types[90]
-#define SWIGTYPE_p_std__shared_ptrT_FloatGridPtr_t swig_types[91]
-#define SWIGTYPE_p_std__shared_ptrT_FloatVolumePtr_t swig_types[92]
-#define SWIGTYPE_p_std__shared_ptrT_VectorVolumePtr_t swig_types[93]
-#define SWIGTYPE_p_std__shared_ptrT_lux__ColorVolume_t swig_types[94]
-#define SWIGTYPE_p_std__shared_ptrT_lux__DeepShadowMap_t swig_types[95]
-#define SWIGTYPE_p_std__shared_ptrT_lux__FloatGrid_t swig_types[96]
-#define SWIGTYPE_p_std__shared_ptrT_lux__FloatVolume_t swig_types[97]
-#define SWIGTYPE_p_std__shared_ptrT_lux__VectorVolume_t swig_types[98]
-#define SWIGTYPE_p_std__vectorT_BoundingBox_std__allocatorT_BoundingBox_t_t swig_types[99]
-#define SWIGTYPE_p_std__vectorT__Tp__Alloc_t swig_types[100]
-#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[101]
-#define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t swig_types[102]
-#define SWIGTYPE_p_std__vectorT_lux__ColorVolumeBase_std__allocatorT_lux__ColorVolumeBase_t_t swig_types[103]
-#define SWIGTYPE_p_std__vectorT_lux__Color_std__allocatorT_lux__Color_t_t swig_types[104]
-#define SWIGTYPE_p_std__vectorT_lux__DSMBase_std__allocatorT_lux__DSMBase_t_t swig_types[105]
-#define SWIGTYPE_p_std__vectorT_lux__FloatVolumeBase_std__allocatorT_lux__FloatVolumeBase_t_t swig_types[106]
-#define SWIGTYPE_p_std__vectorT_lux__light_std__allocatorT_lux__light_t_t swig_types[107]
-#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t swig_types[108]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[109]
-#define SWIGTYPE_p_value_type swig_types[110]
-static swig_type_info *swig_types[112];
-static swig_module_info swig_module = {swig_types, 111, 0, 0, 0, 0};
+#define SWIGTYPE_p_lux__ConstantVolumev swig_types[28]
+#define SWIGTYPE_p_lux__CosVolume swig_types[29]
+#define SWIGTYPE_p_lux__CrossProductVolume swig_types[30]
+#define SWIGTYPE_p_lux__CutoutVolumef swig_types[31]
+#define SWIGTYPE_p_lux__CutoutVolumev swig_types[32]
+#define SWIGTYPE_p_lux__CylinderVolume swig_types[33]
+#define SWIGTYPE_p_lux__DSMBase swig_types[34]
+#define SWIGTYPE_p_lux__DeepShadowMap swig_types[35]
+#define SWIGTYPE_p_lux__DenseGrid swig_types[36]
+#define SWIGTYPE_p_lux__DensityGrid swig_types[37]
+#define SWIGTYPE_p_lux__DivideVolume swig_types[38]
+#define SWIGTYPE_p_lux__Divide_SV_Volume swig_types[39]
+#define SWIGTYPE_p_lux__DotProductVolume swig_types[40]
+#define SWIGTYPE_p_lux__ExpVolumef swig_types[41]
+#define SWIGTYPE_p_lux__ExpVolumev swig_types[42]
+#define SWIGTYPE_p_lux__FloatGrid swig_types[43]
+#define SWIGTYPE_p_lux__FloatGridBase swig_types[44]
+#define SWIGTYPE_p_lux__FloatVolume swig_types[45]
+#define SWIGTYPE_p_lux__FloatVolumeBase swig_types[46]
+#define SWIGTYPE_p_lux__Grid swig_types[47]
+#define SWIGTYPE_p_lux__GriddedVolume swig_types[48]
+#define SWIGTYPE_p_lux__Image swig_types[49]
+#define SWIGTYPE_p_lux__IntersectVolumef swig_types[50]
+#define SWIGTYPE_p_lux__IntersectVolumev swig_types[51]
+#define SWIGTYPE_p_lux__MaskVolume swig_types[52]
+#define SWIGTYPE_p_lux__Matrix swig_types[53]
+#define SWIGTYPE_p_lux__MultVolumef swig_types[54]
+#define SWIGTYPE_p_lux__Mult_SV_Volume swig_types[55]
+#define SWIGTYPE_p_lux__PlaneVolume swig_types[56]
+#define SWIGTYPE_p_lux__PyroSphereVolume swig_types[57]
+#define SWIGTYPE_p_lux__Rotate_S_Volume swig_types[58]
+#define SWIGTYPE_p_lux__Scale_S_Volume swig_types[59]
+#define SWIGTYPE_p_lux__Scale_V_Volume swig_types[60]
+#define SWIGTYPE_p_lux__SceneManager swig_types[61]
+#define SWIGTYPE_p_lux__SimplexNoiseColorVolume swig_types[62]
+#define SWIGTYPE_p_lux__SimplexNoiseVectorVolume swig_types[63]
+#define SWIGTYPE_p_lux__SimplexNoiseVolume swig_types[64]
+#define SWIGTYPE_p_lux__SinVolume swig_types[65]
+#define SWIGTYPE_p_lux__SparseGrid swig_types[66]
+#define SWIGTYPE_p_lux__SphereDistVolume swig_types[67]
+#define SWIGTYPE_p_lux__SphereVolume swig_types[68]
+#define SWIGTYPE_p_lux__SubtractVolumef swig_types[69]
+#define SWIGTYPE_p_lux__SubtractVolumev swig_types[70]
+#define SWIGTYPE_p_lux__TranslateVolumef swig_types[71]
+#define SWIGTYPE_p_lux__TranslateVolumev swig_types[72]
+#define SWIGTYPE_p_lux__UnionVolumef swig_types[73]
+#define SWIGTYPE_p_lux__UnionVolumev swig_types[74]
+#define SWIGTYPE_p_lux__Vector swig_types[75]
+#define SWIGTYPE_p_lux__VectorVolume swig_types[76]
+#define SWIGTYPE_p_lux__VectorVolumeBase swig_types[77]
+#define SWIGTYPE_p_lux__light swig_types[78]
+#define SWIGTYPE_p_mapT_std__string_std__string_t swig_types[79]
+#define SWIGTYPE_p_p_PyObject swig_types[80]
+#define SWIGTYPE_p_size_type swig_types[81]
+#define SWIGTYPE_p_std__allocatorT_BoundingBox_t swig_types[82]
+#define SWIGTYPE_p_std__allocatorT_double_t swig_types[83]
+#define SWIGTYPE_p_std__allocatorT_float_t swig_types[84]
+#define SWIGTYPE_p_std__allocatorT_lux__ColorVolumeBase_t swig_types[85]
+#define SWIGTYPE_p_std__allocatorT_lux__Color_t swig_types[86]
+#define SWIGTYPE_p_std__allocatorT_lux__FloatVolumeBase_t swig_types[87]
+#define SWIGTYPE_p_std__allocatorT_std__string_t swig_types[88]
+#define SWIGTYPE_p_std__invalid_argument swig_types[89]
+#define SWIGTYPE_p_std__ostream swig_types[90]
+#define SWIGTYPE_p_std__shared_ptrT_ColorVolumePtr_t swig_types[91]
+#define SWIGTYPE_p_std__shared_ptrT_DSMPtr_t swig_types[92]
+#define SWIGTYPE_p_std__shared_ptrT_FloatGridPtr_t swig_types[93]
+#define SWIGTYPE_p_std__shared_ptrT_FloatVolumePtr_t swig_types[94]
+#define SWIGTYPE_p_std__shared_ptrT_VectorVolumePtr_t swig_types[95]
+#define SWIGTYPE_p_std__shared_ptrT_lux__ColorVolume_t swig_types[96]
+#define SWIGTYPE_p_std__shared_ptrT_lux__DeepShadowMap_t swig_types[97]
+#define SWIGTYPE_p_std__shared_ptrT_lux__FloatGrid_t swig_types[98]
+#define SWIGTYPE_p_std__shared_ptrT_lux__FloatVolume_t swig_types[99]
+#define SWIGTYPE_p_std__shared_ptrT_lux__VectorVolume_t swig_types[100]
+#define SWIGTYPE_p_std__vectorT_BoundingBox_std__allocatorT_BoundingBox_t_t swig_types[101]
+#define SWIGTYPE_p_std__vectorT__Tp__Alloc_t swig_types[102]
+#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[103]
+#define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t swig_types[104]
+#define SWIGTYPE_p_std__vectorT_lux__ColorVolumeBase_std__allocatorT_lux__ColorVolumeBase_t_t swig_types[105]
+#define SWIGTYPE_p_std__vectorT_lux__Color_std__allocatorT_lux__Color_t_t swig_types[106]
+#define SWIGTYPE_p_std__vectorT_lux__DSMBase_std__allocatorT_lux__DSMBase_t_t swig_types[107]
+#define SWIGTYPE_p_std__vectorT_lux__FloatVolumeBase_std__allocatorT_lux__FloatVolumeBase_t_t swig_types[108]
+#define SWIGTYPE_p_std__vectorT_lux__light_std__allocatorT_lux__light_t_t swig_types[109]
+#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t swig_types[110]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[111]
+#define SWIGTYPE_p_value_type swig_types[112]
+static swig_type_info *swig_types[114];
+static swig_module_info swig_module = {swig_types, 113, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -12471,6 +12473,260 @@ SWIGINTERN PyObject *ConstantVolumef_swigregister(PyObject *SWIGUNUSEDPARM(self)
   return SWIG_Py_Void();
 }
 
+SWIGINTERN PyObject *_wrap_new_ConstantVolumev(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  lux::ConstantVolumev *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:new_ConstantVolumev",&obj0,&obj1,&obj2)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_ConstantVolumev" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_ConstantVolumev" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_ConstantVolumev" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = (lux::ConstantVolumev *)new lux::ConstantVolumev(arg1,arg2,arg3);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__ConstantVolumev, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_ConstantVolumev(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::ConstantVolumev *arg1 = (lux::ConstantVolumev *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_ConstantVolumev",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__ConstantVolumev, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ConstantVolumev" "', argument " "1"" of type '" "lux::ConstantVolumev *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::ConstantVolumev * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ConstantVolumev_eval(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::ConstantVolumev *arg1 = (lux::ConstantVolumev *) 0 ;
+  lux::Vector *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  lux::Vector result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ConstantVolumev_eval",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__ConstantVolumev, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConstantVolumev_eval" "', argument " "1"" of type '" "lux::ConstantVolumev const *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::ConstantVolumev * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ConstantVolumev_eval" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ConstantVolumev_eval" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  result = ((lux::ConstantVolumev const *)arg1)->eval((lux::Vector const &)*arg2);
+  resultobj = SWIG_NewPointerObj((new lux::Vector(static_cast< const lux::Vector& >(result))), SWIGTYPE_p_lux__Vector, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ConstantVolumev_grad(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::ConstantVolumev *arg1 = (lux::ConstantVolumev *) 0 ;
+  lux::Vector *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  lux::Matrix result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ConstantVolumev_grad",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__ConstantVolumev, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ConstantVolumev_grad" "', argument " "1"" of type '" "lux::ConstantVolumev const *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::ConstantVolumev * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ConstantVolumev_grad" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ConstantVolumev_grad" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  result = ((lux::ConstantVolumev const *)arg1)->grad((lux::Vector const &)*arg2);
+  resultobj = SWIG_NewPointerObj((new lux::Matrix(static_cast< const lux::Matrix& >(result))), SWIGTYPE_p_lux__Matrix, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *ConstantVolumev_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_lux__ConstantVolumev, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_new_SphereDistVolume(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  lux::SphereDistVolume *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SphereDistVolume",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_SphereDistVolume" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  result = (lux::SphereDistVolume *)new lux::SphereDistVolume(arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__SphereDistVolume, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_SphereDistVolume(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::SphereDistVolume *arg1 = (lux::SphereDistVolume *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_SphereDistVolume",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__SphereDistVolume, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SphereDistVolume" "', argument " "1"" of type '" "lux::SphereDistVolume *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::SphereDistVolume * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SphereDistVolume_eval(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::SphereDistVolume *arg1 = (lux::SphereDistVolume *) 0 ;
+  lux::Vector *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SphereDistVolume_eval",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__SphereDistVolume, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SphereDistVolume_eval" "', argument " "1"" of type '" "lux::SphereDistVolume const *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::SphereDistVolume * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SphereDistVolume_eval" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SphereDistVolume_eval" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  result = (float)((lux::SphereDistVolume const *)arg1)->eval((lux::Vector const &)*arg2);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SphereDistVolume_grad(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::SphereDistVolume *arg1 = (lux::SphereDistVolume *) 0 ;
+  lux::Vector *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  lux::Vector result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SphereDistVolume_grad",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__SphereDistVolume, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SphereDistVolume_grad" "', argument " "1"" of type '" "lux::SphereDistVolume const *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::SphereDistVolume * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SphereDistVolume_grad" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SphereDistVolume_grad" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  result = ((lux::SphereDistVolume const *)arg1)->grad((lux::Vector const &)*arg2);
+  resultobj = SWIG_NewPointerObj((new lux::Vector(static_cast< const lux::Vector& >(result))), SWIGTYPE_p_lux__Vector, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *SphereDistVolume_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_lux__SphereDistVolume, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
 SWIGINTERN PyObject *_wrap_new_SphereVolume(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   float arg1 ;
@@ -21281,6 +21537,46 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Constantv(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  lux::VectorVolumeBase result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:Constantv",&obj0,&obj1,&obj2)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Constantv" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Constantv" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Constantv" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = Constantv(arg1,arg2,arg3);
+  resultobj = SWIG_NewPointerObj((new lux::VectorVolumeBase(static_cast< const lux::VectorVolumeBase& >(result))), SWIGTYPE_p_lux__VectorVolumeBase, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Sphere(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   float arg1 ;
@@ -21296,6 +21592,28 @@ SWIGINTERN PyObject *_wrap_Sphere(PyObject *SWIGUNUSEDPARM(self), PyObject *args
   } 
   arg1 = static_cast< float >(val1);
   result = Sphere(arg1);
+  resultobj = SWIG_NewPointerObj((new lux::FloatVolumeBase(static_cast< const lux::FloatVolumeBase& >(result))), SWIGTYPE_p_lux__FloatVolumeBase, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Spheredf(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  float arg1 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  lux::FloatVolumeBase result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Spheredf",&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_float(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Spheredf" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  result = Spheredf(arg1);
   resultobj = SWIG_NewPointerObj((new lux::FloatVolumeBase(static_cast< const lux::FloatVolumeBase& >(result))), SWIGTYPE_p_lux__FloatVolumeBase, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
@@ -40217,6 +40535,16 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"ConstantVolumef_eval", _wrap_ConstantVolumef_eval, METH_VARARGS, NULL},
 	 { (char *)"ConstantVolumef_grad", _wrap_ConstantVolumef_grad, METH_VARARGS, NULL},
 	 { (char *)"ConstantVolumef_swigregister", ConstantVolumef_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_ConstantVolumev", _wrap_new_ConstantVolumev, METH_VARARGS, NULL},
+	 { (char *)"delete_ConstantVolumev", _wrap_delete_ConstantVolumev, METH_VARARGS, NULL},
+	 { (char *)"ConstantVolumev_eval", _wrap_ConstantVolumev_eval, METH_VARARGS, NULL},
+	 { (char *)"ConstantVolumev_grad", _wrap_ConstantVolumev_grad, METH_VARARGS, NULL},
+	 { (char *)"ConstantVolumev_swigregister", ConstantVolumev_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_SphereDistVolume", _wrap_new_SphereDistVolume, METH_VARARGS, NULL},
+	 { (char *)"delete_SphereDistVolume", _wrap_delete_SphereDistVolume, METH_VARARGS, NULL},
+	 { (char *)"SphereDistVolume_eval", _wrap_SphereDistVolume_eval, METH_VARARGS, NULL},
+	 { (char *)"SphereDistVolume_grad", _wrap_SphereDistVolume_grad, METH_VARARGS, NULL},
+	 { (char *)"SphereDistVolume_swigregister", SphereDistVolume_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_SphereVolume", _wrap_new_SphereVolume, METH_VARARGS, NULL},
 	 { (char *)"delete_SphereVolume", _wrap_delete_SphereVolume, METH_VARARGS, NULL},
 	 { (char *)"SphereVolume_eval", _wrap_SphereVolume_eval, METH_VARARGS, NULL},
@@ -40494,7 +40822,9 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"GriddedVolume_grad", _wrap_GriddedVolume_grad, METH_VARARGS, NULL},
 	 { (char *)"GriddedVolume_swigregister", GriddedVolume_swigregister, METH_VARARGS, NULL},
 	 { (char *)"Constantf", _wrap_Constantf, METH_VARARGS, NULL},
+	 { (char *)"Constantv", _wrap_Constantv, METH_VARARGS, NULL},
 	 { (char *)"Sphere", _wrap_Sphere, METH_VARARGS, NULL},
+	 { (char *)"Spheredf", _wrap_Spheredf, METH_VARARGS, NULL},
 	 { (char *)"Box", _wrap_Box, METH_VARARGS, NULL},
 	 { (char *)"Cylinder", _wrap_Cylinder, METH_VARARGS, NULL},
 	 { (char *)"Plane", _wrap_Plane, METH_VARARGS, NULL},
@@ -40904,6 +41234,9 @@ static void *_p_lux__Divide_SV_VolumeTo_p_lux__VectorVolume(void *x, int *SWIGUN
 static void *_p_lux__Scale_V_VolumeTo_p_lux__VectorVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((lux::VectorVolume *)  ((lux::Scale_V_Volume *) x));
 }
+static void *_p_lux__ConstantVolumevTo_p_lux__VectorVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((lux::VectorVolume *)  ((lux::ConstantVolumev *) x));
+}
 static void *_p_lux__AddVolumevTo_p_lux__VectorVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((lux::VectorVolume *)  ((lux::AddVolumev *) x));
 }
@@ -40925,9 +41258,6 @@ static void *_p_lux__CutoutVolumevTo_p_lux__VectorVolume(void *x, int *SWIGUNUSE
 static void *_p_lux__TranslateVolumevTo_p_lux__VectorVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((lux::VectorVolume *)  ((lux::TranslateVolumev *) x));
 }
-static void *_p_lux__DivideVolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((lux::FloatVolume *)  ((lux::DivideVolume *) x));
-}
 static void *_p_lux__Advect_MMC_VolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((lux::FloatVolume *)  ((lux::Advect_MMC_Volume *) x));
 }
@@ -40948,6 +41278,9 @@ static void *_p_lux__PyroSphereVolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNU
 }
 static void *_p_lux__SphereVolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((lux::FloatVolume *)  ((lux::SphereVolume *) x));
+}
+static void *_p_lux__DivideVolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((lux::FloatVolume *)  ((lux::DivideVolume *) x));
 }
 static void *_p_lux__CosVolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((lux::FloatVolume *)  ((lux::CosVolume *) x));
@@ -40978,6 +41311,9 @@ static void *_p_lux__CylinderVolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNUSE
 }
 static void *_p_lux__BoxVolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((lux::FloatVolume *)  ((lux::BoxVolume *) x));
+}
+static void *_p_lux__SphereDistVolumeTo_p_lux__FloatVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((lux::FloatVolume *)  ((lux::SphereDistVolume *) x));
 }
 static void *_p_lux__ConstantVolumefTo_p_lux__FloatVolume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((lux::FloatVolume *)  ((lux::ConstantVolumef *) x));
@@ -41037,6 +41373,7 @@ static swig_type_info _swigt__p_lux__ColorVolumeBase = {"_p_lux__ColorVolumeBase
 static swig_type_info _swigt__p_lux__ColorVolumeFromDensity = {"_p_lux__ColorVolumeFromDensity", "lux::ColorVolumeFromDensity *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__ConeVolume = {"_p_lux__ConeVolume", "lux::ConeVolume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__ConstantVolumef = {"_p_lux__ConstantVolumef", "lux::ConstantVolumef *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_lux__ConstantVolumev = {"_p_lux__ConstantVolumev", "lux::ConstantVolumev *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__CosVolume = {"_p_lux__CosVolume", "lux::CosVolume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__CrossProductVolume = {"_p_lux__CrossProductVolume", "lux::CrossProductVolume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__CutoutVolumef = {"_p_lux__CutoutVolumef", "lux::CutoutVolumef *", 0, 0, (void*)0, 0};
@@ -41075,6 +41412,7 @@ static swig_type_info _swigt__p_lux__SimplexNoiseVectorVolume = {"_p_lux__Simple
 static swig_type_info _swigt__p_lux__SimplexNoiseVolume = {"_p_lux__SimplexNoiseVolume", "lux::SimplexNoiseVolume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__SinVolume = {"_p_lux__SinVolume", "lux::SinVolume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__SparseGrid = {"_p_lux__SparseGrid", "lux::SparseGrid *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_lux__SphereDistVolume = {"_p_lux__SphereDistVolume", "lux::SphereDistVolume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__SphereVolume = {"_p_lux__SphereVolume", "lux::SphereVolume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__SubtractVolumef = {"_p_lux__SubtractVolumef", "lux::SubtractVolumef *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_lux__SubtractVolumev = {"_p_lux__SubtractVolumev", "lux::SubtractVolumev *", 0, 0, (void*)0, 0};
@@ -41150,6 +41488,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_lux__ColorVolumeFromDensity,
   &_swigt__p_lux__ConeVolume,
   &_swigt__p_lux__ConstantVolumef,
+  &_swigt__p_lux__ConstantVolumev,
   &_swigt__p_lux__CosVolume,
   &_swigt__p_lux__CrossProductVolume,
   &_swigt__p_lux__CutoutVolumef,
@@ -41188,6 +41527,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_lux__SimplexNoiseVolume,
   &_swigt__p_lux__SinVolume,
   &_swigt__p_lux__SparseGrid,
+  &_swigt__p_lux__SphereDistVolume,
   &_swigt__p_lux__SphereVolume,
   &_swigt__p_lux__SubtractVolumef,
   &_swigt__p_lux__SubtractVolumev,
@@ -41263,6 +41603,7 @@ static swig_cast_info _swigc__p_lux__ColorVolumeBase[] = {  {&_swigt__p_lux__Col
 static swig_cast_info _swigc__p_lux__ColorVolumeFromDensity[] = {  {&_swigt__p_lux__ColorVolumeFromDensity, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__ConeVolume[] = {  {&_swigt__p_lux__ConeVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__ConstantVolumef[] = {  {&_swigt__p_lux__ConstantVolumef, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_lux__ConstantVolumev[] = {  {&_swigt__p_lux__ConstantVolumev, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__CosVolume[] = {  {&_swigt__p_lux__CosVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__CrossProductVolume[] = {  {&_swigt__p_lux__CrossProductVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__CutoutVolumef[] = {  {&_swigt__p_lux__CutoutVolumef, 0, 0, 0},{0, 0, 0, 0}};
@@ -41279,7 +41620,7 @@ static swig_cast_info _swigc__p_lux__ExpVolumef[] = {  {&_swigt__p_lux__ExpVolum
 static swig_cast_info _swigc__p_lux__ExpVolumev[] = {  {&_swigt__p_lux__ExpVolumev, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__FloatGrid[] = {  {&_swigt__p_lux__DeepShadowMap, _p_lux__DeepShadowMapTo_p_lux__FloatGrid, 0, 0},  {&_swigt__p_lux__FloatGrid, 0, 0, 0},  {&_swigt__p_lux__DensityGrid, _p_lux__DensityGridTo_p_lux__FloatGrid, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__FloatGridBase[] = {  {&_swigt__p_lux__FloatGridBase, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_lux__FloatVolume[] = {  {&_swigt__p_lux__DivideVolume, _p_lux__DivideVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__Advect_MMC_Volume, _p_lux__Advect_MMC_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__Advect_SL_Volume, _p_lux__Advect_SL_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__ConeVolume, _p_lux__ConeVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__PlaneVolume, _p_lux__PlaneVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SimplexNoiseVolume, _p_lux__SimplexNoiseVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__PyroSphereVolume, _p_lux__PyroSphereVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SphereVolume, _p_lux__SphereVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__CosVolume, _p_lux__CosVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__Scale_S_Volume, _p_lux__Scale_S_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__Rotate_S_Volume, _p_lux__Rotate_S_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__BlinnBlend_S_Volume, _p_lux__BlinnBlend_S_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__MaskVolume, _p_lux__MaskVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__FloatVolume, 0, 0, 0},  {&_swigt__p_lux__MultVolumef, _p_lux__MultVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SubtractVolumef, _p_lux__SubtractVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__AddVolumef, _p_lux__AddVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__CylinderVolume, _p_lux__CylinderVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__BoxVolume, _p_lux__BoxVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__ConstantVolumef, _p_lux__ConstantVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__ExpVolumef, _p_lux__ExpVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__UnionVolumef, _p_lux__UnionVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__IntersectVolumef, _p_lux__IntersectVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__CutoutVolumef, _p_lux__CutoutVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SinVolume, _p_lux__SinVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__DotProductVolume, _p_lux__DotProductVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__TranslateVolumef, _p_lux__TranslateVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__ClampVolume, _p_lux__ClampVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__GriddedVolume, _p_lux__GriddedVolumeTo_p_lux__FloatVolume, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_lux__FloatVolume[] = {  {&_swigt__p_lux__Advect_MMC_Volume, _p_lux__Advect_MMC_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__Advect_SL_Volume, _p_lux__Advect_SL_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__ConeVolume, _p_lux__ConeVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__PlaneVolume, _p_lux__PlaneVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SimplexNoiseVolume, _p_lux__SimplexNoiseVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__PyroSphereVolume, _p_lux__PyroSphereVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SphereVolume, _p_lux__SphereVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__DivideVolume, _p_lux__DivideVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__CosVolume, _p_lux__CosVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__Scale_S_Volume, _p_lux__Scale_S_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__Rotate_S_Volume, _p_lux__Rotate_S_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__BlinnBlend_S_Volume, _p_lux__BlinnBlend_S_VolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__MaskVolume, _p_lux__MaskVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__FloatVolume, 0, 0, 0},  {&_swigt__p_lux__MultVolumef, _p_lux__MultVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SubtractVolumef, _p_lux__SubtractVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__AddVolumef, _p_lux__AddVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__CylinderVolume, _p_lux__CylinderVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__BoxVolume, _p_lux__BoxVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SphereDistVolume, _p_lux__SphereDistVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__ConstantVolumef, _p_lux__ConstantVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__ExpVolumef, _p_lux__ExpVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__UnionVolumef, _p_lux__UnionVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__IntersectVolumef, _p_lux__IntersectVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__CutoutVolumef, _p_lux__CutoutVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__SinVolume, _p_lux__SinVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__DotProductVolume, _p_lux__DotProductVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__TranslateVolumef, _p_lux__TranslateVolumefTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__ClampVolume, _p_lux__ClampVolumeTo_p_lux__FloatVolume, 0, 0},  {&_swigt__p_lux__GriddedVolume, _p_lux__GriddedVolumeTo_p_lux__FloatVolume, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__FloatVolumeBase[] = {  {&_swigt__p_lux__FloatVolumeBase, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__Grid[] = {  {&_swigt__p_lux__Grid, 0, 0, 0},  {&_swigt__p_lux__DenseGrid, _p_lux__DenseGridTo_p_lux__Grid, 0, 0},  {&_swigt__p_lux__SparseGrid, _p_lux__SparseGridTo_p_lux__Grid, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__GriddedVolume[] = {  {&_swigt__p_lux__GriddedVolume, 0, 0, 0},{0, 0, 0, 0}};
@@ -41301,6 +41642,7 @@ static swig_cast_info _swigc__p_lux__SimplexNoiseVectorVolume[] = {  {&_swigt__p
 static swig_cast_info _swigc__p_lux__SimplexNoiseVolume[] = {  {&_swigt__p_lux__SimplexNoiseVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__SinVolume[] = {  {&_swigt__p_lux__SinVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__SparseGrid[] = {  {&_swigt__p_lux__SparseGrid, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_lux__SphereDistVolume[] = {  {&_swigt__p_lux__SphereDistVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__SphereVolume[] = {  {&_swigt__p_lux__SphereVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__SubtractVolumef[] = {  {&_swigt__p_lux__SubtractVolumef, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__SubtractVolumev[] = {  {&_swigt__p_lux__SubtractVolumev, 0, 0, 0},{0, 0, 0, 0}};
@@ -41309,7 +41651,7 @@ static swig_cast_info _swigc__p_lux__TranslateVolumev[] = {  {&_swigt__p_lux__Tr
 static swig_cast_info _swigc__p_lux__UnionVolumef[] = {  {&_swigt__p_lux__UnionVolumef, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__UnionVolumev[] = {  {&_swigt__p_lux__UnionVolumev, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__Vector[] = {  {&_swigt__p_lux__Vector, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_lux__VectorVolume[] = {  {&_swigt__p_lux__VectorVolume, 0, 0, 0},  {&_swigt__p_lux__SimplexNoiseVectorVolume, _p_lux__SimplexNoiseVectorVolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__CrossProductVolume, _p_lux__CrossProductVolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__Mult_SV_Volume, _p_lux__Mult_SV_VolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__Divide_SV_Volume, _p_lux__Divide_SV_VolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__Scale_V_Volume, _p_lux__Scale_V_VolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__AddVolumev, _p_lux__AddVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__SubtractVolumev, _p_lux__SubtractVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__ExpVolumev, _p_lux__ExpVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__UnionVolumev, _p_lux__UnionVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__IntersectVolumev, _p_lux__IntersectVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__CutoutVolumev, _p_lux__CutoutVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__TranslateVolumev, _p_lux__TranslateVolumevTo_p_lux__VectorVolume, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_lux__VectorVolume[] = {  {&_swigt__p_lux__Mult_SV_Volume, _p_lux__Mult_SV_VolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__Divide_SV_Volume, _p_lux__Divide_SV_VolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__Scale_V_Volume, _p_lux__Scale_V_VolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__ConstantVolumev, _p_lux__ConstantVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__AddVolumev, _p_lux__AddVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__SubtractVolumev, _p_lux__SubtractVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__ExpVolumev, _p_lux__ExpVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__UnionVolumev, _p_lux__UnionVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__IntersectVolumev, _p_lux__IntersectVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__CutoutVolumev, _p_lux__CutoutVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__TranslateVolumev, _p_lux__TranslateVolumevTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__SimplexNoiseVectorVolume, _p_lux__SimplexNoiseVectorVolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__CrossProductVolume, _p_lux__CrossProductVolumeTo_p_lux__VectorVolume, 0, 0},  {&_swigt__p_lux__VectorVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__VectorVolumeBase[] = {  {&_swigt__p_lux__VectorVolumeBase, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lux__light[] = {  {&_swigt__p_lux__light, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_mapT_std__string_std__string_t[] = {  {&_swigt__p_mapT_std__string_std__string_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -41376,6 +41718,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_lux__ColorVolumeFromDensity,
   _swigc__p_lux__ConeVolume,
   _swigc__p_lux__ConstantVolumef,
+  _swigc__p_lux__ConstantVolumev,
   _swigc__p_lux__CosVolume,
   _swigc__p_lux__CrossProductVolume,
   _swigc__p_lux__CutoutVolumef,
@@ -41414,6 +41757,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_lux__SimplexNoiseVolume,
   _swigc__p_lux__SinVolume,
   _swigc__p_lux__SparseGrid,
+  _swigc__p_lux__SphereDistVolume,
   _swigc__p_lux__SphereVolume,
   _swigc__p_lux__SubtractVolumef,
   _swigc__p_lux__SubtractVolumev,
