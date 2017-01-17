@@ -19813,40 +19813,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Grid_trilinearInterpolate(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  lux::Grid *arg1 = (lux::Grid *) 0 ;
-  lux::Vector *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  float result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:Grid_trilinearInterpolate",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__Grid, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Grid_trilinearInterpolate" "', argument " "1"" of type '" "lux::Grid const *""'"); 
-  }
-  arg1 = reinterpret_cast< lux::Grid * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Grid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Grid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
-  }
-  arg2 = reinterpret_cast< lux::Vector * >(argp2);
-  result = (float)((lux::Grid const *)arg1)->trilinearInterpolate((lux::Vector const &)*arg2);
-  resultobj = SWIG_From_float(static_cast< float >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap_Grid_partitionSize_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   lux::Grid *arg1 = (lux::Grid *) 0 ;
@@ -19879,27 +19845,63 @@ SWIGINTERN PyObject *Grid_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject 
 SWIGINTERN PyObject *_wrap_new_DenseGrid(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
-  float arg2 ;
+  int arg2 ;
+  int arg3 ;
+  float arg4 ;
+  float arg5 ;
+  float arg6 ;
   int val1 ;
   int ecode1 = 0 ;
-  float val2 ;
+  int val2 ;
   int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  float val5 ;
+  int ecode5 = 0 ;
+  float val6 ;
+  int ecode6 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
   lux::DenseGrid *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:new_DenseGrid",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:new_DenseGrid",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DenseGrid" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
-  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DenseGrid" "', argument " "2"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DenseGrid" "', argument " "2"" of type '" "int""'");
   } 
-  arg2 = static_cast< float >(val2);
-  result = (lux::DenseGrid *)new lux::DenseGrid(arg1,arg2);
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_DenseGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_DenseGrid" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_DenseGrid" "', argument " "5"" of type '" "float""'");
+  } 
+  arg5 = static_cast< float >(val5);
+  ecode6 = SWIG_AsVal_float(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_DenseGrid" "', argument " "6"" of type '" "float""'");
+  } 
+  arg6 = static_cast< float >(val6);
+  result = (lux::DenseGrid *)new lux::DenseGrid(arg1,arg2,arg3,arg4,arg5,arg6);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__DenseGrid, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
@@ -20034,40 +20036,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_DenseGrid_trilinearInterpolate(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  lux::DenseGrid *arg1 = (lux::DenseGrid *) 0 ;
-  lux::Vector *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  float result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:DenseGrid_trilinearInterpolate",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__DenseGrid, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DenseGrid_trilinearInterpolate" "', argument " "1"" of type '" "lux::DenseGrid const *""'"); 
-  }
-  arg1 = reinterpret_cast< lux::DenseGrid * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DenseGrid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DenseGrid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
-  }
-  arg2 = reinterpret_cast< lux::Vector * >(argp2);
-  result = (float)((lux::DenseGrid const *)arg1)->trilinearInterpolate((lux::Vector const &)*arg2);
-  resultobj = SWIG_From_float(static_cast< float >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *DenseGrid_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
@@ -20078,36 +20046,72 @@ SWIGINTERN PyObject *DenseGrid_swigregister(PyObject *SWIGUNUSEDPARM(self), PyOb
 SWIGINTERN PyObject *_wrap_new_SparseGrid(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
-  float arg2 ;
+  int arg2 ;
   int arg3 ;
+  float arg4 ;
+  float arg5 ;
+  float arg6 ;
+  int arg7 ;
   int val1 ;
   int ecode1 = 0 ;
-  float val2 ;
+  int val2 ;
   int ecode2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  float val5 ;
+  int ecode5 = 0 ;
+  float val6 ;
+  int ecode6 = 0 ;
+  int val7 ;
+  int ecode7 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
   lux::SparseGrid *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:new_SparseGrid",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:new_SparseGrid",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_SparseGrid" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
-  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_SparseGrid" "', argument " "2"" of type '" "float""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_SparseGrid" "', argument " "2"" of type '" "int""'");
   } 
-  arg2 = static_cast< float >(val2);
+  arg2 = static_cast< int >(val2);
   ecode3 = SWIG_AsVal_int(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_SparseGrid" "', argument " "3"" of type '" "int""'");
   } 
   arg3 = static_cast< int >(val3);
-  result = (lux::SparseGrid *)new lux::SparseGrid(arg1,arg2,arg3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_SparseGrid" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_SparseGrid" "', argument " "5"" of type '" "float""'");
+  } 
+  arg5 = static_cast< float >(val5);
+  ecode6 = SWIG_AsVal_float(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_SparseGrid" "', argument " "6"" of type '" "float""'");
+  } 
+  arg6 = static_cast< float >(val6);
+  ecode7 = SWIG_AsVal_int(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_SparseGrid" "', argument " "7"" of type '" "int""'");
+  } 
+  arg7 = static_cast< int >(val7);
+  result = (lux::SparseGrid *)new lux::SparseGrid(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__SparseGrid, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
@@ -20242,40 +20246,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SparseGrid_trilinearInterpolate(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  lux::SparseGrid *arg1 = (lux::SparseGrid *) 0 ;
-  lux::Vector *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  float result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:SparseGrid_trilinearInterpolate",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__SparseGrid, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SparseGrid_trilinearInterpolate" "', argument " "1"" of type '" "lux::SparseGrid const *""'"); 
-  }
-  arg1 = reinterpret_cast< lux::SparseGrid * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SparseGrid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SparseGrid_trilinearInterpolate" "', argument " "2"" of type '" "lux::Vector const &""'"); 
-  }
-  arg2 = reinterpret_cast< lux::Vector * >(argp2);
-  result = (float)((lux::SparseGrid const *)arg1)->trilinearInterpolate((lux::Vector const &)*arg2);
-  resultobj = SWIG_From_float(static_cast< float >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *SparseGrid_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
@@ -20283,34 +20253,43 @@ SWIGINTERN PyObject *SparseGrid_swigregister(PyObject *SWIGUNUSEDPARM(self), PyO
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_new_FloatGrid__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_FloatGrid(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   lux::FloatVolumeBase arg1 ;
   lux::Vector *arg2 = 0 ;
-  double *arg3 = 0 ;
+  lux::Vector *arg3 = 0 ;
   int *arg4 = 0 ;
   int *arg5 = 0 ;
+  int *arg6 = 0 ;
+  int *arg7 = 0 ;
   void *argp1 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  double temp3 ;
-  double val3 ;
-  int ecode3 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
   int temp4 ;
   int val4 ;
   int ecode4 = 0 ;
   int temp5 ;
   int val5 ;
   int ecode5 = 0 ;
+  int temp6 ;
+  int val6 ;
+  int ecode6 = 0 ;
+  int temp7 ;
+  int val7 ;
+  int ecode7 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
   lux::FloatGrid *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:new_FloatGrid",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:new_FloatGrid",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   {
     res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_lux__FloatVolumeBase,  0  | 0);
     if (!SWIG_IsOK(res1)) {
@@ -20332,12 +20311,14 @@ SWIGINTERN PyObject *_wrap_new_FloatGrid__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_FloatGrid" "', argument " "2"" of type '" "lux::Vector const &""'"); 
   }
   arg2 = reinterpret_cast< lux::Vector * >(argp2);
-  ecode3 = SWIG_AsVal_double(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_FloatGrid" "', argument " "3"" of type '" "double""'");
-  } 
-  temp3 = static_cast< double >(val3);
-  arg3 = &temp3;
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_FloatGrid" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_FloatGrid" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  arg3 = reinterpret_cast< lux::Vector * >(argp3);
   ecode4 = SWIG_AsVal_int(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_FloatGrid" "', argument " "4"" of type '" "int""'");
@@ -20350,94 +20331,23 @@ SWIGINTERN PyObject *_wrap_new_FloatGrid__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
   } 
   temp5 = static_cast< int >(val5);
   arg5 = &temp5;
-  result = (lux::FloatGrid *)new lux::FloatGrid(arg1,(lux::Vector const &)*arg2,(double const &)*arg3,(int const &)*arg4,(int const &)*arg5);
+  ecode6 = SWIG_AsVal_int(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_FloatGrid" "', argument " "6"" of type '" "int""'");
+  } 
+  temp6 = static_cast< int >(val6);
+  arg6 = &temp6;
+  ecode7 = SWIG_AsVal_int(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_FloatGrid" "', argument " "7"" of type '" "int""'");
+  } 
+  temp7 = static_cast< int >(val7);
+  arg7 = &temp7;
+  result = (lux::FloatGrid *)new lux::FloatGrid(arg1,(lux::Vector const &)*arg2,(lux::Vector const &)*arg3,(int const &)*arg4,(int const &)*arg5,(int const &)*arg6,(int const &)*arg7);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__FloatGrid, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_FloatGrid__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  lux::FloatGrid *arg1 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  lux::FloatGrid *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:new_FloatGrid",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_lux__FloatGrid,  0  | 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_FloatGrid" "', argument " "1"" of type '" "lux::FloatGrid const &""'"); 
-  }
-  if (!argp1) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_FloatGrid" "', argument " "1"" of type '" "lux::FloatGrid const &""'"); 
-  }
-  arg1 = reinterpret_cast< lux::FloatGrid * >(argp1);
-  result = (lux::FloatGrid *)new lux::FloatGrid((lux::FloatGrid const &)*arg1);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__FloatGrid, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_FloatGrid(PyObject *self, PyObject *args) {
-  int argc;
-  PyObject *argv[6];
-  int ii;
-  
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 5) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
-  if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_lux__FloatGrid, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_FloatGrid__SWIG_1(self, args);
-    }
-  }
-  if (argc == 5) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_lux__FloatVolumeBase, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_lux__Vector, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_double(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          {
-            int res = SWIG_AsVal_int(argv[3], NULL);
-            _v = SWIG_CheckState(res);
-          }
-          if (_v) {
-            {
-              int res = SWIG_AsVal_int(argv[4], NULL);
-              _v = SWIG_CheckState(res);
-            }
-            if (_v) {
-              return _wrap_new_FloatGrid__SWIG_0(self, args);
-            }
-          }
-        }
-      }
-    }
-  }
-  
-fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_FloatGrid'.\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    lux::FloatGrid::FloatGrid(lux::FloatVolumeBase,lux::Vector const &,double const &,int const &,int const &)\n"
-    "    lux::FloatGrid::FloatGrid(lux::FloatGrid const &)\n");
-  return 0;
 }
 
 
@@ -20635,7 +20545,7 @@ SWIGINTERN PyObject *_wrap_FloatGrid_length_get(PyObject *SWIGUNUSEDPARM(self), 
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
-  double result;
+  lux::Vector *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:FloatGrid_length_get",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__FloatGrid, 0 |  0 );
@@ -20643,8 +20553,8 @@ SWIGINTERN PyObject *_wrap_FloatGrid_length_get(PyObject *SWIGUNUSEDPARM(self), 
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FloatGrid_length_get" "', argument " "1"" of type '" "lux::FloatGrid *""'"); 
   }
   arg1 = reinterpret_cast< lux::FloatGrid * >(argp1);
-  result = (double)(double) ((arg1)->length);
-  resultobj = SWIG_From_double(static_cast< double >(result));
+  result = (lux::Vector *)& ((arg1)->length);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__Vector, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20775,31 +20685,39 @@ SWIGINTERN PyObject *FloatGridBase_swigregister(PyObject *SWIGUNUSEDPARM(self), 
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_new_DensityGrid__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_DensityGrid(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   lux::FloatVolumeBase arg1 ;
   lux::Vector arg2 ;
-  double arg3 ;
+  lux::Vector *arg3 = 0 ;
   int arg4 ;
   int arg5 ;
+  int arg6 ;
+  int arg7 ;
   void *argp1 ;
   int res1 = 0 ;
   void *argp2 ;
   int res2 = 0 ;
-  double val3 ;
-  int ecode3 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
   int val4 ;
   int ecode4 = 0 ;
   int val5 ;
   int ecode5 = 0 ;
+  int val6 ;
+  int ecode6 = 0 ;
+  int val7 ;
+  int ecode7 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
   lux::DensityGrid *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:new_DensityGrid",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:new_DensityGrid",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   {
     res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_lux__FloatVolumeBase,  0  | 0);
     if (!SWIG_IsOK(res1)) {
@@ -20826,11 +20744,14 @@ SWIGINTERN PyObject *_wrap_new_DensityGrid__SWIG_0(PyObject *SWIGUNUSEDPARM(self
       if (SWIG_IsNewObj(res2)) delete temp;
     }
   }
-  ecode3 = SWIG_AsVal_double(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_DensityGrid" "', argument " "3"" of type '" "double""'");
-  } 
-  arg3 = static_cast< double >(val3);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_DensityGrid" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DensityGrid" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  arg3 = reinterpret_cast< lux::Vector * >(argp3);
   ecode4 = SWIG_AsVal_int(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_DensityGrid" "', argument " "4"" of type '" "int""'");
@@ -20841,94 +20762,21 @@ SWIGINTERN PyObject *_wrap_new_DensityGrid__SWIG_0(PyObject *SWIGUNUSEDPARM(self
     SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_DensityGrid" "', argument " "5"" of type '" "int""'");
   } 
   arg5 = static_cast< int >(val5);
-  result = (lux::DensityGrid *)new lux::DensityGrid(arg1,arg2,arg3,arg4,arg5);
+  ecode6 = SWIG_AsVal_int(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_DensityGrid" "', argument " "6"" of type '" "int""'");
+  } 
+  arg6 = static_cast< int >(val6);
+  ecode7 = SWIG_AsVal_int(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_DensityGrid" "', argument " "7"" of type '" "int""'");
+  } 
+  arg7 = static_cast< int >(val7);
+  result = (lux::DensityGrid *)new lux::DensityGrid(arg1,arg2,(lux::Vector const &)*arg3,arg4,arg5,arg6,arg7);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__DensityGrid, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_DensityGrid__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  lux::DensityGrid *arg1 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  lux::DensityGrid *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:new_DensityGrid",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_lux__DensityGrid,  0  | 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DensityGrid" "', argument " "1"" of type '" "lux::DensityGrid const &""'"); 
-  }
-  if (!argp1) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DensityGrid" "', argument " "1"" of type '" "lux::DensityGrid const &""'"); 
-  }
-  arg1 = reinterpret_cast< lux::DensityGrid * >(argp1);
-  result = (lux::DensityGrid *)new lux::DensityGrid((lux::DensityGrid const &)*arg1);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__DensityGrid, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_DensityGrid(PyObject *self, PyObject *args) {
-  int argc;
-  PyObject *argv[6];
-  int ii;
-  
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  for (ii = 0; (ii < 5) && (ii < argc); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
-  if (argc == 1) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_lux__DensityGrid, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_new_DensityGrid__SWIG_1(self, args);
-    }
-  }
-  if (argc == 5) {
-    int _v;
-    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_lux__FloatVolumeBase, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_lux__Vector, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        {
-          int res = SWIG_AsVal_double(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          {
-            int res = SWIG_AsVal_int(argv[3], NULL);
-            _v = SWIG_CheckState(res);
-          }
-          if (_v) {
-            {
-              int res = SWIG_AsVal_int(argv[4], NULL);
-              _v = SWIG_CheckState(res);
-            }
-            if (_v) {
-              return _wrap_new_DensityGrid__SWIG_0(self, args);
-            }
-          }
-        }
-      }
-    }
-  }
-  
-fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_DensityGrid'.\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    lux::DensityGrid::DensityGrid(lux::FloatVolumeBase,lux::Vector,double,int,int)\n"
-    "    lux::DensityGrid::DensityGrid(lux::DensityGrid const &)\n");
-  return 0;
 }
 
 
@@ -21120,9 +20968,11 @@ SWIGINTERN PyObject *_wrap_new_DeepShadowMap(PyObject *SWIGUNUSEDPARM(self), PyO
   float arg2 ;
   lux::FloatVolumeBase arg3 ;
   lux::Vector arg4 ;
-  double arg5 ;
+  lux::Vector *arg5 = 0 ;
   int arg6 ;
   int arg7 ;
+  int arg8 ;
+  int arg9 ;
   void *argp1 ;
   int res1 = 0 ;
   float val2 ;
@@ -21131,12 +20981,16 @@ SWIGINTERN PyObject *_wrap_new_DeepShadowMap(PyObject *SWIGUNUSEDPARM(self), PyO
   int res3 = 0 ;
   void *argp4 ;
   int res4 = 0 ;
-  double val5 ;
-  int ecode5 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
   int val6 ;
   int ecode6 = 0 ;
   int val7 ;
   int ecode7 = 0 ;
+  int val8 ;
+  int ecode8 = 0 ;
+  int val9 ;
+  int ecode9 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
@@ -21144,9 +20998,11 @@ SWIGINTERN PyObject *_wrap_new_DeepShadowMap(PyObject *SWIGUNUSEDPARM(self), PyO
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
   lux::DeepShadowMap *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:new_DeepShadowMap",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOO:new_DeepShadowMap",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
   {
     res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_lux__light,  0  | 0);
     if (!SWIG_IsOK(res1)) {
@@ -21191,11 +21047,14 @@ SWIGINTERN PyObject *_wrap_new_DeepShadowMap(PyObject *SWIGUNUSEDPARM(self), PyO
       if (SWIG_IsNewObj(res4)) delete temp;
     }
   }
-  ecode5 = SWIG_AsVal_double(obj4, &val5);
-  if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_DeepShadowMap" "', argument " "5"" of type '" "double""'");
-  } 
-  arg5 = static_cast< double >(val5);
+  res5 = SWIG_ConvertPtr(obj4, &argp5, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "new_DeepShadowMap" "', argument " "5"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp5) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DeepShadowMap" "', argument " "5"" of type '" "lux::Vector const &""'"); 
+  }
+  arg5 = reinterpret_cast< lux::Vector * >(argp5);
   ecode6 = SWIG_AsVal_int(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
     SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_DeepShadowMap" "', argument " "6"" of type '" "int""'");
@@ -21206,7 +21065,17 @@ SWIGINTERN PyObject *_wrap_new_DeepShadowMap(PyObject *SWIGUNUSEDPARM(self), PyO
     SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_DeepShadowMap" "', argument " "7"" of type '" "int""'");
   } 
   arg7 = static_cast< int >(val7);
-  result = (lux::DeepShadowMap *)new lux::DeepShadowMap(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  ecode8 = SWIG_AsVal_int(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "new_DeepShadowMap" "', argument " "8"" of type '" "int""'");
+  } 
+  arg8 = static_cast< int >(val8);
+  ecode9 = SWIG_AsVal_int(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "new_DeepShadowMap" "', argument " "9"" of type '" "int""'");
+  } 
+  arg9 = static_cast< int >(val9);
+  result = (lux::DeepShadowMap *)new lux::DeepShadowMap(arg1,arg2,arg3,arg4,(lux::Vector const &)*arg5,arg6,arg7,arg8,arg9);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__DeepShadowMap, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
@@ -22556,27 +22425,35 @@ SWIGINTERN PyObject *_wrap_Gridf(PyObject *SWIGUNUSEDPARM(self), PyObject *args)
   PyObject *resultobj = 0;
   lux::FloatVolumeBase *arg1 = 0 ;
   lux::Vector *arg2 = 0 ;
-  double arg3 ;
+  lux::Vector *arg3 = 0 ;
   int arg4 ;
   int arg5 ;
+  int arg6 ;
+  int arg7 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  double val3 ;
-  int ecode3 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
   int val4 ;
   int ecode4 = 0 ;
   int val5 ;
   int ecode5 = 0 ;
+  int val6 ;
+  int ecode6 = 0 ;
+  int val7 ;
+  int ecode7 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
   lux::FloatGridBase result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:Gridf",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:Gridf",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_lux__FloatVolumeBase,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Gridf" "', argument " "1"" of type '" "lux::FloatVolumeBase const &""'"); 
@@ -22593,11 +22470,14 @@ SWIGINTERN PyObject *_wrap_Gridf(PyObject *SWIGUNUSEDPARM(self), PyObject *args)
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Gridf" "', argument " "2"" of type '" "lux::Vector const &""'"); 
   }
   arg2 = reinterpret_cast< lux::Vector * >(argp2);
-  ecode3 = SWIG_AsVal_double(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Gridf" "', argument " "3"" of type '" "double""'");
-  } 
-  arg3 = static_cast< double >(val3);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Gridf" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Gridf" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  arg3 = reinterpret_cast< lux::Vector * >(argp3);
   ecode4 = SWIG_AsVal_int(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Gridf" "', argument " "4"" of type '" "int""'");
@@ -22608,7 +22488,17 @@ SWIGINTERN PyObject *_wrap_Gridf(PyObject *SWIGUNUSEDPARM(self), PyObject *args)
     SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Gridf" "', argument " "5"" of type '" "int""'");
   } 
   arg5 = static_cast< int >(val5);
-  result = Gridf((lux::FloatVolumeBase const &)*arg1,(lux::Vector const &)*arg2,arg3,arg4,arg5);
+  ecode6 = SWIG_AsVal_int(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Gridf" "', argument " "6"" of type '" "int""'");
+  } 
+  arg6 = static_cast< int >(val6);
+  ecode7 = SWIG_AsVal_int(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "Gridf" "', argument " "7"" of type '" "int""'");
+  } 
+  arg7 = static_cast< int >(val7);
+  result = Gridf((lux::FloatVolumeBase const &)*arg1,(lux::Vector const &)*arg2,(lux::Vector const &)*arg3,arg4,arg5,arg6,arg7);
   resultobj = SWIG_NewPointerObj((new lux::FloatGridBase(static_cast< const lux::FloatGridBase& >(result))), SWIGTYPE_p_lux__FloatGridBase, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
@@ -22645,27 +22535,35 @@ SWIGINTERN PyObject *_wrap_AutoGriddedf(PyObject *SWIGUNUSEDPARM(self), PyObject
   PyObject *resultobj = 0;
   lux::FloatVolumeBase *arg1 = 0 ;
   lux::Vector *arg2 = 0 ;
-  double arg3 ;
+  lux::Vector *arg3 = 0 ;
   int arg4 ;
   int arg5 ;
+  int arg6 ;
+  int arg7 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  double val3 ;
-  int ecode3 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
   int val4 ;
   int ecode4 = 0 ;
   int val5 ;
   int ecode5 = 0 ;
+  int val6 ;
+  int ecode6 = 0 ;
+  int val7 ;
+  int ecode7 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
   lux::FloatVolumeBase result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:AutoGriddedf",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:AutoGriddedf",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_lux__FloatVolumeBase,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "AutoGriddedf" "', argument " "1"" of type '" "lux::FloatVolumeBase const &""'"); 
@@ -22682,11 +22580,14 @@ SWIGINTERN PyObject *_wrap_AutoGriddedf(PyObject *SWIGUNUSEDPARM(self), PyObject
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "AutoGriddedf" "', argument " "2"" of type '" "lux::Vector const &""'"); 
   }
   arg2 = reinterpret_cast< lux::Vector * >(argp2);
-  ecode3 = SWIG_AsVal_double(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "AutoGriddedf" "', argument " "3"" of type '" "double""'");
-  } 
-  arg3 = static_cast< double >(val3);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "AutoGriddedf" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "AutoGriddedf" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  arg3 = reinterpret_cast< lux::Vector * >(argp3);
   ecode4 = SWIG_AsVal_int(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "AutoGriddedf" "', argument " "4"" of type '" "int""'");
@@ -22697,7 +22598,17 @@ SWIGINTERN PyObject *_wrap_AutoGriddedf(PyObject *SWIGUNUSEDPARM(self), PyObject
     SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "AutoGriddedf" "', argument " "5"" of type '" "int""'");
   } 
   arg5 = static_cast< int >(val5);
-  result = AutoGriddedf((lux::FloatVolumeBase const &)*arg1,(lux::Vector const &)*arg2,arg3,arg4,arg5);
+  ecode6 = SWIG_AsVal_int(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "AutoGriddedf" "', argument " "6"" of type '" "int""'");
+  } 
+  arg6 = static_cast< int >(val6);
+  ecode7 = SWIG_AsVal_int(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "AutoGriddedf" "', argument " "7"" of type '" "int""'");
+  } 
+  arg7 = static_cast< int >(val7);
+  result = AutoGriddedf((lux::FloatVolumeBase const &)*arg1,(lux::Vector const &)*arg2,(lux::Vector const &)*arg3,arg4,arg5,arg6,arg7);
   resultobj = SWIG_NewPointerObj((new lux::FloatVolumeBase(static_cast< const lux::FloatVolumeBase& >(result))), SWIGTYPE_p_lux__FloatVolumeBase, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
@@ -22711,9 +22622,11 @@ SWIGINTERN PyObject *_wrap_DSM(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   float arg2 ;
   lux::FloatVolumeBase *arg3 = 0 ;
   lux::Vector *arg4 = 0 ;
-  double arg5 ;
+  lux::Vector *arg5 = 0 ;
   int arg6 ;
   int arg7 ;
+  int arg8 ;
+  int arg9 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   float val2 ;
@@ -22722,12 +22635,16 @@ SWIGINTERN PyObject *_wrap_DSM(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   int res3 = 0 ;
   void *argp4 = 0 ;
   int res4 = 0 ;
-  double val5 ;
-  int ecode5 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
   int val6 ;
   int ecode6 = 0 ;
   int val7 ;
   int ecode7 = 0 ;
+  int val8 ;
+  int ecode8 = 0 ;
+  int val9 ;
+  int ecode9 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
@@ -22735,9 +22652,11 @@ SWIGINTERN PyObject *_wrap_DSM(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
   lux::DSMBase result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:DSM",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOO:DSM",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_lux__light,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DSM" "', argument " "1"" of type '" "lux::light const &""'"); 
@@ -22767,11 +22686,14 @@ SWIGINTERN PyObject *_wrap_DSM(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DSM" "', argument " "4"" of type '" "lux::Vector const &""'"); 
   }
   arg4 = reinterpret_cast< lux::Vector * >(argp4);
-  ecode5 = SWIG_AsVal_double(obj4, &val5);
-  if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "DSM" "', argument " "5"" of type '" "double""'");
-  } 
-  arg5 = static_cast< double >(val5);
+  res5 = SWIG_ConvertPtr(obj4, &argp5, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "DSM" "', argument " "5"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp5) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DSM" "', argument " "5"" of type '" "lux::Vector const &""'"); 
+  }
+  arg5 = reinterpret_cast< lux::Vector * >(argp5);
   ecode6 = SWIG_AsVal_int(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
     SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "DSM" "', argument " "6"" of type '" "int""'");
@@ -22782,7 +22704,17 @@ SWIGINTERN PyObject *_wrap_DSM(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "DSM" "', argument " "7"" of type '" "int""'");
   } 
   arg7 = static_cast< int >(val7);
-  result = DSM((lux::light const &)*arg1,arg2,(lux::FloatVolumeBase const &)*arg3,(lux::Vector const &)*arg4,arg5,arg6,arg7);
+  ecode8 = SWIG_AsVal_int(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "DSM" "', argument " "8"" of type '" "int""'");
+  } 
+  arg8 = static_cast< int >(val8);
+  ecode9 = SWIG_AsVal_int(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "DSM" "', argument " "9"" of type '" "int""'");
+  } 
+  arg9 = static_cast< int >(val9);
+  result = DSM((lux::light const &)*arg1,arg2,(lux::FloatVolumeBase const &)*arg3,(lux::Vector const &)*arg4,(lux::Vector const &)*arg5,arg6,arg7,arg8,arg9);
   resultobj = SWIG_NewPointerObj((new lux::DSMBase(static_cast< const lux::DSMBase& >(result))), SWIGTYPE_p_lux__DSMBase, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
@@ -23178,11 +23110,11 @@ fail:
 SWIGINTERN PyObject *_wrap_new_BoundingBox__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   lux::Vector *arg1 = 0 ;
-  double arg2 ;
+  lux::Vector *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  double val2 ;
-  int ecode2 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   BoundingBox *result = 0 ;
@@ -23196,12 +23128,15 @@ SWIGINTERN PyObject *_wrap_new_BoundingBox__SWIG_1(PyObject *SWIGUNUSEDPARM(self
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_BoundingBox" "', argument " "1"" of type '" "lux::Vector const &""'"); 
   }
   arg1 = reinterpret_cast< lux::Vector * >(argp1);
-  ecode2 = SWIG_AsVal_double(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_BoundingBox" "', argument " "2"" of type '" "double""'");
-  } 
-  arg2 = static_cast< double >(val2);
-  result = (BoundingBox *)new BoundingBox((lux::Vector const &)*arg1,arg2);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_BoundingBox" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_BoundingBox" "', argument " "2"" of type '" "lux::Vector const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  result = (BoundingBox *)new BoundingBox((lux::Vector const &)*arg1,(lux::Vector const &)*arg2);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_BoundingBox, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
@@ -23260,10 +23195,8 @@ SWIGINTERN PyObject *_wrap_new_BoundingBox(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_lux__Vector, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      {
-        int res = SWIG_AsVal_double(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_lux__Vector, 0);
+      _v = SWIG_CheckState(res);
       if (_v) {
         return _wrap_new_BoundingBox__SWIG_1(self, args);
       }
@@ -23274,7 +23207,7 @@ fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_BoundingBox'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    BoundingBox::BoundingBox()\n"
-    "    BoundingBox::BoundingBox(lux::Vector const &,double const)\n"
+    "    BoundingBox::BoundingBox(lux::Vector const &,lux::Vector const &)\n"
     "    BoundingBox::BoundingBox(BoundingBox const &)\n");
   return 0;
 }
@@ -23305,13 +23238,13 @@ SWIGINTERN PyObject *_wrap_BoundingBox_setBounds(PyObject *SWIGUNUSEDPARM(self),
   PyObject *resultobj = 0;
   BoundingBox *arg1 = (BoundingBox *) 0 ;
   lux::Vector *arg2 = 0 ;
-  double arg3 ;
+  lux::Vector *arg3 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  double val3 ;
-  int ecode3 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
@@ -23330,12 +23263,15 @@ SWIGINTERN PyObject *_wrap_BoundingBox_setBounds(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BoundingBox_setBounds" "', argument " "2"" of type '" "lux::Vector const &""'"); 
   }
   arg2 = reinterpret_cast< lux::Vector * >(argp2);
-  ecode3 = SWIG_AsVal_double(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BoundingBox_setBounds" "', argument " "3"" of type '" "double""'");
-  } 
-  arg3 = static_cast< double >(val3);
-  (arg1)->setBounds((lux::Vector const &)*arg2,arg3);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_lux__Vector,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "BoundingBox_setBounds" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BoundingBox_setBounds" "', argument " "3"" of type '" "lux::Vector const &""'"); 
+  }
+  arg3 = reinterpret_cast< lux::Vector * >(argp3);
+  (arg1)->setBounds((lux::Vector const &)*arg2,(lux::Vector const &)*arg3);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -23509,11 +23445,11 @@ fail:
 SWIGINTERN PyObject *_wrap_BoundingBox_len_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   BoundingBox *arg1 = (BoundingBox *) 0 ;
-  double arg2 ;
+  lux::Vector *arg2 = (lux::Vector *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  double val2 ;
-  int ecode2 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
@@ -23523,12 +23459,12 @@ SWIGINTERN PyObject *_wrap_BoundingBox_len_set(PyObject *SWIGUNUSEDPARM(self), P
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BoundingBox_len_set" "', argument " "1"" of type '" "BoundingBox *""'"); 
   }
   arg1 = reinterpret_cast< BoundingBox * >(argp1);
-  ecode2 = SWIG_AsVal_double(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BoundingBox_len_set" "', argument " "2"" of type '" "double""'");
-  } 
-  arg2 = static_cast< double >(val2);
-  if (arg1) (arg1)->len = arg2;
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_lux__Vector, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BoundingBox_len_set" "', argument " "2"" of type '" "lux::Vector *""'"); 
+  }
+  arg2 = reinterpret_cast< lux::Vector * >(argp2);
+  if (arg1) (arg1)->len = *arg2;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -23542,7 +23478,7 @@ SWIGINTERN PyObject *_wrap_BoundingBox_len_get(PyObject *SWIGUNUSEDPARM(self), P
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
-  double result;
+  lux::Vector *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:BoundingBox_len_get",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BoundingBox, 0 |  0 );
@@ -23550,8 +23486,8 @@ SWIGINTERN PyObject *_wrap_BoundingBox_len_get(PyObject *SWIGUNUSEDPARM(self), P
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BoundingBox_len_get" "', argument " "1"" of type '" "BoundingBox *""'"); 
   }
   arg1 = reinterpret_cast< BoundingBox * >(argp1);
-  result = (double) ((arg1)->len);
-  resultobj = SWIG_From_double(static_cast< double >(result));
+  result = (lux::Vector *)& ((arg1)->len);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lux__Vector, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -40777,20 +40713,17 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Grid_setDefaultValue", _wrap_Grid_setDefaultValue, METH_VARARGS, NULL},
 	 { (char *)"Grid_get", _wrap_Grid_get, METH_VARARGS, NULL},
 	 { (char *)"Grid_set", _wrap_Grid_set, METH_VARARGS, NULL},
-	 { (char *)"Grid_trilinearInterpolate", _wrap_Grid_trilinearInterpolate, METH_VARARGS, NULL},
 	 { (char *)"Grid_partitionSize_get", _wrap_Grid_partitionSize_get, METH_VARARGS, NULL},
 	 { (char *)"Grid_swigregister", Grid_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_DenseGrid", _wrap_new_DenseGrid, METH_VARARGS, NULL},
 	 { (char *)"delete_DenseGrid", _wrap_delete_DenseGrid, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_get", _wrap_DenseGrid_get, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_set", _wrap_DenseGrid_set, METH_VARARGS, NULL},
-	 { (char *)"DenseGrid_trilinearInterpolate", _wrap_DenseGrid_trilinearInterpolate, METH_VARARGS, NULL},
 	 { (char *)"DenseGrid_swigregister", DenseGrid_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_SparseGrid", _wrap_new_SparseGrid, METH_VARARGS, NULL},
 	 { (char *)"delete_SparseGrid", _wrap_delete_SparseGrid, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_get", _wrap_SparseGrid_get, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_set", _wrap_SparseGrid_set, METH_VARARGS, NULL},
-	 { (char *)"SparseGrid_trilinearInterpolate", _wrap_SparseGrid_trilinearInterpolate, METH_VARARGS, NULL},
 	 { (char *)"SparseGrid_swigregister", SparseGrid_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_FloatGrid", _wrap_new_FloatGrid, METH_VARARGS, NULL},
 	 { (char *)"delete_FloatGrid", _wrap_delete_FloatGrid, METH_VARARGS, NULL},

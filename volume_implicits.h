@@ -107,8 +107,8 @@ class dumbBase{
 };*/
 class FloatVolumeBase : public FloatVolumePtr {
     public:
-        FloatVolumeBase() : BB(Vector(0, 0, 0), 4){};
-        FloatVolumeBase(FloatVolume* f) : FloatVolumePtr(f), BB(Vector(0, 0, 0), 4){};
+        FloatVolumeBase() : BB(Vector(0, 0, 0), Vector(4, 4, 4)){};
+        FloatVolumeBase(FloatVolume* f) : FloatVolumePtr(f), BB(Vector(0, 0, 0), Vector(4, 4, 4)){};
         ~FloatVolumeBase(){};
         const FloatVolume* get() const {return FloatVolumePtr::get();};
         BoundingBox BB;
@@ -116,7 +116,7 @@ class FloatVolumeBase : public FloatVolumePtr {
 
 class VectorVolumeBase : public VectorVolumePtr {
     public:
-        VectorVolumeBase() : BB(Vector(0, 0, 0), 4){};
+        VectorVolumeBase() : BB(Vector(0, 0, 0), Vector(4, 4, 4)){};
         VectorVolumeBase(VectorVolume* f) : VectorVolumePtr(f){};
         ~VectorVolumeBase(){};
         const VectorVolume* get() const {return VectorVolumePtr::get();};

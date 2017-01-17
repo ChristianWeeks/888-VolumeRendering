@@ -11,7 +11,14 @@ namespace lux {
 //-----------------------------------------------------------------------------------------------------
 class Grid{
     public:
-        Grid(int v, float l, int p) : partitionSize(p), voxels(v), length(l){};
+        Grid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength, int p) : 
+            partitionSize(p), 
+            xVoxels(xvoxels),
+            yVoxels(yvoxels),
+            zVoxels(zvoxels),
+            xLength(xlength),
+            yLength(ylength),
+            zLength(zlength){};
         virtual ~Grid(){};
 
         void setDefaultValue(float d){defaultValue = d;};
@@ -19,25 +26,27 @@ class Grid{
         //virtual void init() = 0;
         virtual const float get(int i, int j, int k) const = 0;
         virtual void set(int i, int j, int k, float value) = 0;
-        virtual const float trilinearInterpolate(const Vector& position) const = 0;
 
         const int partitionSize;
 
     protected:
         float defaultValue;
-        const int voxels;
-        const double length;
+        const int xVoxels;
+        const int yVoxels;
+        const int zVoxels;
+        const double xLength;
+        const double yLength;
+        const double zLength;
 
 };
 
 class DenseGrid : public Grid{
     public:
-        DenseGrid(int v, float l);
+        DenseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength);
         ~DenseGrid();
 
         const float get(int i, int j, int k) const;
         void set(int i, int j, int k, float value);
-        const float trilinearInterpolate(const Vector& position) const;
 
     private:
         std::unique_ptr<float[]> data;
@@ -46,15 +55,16 @@ class DenseGrid : public Grid{
 
 class SparseGrid : public Grid{
     public:
-        SparseGrid(int v, float l, int p);
+        SparseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength, int p);
         ~SparseGrid();
 
         const float get(int i, int j, int k) const;
         void set(int i, int j, int k, float value);
-        const float trilinearInterpolate(const Vector& position) const;
 
     private:
-        const int numPartitions;
+        const int xPartitions;
+        const int yPartitions;
+        const int zPartitions;
         float **data;
 
 };
@@ -64,18 +74,21 @@ class SparseGrid : public Grid{
 //-----------------------------------------------------------------------------------------------------
 class FloatGrid{
     public:
-        FloatGrid(FloatVolumeBase f, const Vector& c, const double& l, const int& v, const int& partitionSize);
-        FloatGrid(const FloatGrid& f);
+        FloatGrid(FloatVolumeBase f, const Vector& c, const Vector& s, const int& vx, const int& vy, const int& vz, const int& partitionSize);
+        //FloatGrid(const FloatGrid& f);
         ~FloatGrid();
         const float trilinearInterpolate(const Vector& P) const;
         virtual void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound);
+
         const Vector center;
-        const double length;
+        const Vector length;
     protected:
 
         FloatVolumeBase field;
         const Vector origin;
-        const int voxels;
+        const int xVoxels;
+        const int yVoxels;
+        const int zVoxels;
         const float voxelLength;
         const int totalCells;
         Grid *data;
@@ -97,8 +110,8 @@ class FloatGridBase :  public FloatGridPtr{
 
 class DensityGrid: public FloatGrid{
     public:
-        DensityGrid(FloatVolumeBase f, Vector c, double s, int v, int p);
-        DensityGrid(const DensityGrid& f);
+        DensityGrid(FloatVolumeBase f, Vector c, const Vector& s, int xv, int yv, int zv, int p);
+        //DensityGrid(const DensityGrid& f);
         ~DensityGrid(){};
 
         void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound);
@@ -109,7 +122,7 @@ class DensityGrid: public FloatGrid{
 
 class DeepShadowMap: public FloatGrid{
     public:
-        DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, double s, int v, int p);
+        DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p);
         ~DeepShadowMap(){};
         light sourceLight;
 

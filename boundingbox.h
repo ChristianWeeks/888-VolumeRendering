@@ -20,19 +20,19 @@ class BoundingBox {
   public:
     BoundingBox();
 
-    BoundingBox(const lux::Vector& c, const double length);
+    BoundingBox(const lux::Vector& c, const lux::Vector& length);
     BoundingBox(const BoundingBox& bb);
 
     ~BoundingBox();
 
-    void setBounds(const lux::Vector& center, const double len);
+    void setBounds(const lux::Vector& center, const lux::Vector& len);
     // (t0, t1) is the interval for valid hits
     std::vector<float> intersect(const Ray &, float t0, float t1) const;
 
     // corners
     lux::Vector bounds[2];
     lux::Vector center;
-    double len;
+    lux::Vector len;
 };
 
 #endif // _BOUNDING_BOX_H_

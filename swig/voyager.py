@@ -1317,7 +1317,6 @@ class Grid(_object):
     def setDefaultValue(self, *args): return _voyager.Grid_setDefaultValue(self, *args)
     def get(self, *args): return _voyager.Grid_get(self, *args)
     def set(self, *args): return _voyager.Grid_set(self, *args)
-    def trilinearInterpolate(self, *args): return _voyager.Grid_trilinearInterpolate(self, *args)
     __swig_getmethods__["partitionSize"] = _voyager.Grid_partitionSize_get
     if _newclass:partitionSize = _swig_property(_voyager.Grid_partitionSize_get)
 Grid_swigregister = _voyager.Grid_swigregister
@@ -1339,7 +1338,6 @@ class DenseGrid(Grid):
     __del__ = lambda self : None;
     def get(self, *args): return _voyager.DenseGrid_get(self, *args)
     def set(self, *args): return _voyager.DenseGrid_set(self, *args)
-    def trilinearInterpolate(self, *args): return _voyager.DenseGrid_trilinearInterpolate(self, *args)
 DenseGrid_swigregister = _voyager.DenseGrid_swigregister
 DenseGrid_swigregister(DenseGrid)
 
@@ -1359,7 +1357,6 @@ class SparseGrid(Grid):
     __del__ = lambda self : None;
     def get(self, *args): return _voyager.SparseGrid_get(self, *args)
     def set(self, *args): return _voyager.SparseGrid_set(self, *args)
-    def trilinearInterpolate(self, *args): return _voyager.SparseGrid_trilinearInterpolate(self, *args)
 SparseGrid_swigregister = _voyager.SparseGrid_swigregister
 SparseGrid_swigregister(SparseGrid)
 

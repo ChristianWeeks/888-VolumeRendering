@@ -14,7 +14,7 @@
 BoundingBox::BoundingBox(){}
 
 
-BoundingBox::BoundingBox(const lux::Vector& c, const double l) : center(c), len(l){
+BoundingBox::BoundingBox(const lux::Vector& c, const lux::Vector& l) : center(c), len(l){
     setBounds(c, l);
 }
 BoundingBox::BoundingBox(const BoundingBox& bb) : center(bb.center), len(bb.len){
@@ -23,11 +23,11 @@ BoundingBox::BoundingBox(const BoundingBox& bb) : center(bb.center), len(bb.len)
 
 BoundingBox::~BoundingBox(){}
 
-void BoundingBox::setBounds(const lux::Vector& c, const double l) {
+void BoundingBox::setBounds(const lux::Vector& c, const lux::Vector& l) {
     center = c;
     len = l;
-    bounds[0] = center - lux::Vector(len/2.0, len/2.0, len/2.0);
-    bounds[1] = center + lux::Vector(len/2.0, len/2.0, len/2.0);
+    bounds[0] = center - (len/2.0);
+    bounds[1] = center + (len/2.0);
 }
 
 std::vector<float> BoundingBox::intersect(const Ray &r, float t0, float t1) const {

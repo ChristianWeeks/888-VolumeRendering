@@ -5,32 +5,45 @@ using namespace lux;
 //-------------------------------------------------------------------------------------------------------------------------------
 //Grid Data Structures
 //-------------------------------------------------------------------------------------------------------------------------------
-DenseGrid::DenseGrid(int v, float l) : Grid(v, l, -1), data(new float[v*v*v]){};
+DenseGrid::DenseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength) :
+    Grid(xvoxels, yvoxels, zvoxels, xlength, ylength, zlength, -1), data(new float[xvoxels*yvoxels*zvoxels]){};
 DenseGrid::~DenseGrid(){};
 
-inline const float DenseGrid::get(int i, int j, int k) const{ return data.get()[k + j*voxels + i*voxels*voxels];};
-inline void DenseGrid::set(int i, int j, int k, float value){ data.get()[k + j*voxels + i*voxels*voxels] = value;};
-inline const float DenseGrid::trilinearInterpolate(const Vector& position) const { return 1.0;};
+inline const float DenseGrid::get(int i, int j, int k) const{ return data.get()[k + j*zVoxels + i*yVoxels*zVoxels];};
+inline void DenseGrid::set(int i, int j, int k, float value){ data.get()[k + j*zVoxels + i*yVoxels*zVoxels] = value;};
 
-SparseGrid::SparseGrid(int v, float l, int p) : Grid(v, l, p), numPartitions(v / p){
+SparseGrid::SparseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength, int p) :
+    Grid(xvoxels, yvoxels, zvoxels, xlength, ylength, zlength, p),
+    xPartitions(xvoxels / p),
+    yPartitions(yvoxels / p),
+    zPartitions(zvoxels / p){
     try{
-        if ((v) % partitionSize != 0)
+        if ((xvoxels) % partitionSize != 0 || (yvoxels) % partitionSize != 0 || (zvoxels) % partitionSize != 0){
             throw 10;
+        }
+        if (xlength / xvoxels != ylength / yvoxels || xlength / xvoxels != zlength / zvoxels){
+            throw 20;
+        }
+
     }
     catch(int e){
-        std::cout << "Error: Voxels must be evenly divisible by partition size\n";
+        if (e == 10){
+            std::cout << "Error: Voxels must be evenly divisible by partition size\n";
+        }
+        else if (e == 20){
+            std::cout << "Error: Voxels must be of equal length on every side\n";
+        }
     }
     setDefaultValue(0.0);
 
-    data = new float*[numPartitions*numPartitions*numPartitions];
-    for(int i = 0; i < numPartitions*numPartitions*numPartitions; i++){
+    data = new float*[xPartitions*yPartitions*zPartitions];
+    for(int i = 0; i < xPartitions*yPartitions*zPartitions; i++){
         data[i] = NULL;
     }
-
-};
+}
 
 SparseGrid::~SparseGrid(){
-    for (int i = 0; i < numPartitions; i++){
+    for (int i = 0; i < xPartitions*yPartitions*zPartitions; i++){
         delete data[i];
     }
 };
@@ -40,7 +53,7 @@ const float SparseGrid::get(int i, int j, int k) const{
     int jj = j/partitionSize;
     int kk = k/partitionSize;
     //Get our partition index first
-    int partitionIndex = kk + numPartitions * (jj + numPartitions * ii);
+    int partitionIndex = kk + jj*zPartitions + ii*yPartitions*zPartitions;
     int iii = (i % partitionSize);
     int jjj = (j % partitionSize);
     int kkk = (k % partitionSize);
@@ -57,7 +70,7 @@ void SparseGrid::set(int i, int j, int k, float value){
     int jj = j/partitionSize;
     int kk = k/partitionSize;
     //Get our partition index first
-    int partitionIndex = kk + numPartitions * (jj + numPartitions * ii);
+    int partitionIndex = kk + jj*zPartitions + ii*yPartitions*zPartitions;
 
     if (data[partitionIndex] == NULL){
         //if block does not exist, we must create and initialize it
@@ -77,28 +90,29 @@ void SparseGrid::set(int i, int j, int k, float value){
     data[partitionIndex][kkk + partitionSize*(jjj + iii*partitionSize)] = value;
 };
 
-const float SparseGrid::trilinearInterpolate(const Vector& position) const{ return 1.0;};
 //-------------------------------------------------------------------------------------------------------------------------------
 //floatgrid
 //-------------------------------------------------------------------------------------------------------------------------------
-FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const double& s, const int& v, const int& partitionSize) :
+FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const Vector& s, const int& xv, const int& yv, const int& zv, const int& partitionSize) :
     center(c),
     length(s),
     field(f),
     origin(c - (s/2.0)),
-    voxels(v),
-    voxelLength(length / (double)voxels),
-    totalCells(v*v*v){
+    xVoxels(xv),
+    yVoxels(yv),
+    zVoxels(zv),
+    voxelLength(s[0] / (double)xv),
+    totalCells(xv*yv*zv){
 
     if (partitionSize > 0){
-        data = new SparseGrid(v, s, partitionSize);
+        data = new SparseGrid(xv, yv, zv, s[0], s[1], s[2], partitionSize);
     }
     else{
-        data = new DenseGrid(v, s);
+        data = new DenseGrid(xv, yv,zv, s[0], s[1], s[2]);
     }
 };
 
-FloatGrid::FloatGrid(const FloatGrid& f) :
+/*FloatGrid::FloatGrid(const FloatGrid& f) :
     center(f.center),
     length(f.length),
     field(f.field),
@@ -115,14 +129,14 @@ FloatGrid::FloatGrid(const FloatGrid& f) :
         data = new DenseGrid(voxels, length);
     }
 
-    for(int i = 0; i < voxels; i++){
-        for(int j = 0; j < voxels; j++){
-            for(int k = 0; k < voxels; k++){
+    for(int i = 0; i < xVoxels; i++){
+        for(int j = 0; j < yVoxels; j++){
+            for(int k = 0; k < zVoxels; k++){
             data->set(i, j, k, f.data->get(i, j, k));
             }
         }
     }
-};
+};*/
 
 FloatGrid::~FloatGrid(){
     delete data;
@@ -136,7 +150,7 @@ const Vector FloatGrid::positionToIndex(const Vector& P) const{
     P2[0] = int(P2[0]);
     P2[1] = int(P2[1]);
     P2[2] = int(P2[2]);
-    if(P2[0] <= 1 || P2[0] >= (voxels-1) || P2[1] <= 1 || P2[1] >= (voxels-1) || P2[2] <= 1 || P2[2] >= (voxels-1)){
+    if(P2[0] <= 1 || P2[0] >= (xVoxels-1) || P2[1] <= 1 || P2[1] >= (yVoxels-1) || P2[2] <= 1 || P2[2] >= (zVoxels-1)){
         return Vector(-1, -1, -1);
     }
     return Vector(P2[0], P2[1], P2[2]);
@@ -182,7 +196,7 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     //if(vecMagn(c00) > 7.0)
     //    return vField[c[0]];
     //if (c00 > 0) std::cout << c00 << "\n";
-    /*if(c00 > 4.0){ 
+    /*if(c00 > 4.0){
         std::cout << "c00: " << c00 << "\n";
         std::cout << "Pos: " << position << "\n";
         std::cout << "Index: " << c[0] << "\n";
@@ -193,12 +207,12 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
 //-------------------------------------------------------------------------------------------------------------------------------
 //DensityGrid
 //-------------------------------------------------------------------------------------------------------------------------------
-DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, double s, int v, int p)
-    : FloatGrid(f, o, s, v, p){
+DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p)
+    : FloatGrid(f, o, s, vx, vy, vz, p){
     //stamp the values into our grid
-    for(int i = 0; i < voxels; i++){
-        for(int j = 0; j < voxels; j++){
-            for(int k = 0; k < voxels; k++){
+    for(int i = 0; i < xVoxels; i++){
+        for(int j = 0; j < yVoxels; j++){
+            for(int k = 0; k < zVoxels; k++){
 
                 //First convert our indices to world space
                 float ii = (float)i * voxelLength + origin[0];
@@ -209,13 +223,13 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, double s, int v, int p)
                 //now evaluate the field at that point
                 data->set(i, j, k, field.get()->eval(Vector(ii, jj, kk)));
 
-               // std::cout << values.get()[k + j*voxels + i*voxels*voxels] << "\n";
+               // std::cout << values.get()[k + j*zVoxels + i*yVoxels*zVoxels] << "\n";
             }
         }
     }
 }
 
-DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
+//DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
 
 //Wisp algorithm
 void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset, float dBound){
@@ -319,16 +333,16 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
 //-------------------------------------------------------------------------------------------------------------------------------
 //Deep Shadow Map
 //-------------------------------------------------------------------------------------------------------------------------------
-DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, double s, int v, int p)
-    : FloatGrid(f, o, s, v, p),
+DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p)
+    : FloatGrid(f, o, s, vx, vy, vz, p),
     sourceLight(l),
     marchStep(m){
 
     std::cout << "Building Deep Shadow Map\n";
     //stamp the values into our grid
-    for(int i = 0; i < voxels; i++){
-        for(int j = 0; j < voxels; j++){
-            for(int k = 0; k < voxels; k++){
+    for(int i = 0; i < xVoxels; i++){
+        for(int j = 0; j < yVoxels; j++){
+            for(int k = 0; k < zVoxels; k++){
 
                 //First convert our indices to world space
                 float ii = (float)i * voxelLength + origin[0];
