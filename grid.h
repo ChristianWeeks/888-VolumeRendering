@@ -42,11 +42,12 @@ class Grid{
 
 class DenseGrid : public Grid{
     public:
-        DenseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength);
-        ~DenseGrid();
+        DenseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength) :
+            Grid(xvoxels, yvoxels, zvoxels, xlength, ylength, zlength, -1), data(new float[xvoxels*yvoxels*zvoxels]){};
+        ~DenseGrid(){};
 
-        const float get(int i, int j, int k) const;
-        void set(int i, int j, int k, float value);
+        const float get(int i, int j, int k) const{ return data.get()[k + j*zVoxels + i*yVoxels*zVoxels];};
+        void set(int i, int j, int k, float value){ data.get()[k + j*zVoxels + i*yVoxels*zVoxels] = value;};
 
     private:
         std::unique_ptr<float[]> data;
@@ -79,6 +80,7 @@ class FloatGrid{
         ~FloatGrid();
         const float trilinearInterpolate(const Vector& P) const;
         virtual void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound);
+        void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
 
         const Vector center;
         const Vector length;

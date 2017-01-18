@@ -5,13 +5,6 @@ using namespace lux;
 //-------------------------------------------------------------------------------------------------------------------------------
 //Grid Data Structures
 //-------------------------------------------------------------------------------------------------------------------------------
-DenseGrid::DenseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength) :
-    Grid(xvoxels, yvoxels, zvoxels, xlength, ylength, zlength, -1), data(new float[xvoxels*yvoxels*zvoxels]){};
-DenseGrid::~DenseGrid(){};
-
-inline const float DenseGrid::get(int i, int j, int k) const{ return data.get()[k + j*zVoxels + i*yVoxels*zVoxels];};
-inline void DenseGrid::set(int i, int j, int k, float value){ data.get()[k + j*zVoxels + i*yVoxels*zVoxels] = value;};
-
 SparseGrid::SparseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength, int p) :
     Grid(xvoxels, yvoxels, zvoxels, xlength, ylength, zlength, p),
     xPartitions(xvoxels / p),
@@ -204,6 +197,46 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     return c00;
 }
 
+void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand){
+
+    //First we need to get the indices within the bounding box.
+    //Add 1 to the returned indices because indices cast to integers will be 1 voxel outside of the grid
+    Vector startPos = positionToIndex(AABB.bounds[0]);
+    Vector endPos = positionToIndex(AABB.bounds[1]);
+    int x1 = startPos[0] + 1;
+    int y1 = startPos[1] + 1;
+    int z1 = startPos[2] + 1;
+    int x2 = endPos[0];
+    int y2 = endPos[1];
+    int z2 = endPos[2];
+
+    for (int i = x1; i < x2; i++){
+        for (int j = y1; j < y2; j++){
+            for (int k = z1; k < z2; k++){
+
+                float ii = (float)i * voxelLength + origin[0];
+                float jj = (float)j * voxelLength + origin[1];
+                float kk = (float)k * voxelLength + origin[2];
+                //Replace
+                if (operand == 0){
+                    data->set(i, j, k, f.get()->eval(Vector(ii, jj, kk)));
+                }
+                //Max
+                else if(operand == 1){
+                    float value = f.get()->eval(Vector(ii, jj, kk));
+                    if (value > data->get(i, j, k)){
+                        data->set(i, j, k, value);
+                    }
+                }
+                //Add
+                else if(operand == 2){
+                    data->set(i, j, k, f.get()->eval(Vector(ii, jj, kk)) + data->get(i, j, k));
+                }
+            }
+        }
+    }
+
+}
 //-------------------------------------------------------------------------------------------------------------------------------
 //DensityGrid
 //-------------------------------------------------------------------------------------------------------------------------------

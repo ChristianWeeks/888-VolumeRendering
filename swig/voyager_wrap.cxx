@@ -20517,6 +20517,60 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_FloatGrid_StampField(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  lux::FloatGrid *arg1 = (lux::FloatGrid *) 0 ;
+  lux::FloatVolumeBase *arg2 = 0 ;
+  BoundingBox *arg3 = 0 ;
+  int arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:FloatGrid_StampField",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lux__FloatGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FloatGrid_StampField" "', argument " "1"" of type '" "lux::FloatGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< lux::FloatGrid * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_lux__FloatVolumeBase,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "FloatGrid_StampField" "', argument " "2"" of type '" "lux::FloatVolumeBase const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "FloatGrid_StampField" "', argument " "2"" of type '" "lux::FloatVolumeBase const &""'"); 
+  }
+  arg2 = reinterpret_cast< lux::FloatVolumeBase * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_BoundingBox,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "FloatGrid_StampField" "', argument " "3"" of type '" "BoundingBox const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "FloatGrid_StampField" "', argument " "3"" of type '" "BoundingBox const &""'"); 
+  }
+  arg3 = reinterpret_cast< BoundingBox * >(argp3);
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "FloatGrid_StampField" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  (arg1)->StampField((lux::FloatVolumeBase const &)*arg2,(BoundingBox const &)*arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_FloatGrid_center_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   lux::FloatGrid *arg1 = (lux::FloatGrid *) 0 ;
@@ -40729,6 +40783,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_FloatGrid", _wrap_delete_FloatGrid, METH_VARARGS, NULL},
 	 { (char *)"FloatGrid_trilinearInterpolate", _wrap_FloatGrid_trilinearInterpolate, METH_VARARGS, NULL},
 	 { (char *)"FloatGrid_StampWisp", _wrap_FloatGrid_StampWisp, METH_VARARGS, NULL},
+	 { (char *)"FloatGrid_StampField", _wrap_FloatGrid_StampField, METH_VARARGS, NULL},
 	 { (char *)"FloatGrid_center_get", _wrap_FloatGrid_center_get, METH_VARARGS, NULL},
 	 { (char *)"FloatGrid_length_get", _wrap_FloatGrid_length_get, METH_VARARGS, NULL},
 	 { (char *)"FloatGrid_swigregister", FloatGrid_swigregister, METH_VARARGS, NULL},

@@ -26,9 +26,9 @@ def main(args):
 
     zeroVector = voy.Vector(0.0, 0.0, 0.0);
     K = 3.0;
-    emissive = 0.5;
-    marchStep = 0.02;
-    lightMarchStep = 0.1;
+    emissive = 0.00;
+    marchStep = 0.01;
+    lightMarchStep = 0.03;
     gridLength = 4.0;
     gridVoxelCount = 400;
     lightVoxelCount = 100;
@@ -51,7 +51,7 @@ def main(args):
     scene.ENABLE_DSM = 1;
     scene.setFrameRange(startFrame, endFrame);
     scene.WRITE_RENDER_ANNOTATION = 1;
-    scene.camera.setEyeViewUp(voy.Vector(0.0, 0.0, 6.0), voy.Vector(0.0, 0.0, -1.0), voy.Vector(0, 1.0, 0.0));
+    scene.camera.setEyeViewUp(voy.Vector(0.0, 0.0, 10.0), voy.Vector(0.0, 0.0, -1.0), voy.Vector(0, 1.0, 0.0));
 
     #################################################################################################
     #Setup our lights
@@ -75,15 +75,6 @@ def main(args):
         #################################################################################################
         #Setup our Volumes
         #################################################################################################
-        constVol = voy.Constantf(0.3);
-        sphereVol = voy.Sphere(0.5);
-        translate1 = voy.Translatef(sphereVol, voy.Vector(-1.0, 0.0, 0.0));
-        translate2 = voy.Translatef(sphereVol, voy.Vector(1.0, 0.0, 0.0));
-        union1 = voy.Unionf(sphereVol, translate1);
-        union2 = voy.Unionf(translate2, union1);
-        union3 = voy.Unionf(union2, constVol);
-
-        constGrid = voy.AutoGriddedf(union3, voy.Vector(0.0, 0.0, 0.0), voy.Vector(4.0, 2.0, 2.0), 400, 200, 200, 0);
 
         end = time.time()
         print "Grid Build Time: " + str(end - gridtime);
@@ -100,7 +91,6 @@ def main(args):
         #################################################################################################
         #Push our volumes and lights
         #################################################################################################
-        scene.pushFloatVolume(constGrid)
 
         #################################################################################################
         #Create our annotations

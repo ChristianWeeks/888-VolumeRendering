@@ -1374,6 +1374,7 @@ class FloatGrid(_object):
     __del__ = lambda self : None;
     def trilinearInterpolate(self, *args): return _voyager.FloatGrid_trilinearInterpolate(self, *args)
     def StampWisp(self, *args): return _voyager.FloatGrid_StampWisp(self, *args)
+    def StampField(self, *args): return _voyager.FloatGrid_StampField(self, *args)
     __swig_getmethods__["center"] = _voyager.FloatGrid_center_get
     if _newclass:center = _swig_property(_voyager.FloatGrid_center_get)
     __swig_getmethods__["length"] = _voyager.FloatGrid_length_get
