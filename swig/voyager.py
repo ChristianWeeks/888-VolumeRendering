@@ -541,6 +541,18 @@ class SimplexNoiseVolume(FloatVolume):
 SimplexNoiseVolume_swigregister = _voyager.SimplexNoiseVolume_swigregister
 SimplexNoiseVolume_swigregister(SimplexNoiseVolume)
 
+class FloatGradientVolume(FloatVolume):
+    __swig_setmethods__ = {}
+    for _s in [FloatVolume]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FloatGradientVolume, name, value)
+    __swig_getmethods__ = {}
+    for _s in [FloatVolume]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, FloatGradientVolume, name)
+    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+FloatGradientVolume_swigregister = _voyager.FloatGradientVolume_swigregister
+FloatGradientVolume_swigregister(FloatGradientVolume)
+
 class SimplexNoiseVectorVolume(VectorVolume):
     __swig_setmethods__ = {}
     for _s in [VectorVolume]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))

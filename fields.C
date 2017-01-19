@@ -16,6 +16,7 @@ lux::FloatVolumeBase Noisef(SimplexNoiseObject s)               { return lux::Fl
 lux::FloatVolumeBase PyroSphere(const float rad, const float d, const float e, SimplexNoiseObject s){
     return lux::FloatVolumeBase(new lux::PyroSphereVolume(rad, d, e, s));};
 
+lux::FloatVolumeBase Gradientf(const Vector& d, const Vector& start, const float l, const float mn, const float mx){ return lux::FloatVolumeBase(new lux::FloatGradientVolume(d, start, l, mn, mx));};
 lux::VectorVolumeBase Noisev(SimplexNoiseObject s, const float xO, const float yO, const float zO) {
     return lux::VectorVolumeBase(new lux::SimplexNoiseVectorVolume(s, xO, yO, zO));};
 

@@ -33,6 +33,7 @@ SparseGrid::SparseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, flo
     for(int i = 0; i < xPartitions*yPartitions*zPartitions; i++){
         data[i] = NULL;
     }
+    std::cout << "Initializing SparseGrid\n";
 }
 
 SparseGrid::~SparseGrid(){
@@ -143,7 +144,7 @@ const Vector FloatGrid::positionToIndex(const Vector& P) const{
     P2[0] = int(P2[0]);
     P2[1] = int(P2[1]);
     P2[2] = int(P2[2]);
-    if(P2[0] <= 1 || P2[0] >= (xVoxels-1) || P2[1] <= 1 || P2[1] >= (yVoxels-1) || P2[2] <= 1 || P2[2] >= (zVoxels-1)){
+    if(P2[0] < 0 || P2[0] >= (xVoxels-1) || P2[1] < 0 || P2[1] >= (yVoxels-1) || P2[2] < 0 || P2[2] >= (zVoxels-1)){
         return Vector(-1, -1, -1);
     }
     return Vector(P2[0], P2[1], P2[2]);
@@ -162,7 +163,7 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     Vector indices = positionToIndex(position);
     //If positionToIndex returns a negative value, we are at the border or beyond our grid
     if (indices[0] == -1)
-        return 0.0;
+        return -0.00001;
 
     int x = indices[0];
     int y = indices[1];
@@ -243,6 +244,8 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
 DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p)
     : FloatGrid(f, o, s, vx, vy, vz, p){
     //stamp the values into our grid
+    std::cout << "Building Grid\n";
+    boost::timer gridTimer;
     for(int i = 0; i < xVoxels; i++){
         for(int j = 0; j < yVoxels; j++){
             for(int k = 0; k < zVoxels; k++){
@@ -260,6 +263,7 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, i
             }
         }
     }
+    std::cout << "Grid Built in: " << gridTimer.elapsed() <<" seconds\n";
 }
 
 //DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
@@ -372,6 +376,7 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, cons
     marchStep(m){
 
     std::cout << "Building Deep Shadow Map\n";
+    boost::timer gridTimer;
     //stamp the values into our grid
     for(int i = 0; i < xVoxels; i++){
         for(int j = 0; j < yVoxels; j++){
@@ -389,6 +394,7 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, cons
             }
         }
     }
+    std::cout << "Grid Built in: " << gridTimer.elapsed() <<" seconds\n";
 }
 
 //Returns the denisty integral at this position

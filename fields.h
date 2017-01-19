@@ -12,6 +12,7 @@ lux::FloatVolumeBase Plane(const lux::Vector& n, const lux::Vector& c);
 lux::FloatVolumeBase Cone(const lux::Vector& n, const float h, const float ang);
 lux::FloatVolumeBase Noisef(SimplexNoiseObject s);
 lux::FloatVolumeBase PyroSphere(const float rad, const float d, const float e, SimplexNoiseObject s);
+lux::FloatVolumeBase Gradientf(const Vector& d, const Vector& start, const float l, const float mn, const float mx);
 lux::VectorVolumeBase Noisev(SimplexNoiseObject s, const float xO, const float yO, const float zO);
 lux::ColorVolumeBase Noisec(SimplexNoiseObject s, const float xO, const float yO, const float zO);
 

@@ -56,7 +56,8 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
     double T = 1.0;
     Color C {0.0, 0.0, 0.0, 0.0};
     Color fieldColor;
-
+    double activeMarchStep = marchStep;
+    double increaseMarchCounter = 0.0;
     Vector x = camera.eye() + n*start;
     Color smokeColor(1.0, 1.0, 1.0, 1.0);
     while (marchLen < totalMarchLength){
@@ -73,13 +74,16 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
                 density = std::max(density, volumes[j].get()->eval(x));
             }
             else if(ADD_COLLISIONS){
-                density += volumes[j].get()->eval(x);
+                float newDensity = volumes[j].get()->eval(x);
+                if(newDensity > 0){
+                    density += newDensity;
+                }
             }
         }
         if (density > 0.0){
 
             //step 1
-            double deltaT = exp(-density * marchStep * K);
+            double deltaT = exp(-density * activeMarchStep * K);
             double tVal = T * (1 - deltaT);
 
             //March to each light
@@ -92,7 +96,9 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
             if(ENABLE_DSM){
                 for (int i = 0; i < lightGrids.size(); i++){
                     double lightTransmissivity = rayMarchDSM(x, lightGrids[i].get());
-                    C += lightGrids[i].get()->sourceLight.getColor(lightTransmissivity) * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
+                    if (lightTransmissivity > 0.0){
+                        C += lightGrids[i].get()->sourceLight.getColor(lightTransmissivity) * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
+                    }
                     /*if(density > 1.0){
                         std::cout << "----------------------------------\n";
                         std::cout << "transmission: " << lightTransmissivity << "\n";
@@ -120,8 +126,14 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
         }
         
         //step 4
-        x += n * marchStep;
-        marchLen += marchStep;
+        x += n * activeMarchStep;
+        marchLen += activeMarchStep;
+        increaseMarchCounter += activeMarchStep;
+        //Increase march length as we get further away from the camera
+        if(increaseMarchCounter > 12.0){
+            activeMarchStep *= 1.5;
+            increaseMarchCounter = 0.0;
+        }
     }
     //Set alpha equal to the light transmissivity
     C[3] = 1 - T;
@@ -146,7 +158,6 @@ double SceneManager::rayMarchLightScatter(const Vector& x, light l) const {
                 density += volumes[j].get()->eval(x);
         }
         if(density > 0.0){
-
             T *= exp(-density * marchStep * K);
         }
         x1 += marchStep * toLight;
@@ -159,7 +170,7 @@ double SceneManager::rayMarchLightScatter(const Vector& x, light l) const {
 double SceneManager::rayMarchDSM(const Vector& x, const DeepShadowMap* dsm) const {
     float lightInterp = dsm->trilinearInterpolate(x);
     if (lightInterp < 0.0)
-        lightInterp = 1.0;
+        return 0.0;
     return exp(-K * lightInterp);
 }
 

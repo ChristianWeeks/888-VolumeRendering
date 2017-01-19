@@ -236,6 +236,39 @@ class SimplexNoiseVolume : public FloatVolume{
        SimplexNoiseObject simplex;
 };
 
+class FloatGradientVolume : public FloatVolume{
+    FloatGradientVolume(const Vector& d, const Vector& start, const float l, const float mn, const float mx) :
+        direction(d.unitvector()),
+        position(start),
+        length(l),
+        min(mn),
+        max(mx){};
+
+    ~FloatGradientVolume(){};
+
+    const float eval(const Vector& P) const{
+        //find the scalar projection onto our line
+        Vector u = (direction*length) + position;
+        Vector v = position + P;
+        float dot = u*v;
+        float scalarProjection = dot / u.magnitude();
+
+        //then interpolate to between the min and max values
+        return (scalarProjection / length) * (max - min);
+    }
+    const Vector grad(const Vector& P) const { Vector G(0, 0, 0); return G;};
+
+    private:
+        Vector direction;
+        Vector position;
+        float length;
+        float min;
+        float max;
+
+};
+/*class NoiseSphere : public FloatVolume{
+
+};*/
 class SimplexNoiseVectorVolume : public VectorVolume{
     public:
         SimplexNoiseVectorVolume(SimplexNoiseObject s, float xO, float yO, float zO) : 

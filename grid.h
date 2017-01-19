@@ -2,6 +2,7 @@
 #define __GRID_H__
 #include "volume_operators.h"
 #include "light.h"
+#include <boost/timer.hpp>
 #include <random>
 
 namespace lux {
