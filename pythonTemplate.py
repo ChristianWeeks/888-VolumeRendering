@@ -4,6 +4,7 @@ import voyager as voy
 import time
 import sys
 import random
+import ReadGeo
 
 def main(args):
 
@@ -23,6 +24,8 @@ def main(args):
     #################################################################################################
     startFrame = int(args[2]);
     endFrame = int(args[3]); 
+    pointData = {};
+
 
     zeroVector = voy.Vector(0.0, 0.0, 0.0);
     K = 3.0;
@@ -30,7 +33,7 @@ def main(args):
     marchStep = 0.01;
     lightMarchStep = 0.03;
     gridLength = 4.0;
-    gridVoxelCount = 400;
+    gridVoxelCount = 300;
     lightVoxelCount = 100;
 
     #################################################################################################
@@ -75,6 +78,14 @@ def main(args):
         #################################################################################################
         #Setup our Volumes
         #################################################################################################
+
+        #################################################################################################
+        #If we are reading in geometry data, here is where we use it
+        #################################################################################################
+        if (len(args) >= 5):
+            geoFile = args[5] + "." + i.zfill(4) + ".geo"
+            parser = ReadGeo.geoParser(args[5]);
+            pointData = parser.readGeo();
 
         end = time.time()
         print "Grid Build Time: " + str(end - gridtime);

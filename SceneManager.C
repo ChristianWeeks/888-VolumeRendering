@@ -11,6 +11,7 @@ SceneManager::SceneManager(std::string filepath) :
     ADD_COLLISIONS(0),
     K(1.0),
     emissive(0.05),
+    smokeColor(Color(1.0, 1.0, 1.0, 1.0), Vector(1.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1.0),
     marchStep(0.04),
     lightMarchStep(0.1),
     outFile(filepath),
@@ -59,7 +60,6 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
     double activeMarchStep = marchStep;
     double increaseMarchCounter = 0.0;
     Vector x = camera.eye() + n*start;
-    Color smokeColor(1.0, 1.0, 1.0, 1.0);
     while (marchLen < totalMarchLength){
         //Check each volume
         float density = 0.0;
@@ -113,7 +113,7 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
             if (emissive) {
                 //Boosting the emission of the peaks in our noise function- this makes the star clusters appear brighter
                 //smokeColor = cSlider.getColor(density);
-                Color emitColor = smokeColor * density;
+                Color emitColor = smokeColor.getColor(density) * density;
                 //std::cout << color << "Density: " << density << "\n";
                 //The field color's contribution will be scaled by the density, so sparse areas don't become super bright
                 if (colorVolumes.size()){
@@ -218,13 +218,10 @@ void SceneManager::renderImage(int frameNumber){
 
     //Don't give it number padding if it is just a single render
     std::string filename(outFile);
-    if (endFrame - startFrame > 1){
-        filename += ".";
-        std::ostringstream ss;
-        ss << setfill('0') << setw(4) << frameNumber;
-        std::string numPadding = ss.str();
-        filename += numPadding;
-    }
+    filename += ".";
+    ss << setfill('0') << setw(4) << frameNumber;
+    std::string numPadding = ss.str();
+    filename += numPadding;
 
     filename += ".exr";
     writeOIIOImage(filename.c_str(), img, 1.0, 1.0);

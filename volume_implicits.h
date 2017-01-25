@@ -156,7 +156,6 @@ class ConstantVolumev : public VectorVolume{
        Vector value;
 };
 
-
 class SphereDistVolume : public FloatVolume{
     public:
 
@@ -190,10 +189,11 @@ class SphereVolume : public FloatVolume{
 class PyroSphereVolume : public FloatVolume{
     public:
 
-        PyroSphereVolume(float rad, float d, float e, SimplexNoiseObject s) : 
+        PyroSphereVolume(float rad, float d, float e, float ds, SimplexNoiseObject s) : 
             r(rad),
             exponent(e),
             dBound(d),
+            dScale(ds),
             simplex(s){}
        ~PyroSphereVolume(){}
 
@@ -211,7 +211,7 @@ class PyroSphereVolume : public FloatVolume{
             lux::Vector n(P.unitvector());
             //float f = r - d + octave_noise_3d(1, 0.5, 1.0, n[0], n[1], n[2]);
             //float f = r - d + std::pow(std::abs(octave_noise_3d(1, 0.5, 1.0, n[0], n[1], n[2])), 2)
-            float f = r - d + std::pow(std::abs(simplex.eval(n[0], n[1], n[2])), exponent);
+            float f = r - d + dScale * std::pow(std::abs(simplex.eval(n[0], n[1], n[2])), exponent);
             if(f > 0) return 1;
             return 0;};
        const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
@@ -220,7 +220,34 @@ class PyroSphereVolume : public FloatVolume{
        float r;
        float exponent;
        float dBound;
+       float dScale;
        SimplexNoiseObject simplex;
+};
+
+class RadialVectorVolume : public VectorVolume{
+    public:
+        RadialVectorVolume(const Vector& o, int n, float m) :
+            origin(o),
+            normalized(n),
+            magnitude(n){};
+        ~RadialVectorVolume(){};
+
+        const Vector eval(const Vector& P) const {
+            Vector v = P - origin;
+            //Magnitude scales our vector, normalized determines if we start with a normalized vector or not.
+            //So, to get a unit vector at all points, n = 1, m = 1
+            //To get a unit vector scaled by 2, n = 1, m = 2
+            //To get a non unit vector that increases with distance, n = 0 
+            if (normalized)
+                v = v.unitvector();
+            return v * magnitude;
+        };
+        const Matrix grad(const Vector& P) const { Matrix G; return G;};
+
+    private:
+        Vector origin;
+        int normalized;
+        float magnitude;
 };
 
 class SimplexNoiseVolume : public FloatVolume{
@@ -237,38 +264,64 @@ class SimplexNoiseVolume : public FloatVolume{
 };
 
 class FloatGradientVolume : public FloatVolume{
-    FloatGradientVolume(const Vector& d, const Vector& start, const float l, const float mn, const float mx) :
-        direction(d.unitvector()),
-        position(start),
-        length(l),
-        min(mn),
-        max(mx){};
+    public:
+        FloatGradientVolume(const Vector& d, const Vector& start, const float l, const float mn, const float mx) :
+            direction(d.unitvector()),
+            position(start),
+            length(l),
+            min(mn),
+            max(mx){};
 
-    ~FloatGradientVolume(){};
+        ~FloatGradientVolume(){};
 
-    const float eval(const Vector& P) const{
-        //find the scalar projection onto our line
-        Vector u = (direction*length) + position;
-        Vector v = position + P;
-        float dot = u*v;
-        float scalarProjection = dot / u.magnitude();
+        const float eval(const Vector& P) const{
+            //find the scalar projection onto our line
+            Vector u = (direction*length) + position;
+            Vector v = P - position;
+            float dot = u*v;
+            float scalarProjection = dot / u.magnitude();
 
-        //then interpolate to between the min and max values
-        return (scalarProjection / length) * (max - min);
-    }
-    const Vector grad(const Vector& P) const { Vector G(0, 0, 0); return G;};
+            //then interpolate to between the min and max values
+            return (scalarProjection / length) * (max - min);
+        };
+        const Vector grad(const Vector& P) const { Vector G(0, 0, 0); return G;};
 
     private:
-        Vector direction;
-        Vector position;
-        float length;
-        float min;
-        float max;
+        const Vector direction;
+        const Vector position;
+        const float length;
+        const float min;
+        const float max;
 
 };
-/*class NoiseSphere : public FloatVolume{
+class NoiseSphere : public FloatVolume{
+    public:
+        NoiseSphere(const Vector& pos, const SimplexNoiseObject& s, const float rad, const float f) :
+            position(pos),
+            simplex(s),
+            r(rad),
+            falloffStart(f){};
+        ~NoiseSphere(){};
 
-};*/
+        const float eval(const Vector& P) const{
+            float value = simplex.eval(P[0], P[1], P[2]);
+            Vector diff = P - position;
+            float dist = diff.magnitude();
+            if(dist < falloffStart)
+                return value;
+            else if(dist > r)
+                return 0;
+            return value * (1 - ((dist - falloffStart) / (r - falloffStart)));
+        };
+        const Vector grad(const Vector& P) const {Vector G(0, 0, 0); return G;};
+
+    private:
+        const Vector position;
+        SimplexNoiseObject simplex;
+        const float r;
+        const float falloffStart;
+};
+
 class SimplexNoiseVectorVolume : public VectorVolume{
     public:
         SimplexNoiseVectorVolume(SimplexNoiseObject s, float xO, float yO, float zO) : 

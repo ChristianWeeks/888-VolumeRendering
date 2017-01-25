@@ -13,12 +13,15 @@ lux::FloatVolumeBase Cylinder(const lux::Vector& n, const float rad) { return lu
 lux::FloatVolumeBase Plane(const lux::Vector& n, const lux::Vector& c)    { return lux::FloatVolumeBase(new lux::PlaneVolume(n, c));};
 lux::FloatVolumeBase Cone(const lux::Vector& n, const float h, const float ang)    { return lux::FloatVolumeBase(new lux::ConeVolume(n, h, ang));};
 lux::FloatVolumeBase Noisef(SimplexNoiseObject s)               { return lux::FloatVolumeBase(new lux::SimplexNoiseVolume(s));};
-lux::FloatVolumeBase PyroSphere(const float rad, const float d, const float e, SimplexNoiseObject s){
-    return lux::FloatVolumeBase(new lux::PyroSphereVolume(rad, d, e, s));};
+lux::FloatVolumeBase NoiseSpheref(const lux::Vector& pos, const SimplexNoiseObject s, const float rad, const float f) { return lux::FloatVolumeBase(new lux::NoiseSphere(pos, s, rad, f));};
 
-lux::FloatVolumeBase Gradientf(const Vector& d, const Vector& start, const float l, const float mn, const float mx){ return lux::FloatVolumeBase(new lux::FloatGradientVolume(d, start, l, mn, mx));};
+lux::FloatVolumeBase PyroSphere(const float rad, const float d, const float e, const float ds, SimplexNoiseObject s){
+    return lux::FloatVolumeBase(new lux::PyroSphereVolume(rad, d, e, ds, s));};
+
+lux::FloatVolumeBase Gradientf(const lux::Vector& d, const lux::Vector& start, const float l, const float mn, const float mx){ return lux::FloatVolumeBase(new lux::FloatGradientVolume(d, start, l, mn, mx));};
 lux::VectorVolumeBase Noisev(SimplexNoiseObject s, const float xO, const float yO, const float zO) {
     return lux::VectorVolumeBase(new lux::SimplexNoiseVectorVolume(s, xO, yO, zO));};
+lux::VectorVolumeBase Radialv(const lux::Vector& origin, const int normalized, const float magnitude) { return lux::VectorVolumeBase(new lux::RadialVectorVolume(origin, normalized, magnitude));};
 
 lux::ColorVolumeBase Noisec(SimplexNoiseObject s, const float xO, const float yO, const float zO) {
     return lux::ColorVolumeBase(new lux::SimplexNoiseColorVolume(s, xO, yO, zO));};

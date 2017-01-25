@@ -9,7 +9,14 @@
 *.hip
 *.hipnc
 *.nk
+*.py
+*.sh
+*.geo
+*.abc
+*.pyc
 vdbTests
+output/*
+output*
 swig/voyager.py
 swig/*.so
 swig/voyager.pyc

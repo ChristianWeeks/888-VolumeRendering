@@ -29,7 +29,7 @@ class light
 
         const Color getColor(float transmission) {
             //std::cout << "slider1: " << cSlider.get<< "\n";
-            if(1) return cSlider.getColor(transmission);
+            if(1){ return cSlider.getColor(transmission);}
             return c;
         }
 

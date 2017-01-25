@@ -67,6 +67,7 @@ class SceneManager{
         int ADD_COLLISIONS;
         double K;
         double emissive;
+        light smokeColor;
 
         double marchStep;
         double lightMarchStep;

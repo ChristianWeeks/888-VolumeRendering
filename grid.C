@@ -43,17 +43,20 @@ SparseGrid::~SparseGrid(){
 };
 
 const float SparseGrid::get(int i, int j, int k) const{
+    if(i < 0 || i > xVoxels || j < 0 || j > yVoxels || k < 0 || k > zVoxels){
+        return defaultValue;
+    }
     int ii = i/partitionSize;
     int jj = j/partitionSize;
     int kk = k/partitionSize;
     //Get our partition index first
     int partitionIndex = kk + jj*zPartitions + ii*yPartitions*zPartitions;
-    int iii = (i % partitionSize);
-    int jjj = (j % partitionSize);
-    int kkk = (k % partitionSize);
     if(data[partitionIndex] == NULL){
         return defaultValue;
     }
+    int iii = (i % partitionSize);
+    int jjj = (j % partitionSize);
+    int kkk = (k % partitionSize);
     return data[partitionIndex][kkk + partitionSize*(jjj + iii*partitionSize)];
 };
 
@@ -210,6 +213,18 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
     int x2 = endPos[0];
     int y2 = endPos[1];
     int z2 = endPos[2];
+    if (x1 < 0)
+        x1 = 0;
+    if (y1 < 0)
+        y1 = 0;
+    if (z1 < 0)
+        z1 = 0;
+    if (x2 > xVoxels)
+        x2 = xVoxels;
+    if (y2 > yVoxels)
+        y2 = yVoxels;
+    if (z2 > zVoxels)
+        z2 = zVoxels;
 
     for (int i = x1; i < x2; i++){
         for (int j = y1; j < y2; j++){
@@ -337,6 +352,18 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     //(x, y, z)
     c[7] = c[6] + 1;*/
 
+    /*if (x1 < 0)
+        x1 = 0;
+    if (y1 < 0)
+        y1 = 0;
+    if (z1 < 0);
+        z1 = 0;
+    if (x2 > xVoxels)
+        x2 = xVoxels;
+    if (y2 > yVoxels)
+        y2 = yVoxels;
+    if (z2 > zVoxels)
+        z2 = zVoxels;*/
 
     //Weights
     float wx1, wx2, wy1, wy2, wz1, wz2;

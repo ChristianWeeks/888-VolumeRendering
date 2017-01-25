@@ -27,7 +27,7 @@ def main(args):
 
     zeroVector = voy.Vector(0.0, 0.0, 0.0);
     K = 3.0;
-    emissive = 0.0;
+    emissive = 0.02;
     marchStep = 0.02;
     lightMarchStep = 0.1;
     gridLength = 4.0;
@@ -52,7 +52,7 @@ def main(args):
     scene.ENABLE_DSM = 1;
     scene.setFrameRange(startFrame, endFrame);
     scene.WRITE_RENDER_ANNOTATION = 1;
-    scene.camera.setEyeViewUp(voy.Vector(0.0, 6.0, 0.0), voy.Vector(0.0, -1.0, 0.0), voy.Vector(1.0, 0.0, 0.0));
+    scene.camera.setEyeViewUp(voy.Vector(0.0, 0.0, 10.0), voy.Vector(0.0, 0.0, -1.0), voy.Vector(0.0, 1.0, 0.0));
 
     #################################################################################################
     #Setup our lights
@@ -77,18 +77,8 @@ def main(args):
         #Setup our Volumes
         #################################################################################################
         constVol = voy.Constantf(0.05);
-        emptyGrid = voy.Gridf(constVol, voy.Vector(0.0, 0.0, 0.0), voy.Vector(4.0, 4.0, 4.0), 200, 200, 200, 0);
-        gridReference = emptyGrid.getRef();
-        pyroNoise = voy.SimplexNoiseObject(7, 0.5, 1.0, 2.0, -0.6, 0.6, 0);
-        rad = 1.0;
-        dBound = 0.7;
-        pyroExp = 0.3;
-        pyroSphere = voy.PyroSphere(rad, dBound, pyroExp, pyroNoise);
-        pyroLength = 2*(rad + math.pow(dBound, pyroExp));
-        pyroBound = voy.BoundingBox(voy.Vector(0.0, 0.0, 0.0), voy.Vector(pyroLength, pyroLength, pyroLength)); 
-        gridReference.StampField(pyroSphere, pyroBound, 0);
-        
-        pyroGridded = voy.GriddedVolf(emptyGrid);
+        gradVol = voy.Gradientf(voy.Vector(1.0, 1.0, 0.0), voy.Vector(-2.0, -2.0, 0.0), 4.0, 0.0, 1.0);
+        gradGrid = voy.AutoGriddedf(gradVol, voy.Vector(0.0, 0.0, 0.0), voy.Vector(4.0, 4.0, 4.0), 100, 100, 100, 0);
         #constGrid = voy.AutoGriddedf(emptyGrid, voy.Vector(0.0, 0.0, 0.0), voy.Vector(4.0, 2.0, 2.0), 400, 200, 200, 0);
 
         end = time.time()
@@ -99,17 +89,13 @@ def main(args):
         #################################################################################################
         #Setup our Deep Shadow Maps
         #################################################################################################
-        DSM = voy.DSM(rLight, lightMarchStep, pyroGridded, voy.Vector(-1.0, 0.0, 0.0), voy.Vector(4.0, 4.0, 4.0), 100, 100, 100, 0);
-        DSM2 = voy.DSM(rLight, lightMarchStep, pyroGridded, voy.Vector(1.0, 0.0, 0.0), voy.Vector(4.0, 4.0, 4.0), 100, 100, 100, 0);
         end = time.time()
         print "DSM Build Time: " + str(end - dsmtime);
 
         #################################################################################################
         #Push our volumes and lights
         #################################################################################################
-        scene.pushFloatVolume(pyroGridded)
-        scene.pushDSM(DSM);
-        scene.pushDSM(DSM2);
+        scene.pushFloatVolume(gradGrid)
 
         #################################################################################################
         #Create our annotations

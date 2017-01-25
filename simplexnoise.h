@@ -197,6 +197,16 @@ static const int simplex[64][4] = {
 //Simple class to store noise attributes
 class SimplexNoiseObject {
     public:
+        SimplexNoiseObject(int o, float p, float f, float fj, float min, float max, float ox, float oy, float oz) :
+            octaves(o),
+            roughness(p),
+            frequency(f),
+            fjump(fj),
+            lowBound(min),
+            highBound(max),
+            xOffset(ox),
+            yOffset(oy),
+            zOffset(oz){};
         SimplexNoiseObject(int o, float p, float f, float fj, float min, float max, float of) :
             octaves(o),
             roughness(p),
@@ -204,11 +214,13 @@ class SimplexNoiseObject {
             fjump(fj),
             lowBound(min),
             highBound(max),
-            offset(of){};
+            xOffset(of),
+            yOffset(of),
+            zOffset(of){};
         ~SimplexNoiseObject(){};
 
         const float eval(float x, float y, float z) const{
-            return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x + offset, y + offset, z + offset);};
+            return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x + xOffset, y + yOffset, z + zOffset);};
 
         std::vector<std::string> getAnnotation(){
             std::vector<std::string> annoVec;
@@ -224,8 +236,8 @@ class SimplexNoiseObject {
             annoVec.push_back(std::to_string(lowBound));
             annoVec.push_back("High Bound");
             annoVec.push_back(std::to_string(highBound));
-            annoVec.push_back("Offset");
-            annoVec.push_back(std::to_string(offset));
+            //annoVec.push_back("Offset");
+            //annoVec.push_back(std::to_string(offset));
             return annoVec;
         }
 
@@ -236,6 +248,8 @@ class SimplexNoiseObject {
         const float fjump;
         const float lowBound;
         const float highBound;
-        const float offset;
+        const float xOffset;
+        const float yOffset;
+        const float zOffset;
 };
 #endif /*SIMPLEX_H_*/
