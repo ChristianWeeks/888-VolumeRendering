@@ -1,4 +1,6 @@
 *.exr
+*.tif
+*.it
 *.autosave
 *.nk
 *.log
@@ -25,3 +27,4 @@ swig/voyager.pyc
 swig/voyager_wrap.cxx
 .nfs*
 img
+itCatalogSaves
