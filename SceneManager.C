@@ -196,6 +196,8 @@ void SceneManager::renderImage(int frameNumber){
                 if(intersects.size() == 2){
                     startMarch = std::min(startMarch, intersects[0]);
                     endMarch = std::max(endMarch, intersects[1]);
+                    if (startMarch < 0)
+                        startMarch = 0;
                 }
             }
 
