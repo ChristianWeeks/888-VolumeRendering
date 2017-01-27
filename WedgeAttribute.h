@@ -28,6 +28,10 @@ class WedgeAttribute {
     float get(int frame){
         std::vector<int>::iterator fit;
         std::vector<float>::iterator vit;
+        if(keyFrames.size() == 0){
+            std::cout << "Warning: No keyframe set\n";
+            return 0;
+        }
         fit = keyFrames.begin();
         vit = keyValues.begin();
 

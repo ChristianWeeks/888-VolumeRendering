@@ -98,6 +98,12 @@ FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const Vector& s, const 
     xVoxels(xv),
     yVoxels(yv),
     zVoxels(zv),
+    stampXMin(-1),
+    stampXMax(1),
+    stampYMin(-1),
+    stampYMax(1),
+    stampZMin(-1),
+    stampZMax(1),
     voxelLength(s[0] / (double)xv),
     totalCells(xv*yv*zv){
 
@@ -139,7 +145,7 @@ FloatGrid::~FloatGrid(){
     delete data;
 };
 
-void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound){std::cout << "FloatGrid can't stamp wisps! Use a density grid.\n";};
+void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength){std::cout << "FloatGrid can't stamp wisps! Use a density grid.\n";};
 
 //Converts a position in 3-D space to an index in our grid
 const Vector FloatGrid::positionToIndex(const Vector& P) const{
@@ -284,18 +290,19 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, i
 //DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
 
 //Wisp algorithm
-void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset, float dBound){
+void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset, float dBound, const Vector& n, int numSteps, float streakLength){
 
-    std::random_device rnd;
-    std::mt19937 rng(rnd());
-    std::uniform_real_distribution<> udist(-1, 1);
+    std::mt19937 rng(20);
+    std::uniform_real_distribution<> udistx(stampXMin, stampXMax);
+    std::uniform_real_distribution<> udisty(stampYMin, stampYMax);
+    std::uniform_real_distribution<> udistz(stampZMin, stampZMax);
 
     for(int i = 0; i < numDots; i++){
 
         //Generate our random point within the bounding box of our sphere
-        float randX = udist(rng);
-        float randY = udist(rng);
-        float randZ =  udist(rng);
+        float randX = udistx(rng);
+        float randY = udisty(rng);
+        float randZ =  udistz(rng);
 
         lux::Vector d(randX, randY, randZ);
 
@@ -319,9 +326,19 @@ void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObje
         dot += d2;
 
         lux::Vector diff = dot - P;
+        lux::Vector normal = diff.unitvector();
         //Only bake out dot if it is within the boundaries
         if (sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]) < dBound){
+
             bakeDot(dot, value);
+            if (streakLength != 0){
+                for (int j = 1; j < numSteps; j++){
+                    float stepLength = streakLength / float(numSteps);
+                    float stampValue = value * (float((numSteps - j)) / float(numSteps));
+                    lux::Vector newPosition = diff + normal*j*stepLength;
+                    bakeDot(newPosition, stampValue);
+                }
+            }
         }
     }
 }
@@ -352,18 +369,8 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     //(x, y, z)
     c[7] = c[6] + 1;*/
 
-    /*if (x1 < 0)
-        x1 = 0;
-    if (y1 < 0)
-        y1 = 0;
-    if (z1 < 0);
-        z1 = 0;
-    if (x2 > xVoxels)
-        x2 = xVoxels;
-    if (y2 > yVoxels)
-        y2 = yVoxels;
-    if (z2 > zVoxels)
-        z2 = zVoxels;*/
+    if (x < 0 || y < 0 || z < 0 || x > xVoxels || y > yVoxels || z > zVoxels)
+        return 0;
 
     //Weights
     float wx1, wx2, wy1, wy2, wz1, wz2;

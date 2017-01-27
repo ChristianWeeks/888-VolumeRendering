@@ -38,6 +38,7 @@ lux::FloatVolumeBase Intersectf(const lux::FloatVolumeBase& f, const lux::FloatV
 lux::FloatVolumeBase Cutoutf(const lux::FloatVolumeBase& f, const lux::FloatVolumeBase& g)        ;
 lux::FloatVolumeBase Maskf(const lux::FloatVolumeBase& f)                                    ;
 lux::FloatVolumeBase Clampf(const lux::FloatVolumeBase& f, const float Min, const float Max) ;
+lux::FloatVolumeBase Reducef(const lux::FloatVolumeBase& f, const float cutoff) ;
 
 lux::VectorVolumeBase Addv(const lux::VectorVolumeBase& f, const lux::VectorVolumeBase& g) ;
 lux::VectorVolumeBase Subtractv(const lux::VectorVolumeBase& f, const lux::VectorVolumeBase& g) ;

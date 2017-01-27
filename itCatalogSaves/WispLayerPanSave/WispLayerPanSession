@@ -1,0 +1,936 @@
+it_Session {-vers 2} {
+  # saved on: 01:25:05 PM 01/27/2017 2017
+  # for: caweeks
+  # by: it 10.5 (@1365910 Aug 20 2014)
+  CatalogList {} {
+    Catalog {-name Catalog1} {
+      Viewspec {} {
+        channelView c
+        colorSpace Automatic
+        colorTransform sRGB
+        correctionMode 0
+        pan {280.494324 -127.748566}
+      }
+      SequenceInfo {} {
+        frameRange {1 14}
+        currentFrame 1
+      }
+      ImageList {} {
+        ImageElement {-handle e0 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e1 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e2 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e3 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e4 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e5 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0002.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e6 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0003.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e7 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0004.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e8 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0005.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e9 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0006.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e10 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0007.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e11 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0008.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e12 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0009.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e13 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0010.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e14 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0011.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e15 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0012.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e16 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0013.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e17 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0014.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e18 -isSequence 1 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.$_F4_.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+          SequenceInfo {} {
+            frameRange {1 14}
+            currentFrame 1
+          }
+        }
+        ImageElement {-handle e19 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e20 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0005.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e21 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e22 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0005.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e23 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e24 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e25 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e26 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0002.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e27 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0003.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e28 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0004.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e29 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0005.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e30 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0006.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e31 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0007.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e32 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0008.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e33 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0009.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e34 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0010.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e35 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0011.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e36 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0012.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e37 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0013.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e38 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/AdvectedGlow/AdvectedGlow.0014.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e39 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/PyroRibbon/PyroRibbon.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e40 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/PyroRibbon/PyroRibbon.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e41 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/PyroRibbon/PyroRibbon.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e42 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispNebula1/WispNebula1.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e43 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispNebula1/WispNebula1.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e44 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispNebula1/WispNebula1.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e45 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispNebula1/WispNebula1.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e46 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispNebula1/WispNebula1.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e47 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispBoundsWedge_Clump_1/WispBoundsWedge_Clump_1.0056.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e48 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispBoundsWedge_Clump_1/WispBoundsWedge_Clump_1.0056.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e49 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispBoundsWedge_Clump_1/WispBoundsWedge_Clump_1.0056.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e50 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispBoundsWedge_Clump_1/WispBoundsWedge_Clump_1.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e51 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispNebula1/WispNebula1.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e52 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispNebula1/WispNebula1.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e53 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispNebula1/WispNebula1.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e54 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispBiggerRad/WispBiggerRad.0056.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e55 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e56 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e57 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e58 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e59 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e60 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e61 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e62 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e63 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e64 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e65 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e66 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e67 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e68 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e69 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e70 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e71 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e72 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e73 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e74 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e75 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e76 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e77 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e78 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0105.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e79 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e80 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e81 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e82 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e83 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan/WispLayerPan.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e84 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan2/WispLayerPan2.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e85 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan2/WispLayerPan2.0229.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e86 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan2/WispLayerPan2.0228.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e87 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan2/WispLayerPan2.0227.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e88 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan2/WispLayerPan2.0349.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e89 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e90 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e91 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e92 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e93 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e94 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e95 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e96 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e97 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e98 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e99 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e100 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e101 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e102 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e103 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e104 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e105 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e106 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e107 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e108 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e109 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e110 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e111 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e112 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e113 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e114 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e115 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e116 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e117 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e118 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e119 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e120 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e121 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e122 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e123 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e124 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e125 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e126 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e127 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e128 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e129 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e130 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e131 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e132 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e133 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e134 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e135 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e136 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e137 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e138 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e139 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e140 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0200.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e141 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e142 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0200.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e143 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e144 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e145 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e146 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e147 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e148 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispBoundsWedgeClump_0_1_Freq_0_1/WispBoundsWedgeClump_0_1_Freq_0_1.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e149 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e150 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e151 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e152 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e153 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e154 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e155 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e156 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e157 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e158 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispFreqWedge_1/WispFreqWedge_1.0070.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e159 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e160 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e161 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e162 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e163 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e164 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e165 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e166 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e167 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e168 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e169 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e170 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan2/WispLayerPan2.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e171 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e172 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/WispLayerPan3/WispLayerPan3.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e173 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/HourglassNebula.py/HourglassNebula.py.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e174 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/HourglassNebula.py/HourglassNebula.py.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e175 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/HourglassNebula.py/HourglassNebula.py.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e176 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/HourglassNebula.py/HourglassNebula.py.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e177 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/HourglassNebula.py/HourglassNebula.py.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e178 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/HourglassNebula.py/HourglassNebula.py.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e179 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/HourglassNebula.py/HourglassNebula.py.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e180 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/output/HourglassNebula.py/HourglassNebula.py.0001.exr} {
+          statusMsg {960x540 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+        ImageElement {-handle e181 -isSequence 0 -filename /DPA/wookie/dpa/projects/caweeks/rnd/VolumeRendering/itCatalogSaves/WispLayerPanSave/HourglassNebula.py.0001.exr} {
+          statusMsg {1920x1080 4 channel 32bit float}
+          notes {}
+          useCustomView 0
+        }
+      }
+    }
+  }
+}

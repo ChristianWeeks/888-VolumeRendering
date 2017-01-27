@@ -620,6 +620,27 @@ class MaskVolume: public FloatVolume{
         FloatVolumeBase a;
 };
 
+class ReduceVolume: public FloatVolume{
+    public:
+        ReduceVolume(FloatVolumeBase f, float c) :
+            a(f),
+            cutoff(c){};
+        ~ReduceVolume(){};
+
+        const float eval( const Vector& P) const{
+            float val = a.get()->eval(P);
+            if (val < cutoff) return 0;
+            return val;};
+        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
+
+    private:
+        FloatVolumeBase a;
+        float cutoff;
+};
+
+
+
+
 class ClampVolume: public FloatVolume{
     public:
         ClampVolume(FloatVolumeBase f, float Min, float Max) :

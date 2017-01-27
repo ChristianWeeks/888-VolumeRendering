@@ -80,8 +80,15 @@ class FloatGrid{
         //FloatGrid(const FloatGrid& f);
         ~FloatGrid();
         const float trilinearInterpolate(const Vector& P) const;
-        virtual void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound);
+        virtual void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
         void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
+
+        float stampXMin;
+        float stampXMax;
+        float stampYMin;
+        float stampYMax;
+        float stampZMin;
+        float stampZMax;
 
         const Vector center;
         const Vector length;
@@ -94,6 +101,7 @@ class FloatGrid{
         const int zVoxels;
         const float voxelLength;
         const int totalCells;
+
         Grid *data;
 
         const Vector positionToIndex(const Vector& P) const;
@@ -117,7 +125,7 @@ class DensityGrid: public FloatGrid{
         //DensityGrid(const DensityGrid& f);
         ~DensityGrid(){};
 
-        void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound);
+        void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
         //Bake a dot - Used for baking wisps
         int bakeDot(const Vector& p, const float density);
 
