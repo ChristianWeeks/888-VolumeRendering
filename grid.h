@@ -2,6 +2,7 @@
 #define __GRID_H__
 #include "volume_operators.h"
 #include "light.h"
+#include "Camera.h"
 #include <boost/timer.hpp>
 #include <random>
 
@@ -12,14 +13,11 @@ namespace lux {
 //-----------------------------------------------------------------------------------------------------
 class Grid{
     public:
-        Grid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength, int p) : 
+        Grid(int xvoxels, int yvoxels, int zvoxels, int p) : 
             partitionSize(p), 
             xVoxels(xvoxels),
             yVoxels(yvoxels),
-            zVoxels(zvoxels),
-            xLength(xlength),
-            yLength(ylength),
-            zLength(zlength){};
+            zVoxels(zvoxels){};
         virtual ~Grid(){};
 
         void setDefaultValue(float d){defaultValue = d;};
@@ -35,16 +33,13 @@ class Grid{
         const int xVoxels;
         const int yVoxels;
         const int zVoxels;
-        const double xLength;
-        const double yLength;
-        const double zLength;
 
 };
 
 class DenseGrid : public Grid{
     public:
-        DenseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength) :
-            Grid(xvoxels, yvoxels, zvoxels, xlength, ylength, zlength, -1), data(new float[xvoxels*yvoxels*zvoxels]){};
+        DenseGrid(int xvoxels, int yvoxels, int zvoxels) :
+            Grid(xvoxels, yvoxels, zvoxels, -1), data(new float[xvoxels*yvoxels*zvoxels]){};
         ~DenseGrid(){};
 
         const float get(int i, int j, int k) const{ return data.get()[k + j*zVoxels + i*yVoxels*zVoxels];};
@@ -57,7 +52,7 @@ class DenseGrid : public Grid{
 
 class SparseGrid : public Grid{
     public:
-        SparseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength, int p);
+        SparseGrid(int xvoxels, int yvoxels, int zvoxels, int p);
         ~SparseGrid();
 
         const float get(int i, int j, int k) const;
@@ -79,8 +74,10 @@ class FloatGrid{
         FloatGrid(FloatVolumeBase f, const Vector& c, const Vector& s, const int& vx, const int& vy, const int& vz, const int& partitionSize);
         //FloatGrid(const FloatGrid& f);
         ~FloatGrid();
+
+        virtual const float getVoxelLength(const int x, const int y, const int z) const;
         const float trilinearInterpolate(const Vector& P) const;
-        virtual void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
+        void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
         void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
 
         float stampXMin;
@@ -104,8 +101,9 @@ class FloatGrid{
 
         Grid *data;
 
-        const Vector positionToIndex(const Vector& P) const;
-        const Vector indexToPosition(const int i, const int j, const int k) const;
+        virtual const Vector positionToIndex(const Vector& P) const;
+        virtual const Vector indexToPosition(const int i, const int j, const int k) const;
+        int bakeDot(const Vector& p, const float density);
 };
 
 typedef std::shared_ptr<FloatGrid> FloatGridPtr;
@@ -119,15 +117,24 @@ class FloatGridBase :  public FloatGridPtr{
         FloatGrid* getRef() { return FloatGridPtr::get();};
 };
 
+class FrustumGrid: public FloatGrid{
+    public:
+        FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p);
+        ~FrustumGrid(){}
+
+    protected:
+        const float getVoxelLength(const int x, const int y, const int z) const;
+        const Vector positionToIndex(const Vector& P) const;
+        const Vector indexToPosition(const int i, const int j, const int k) const;
+        Camera camera;
+        float zVoxelLength;
+};
+
 class DensityGrid: public FloatGrid{
     public:
         DensityGrid(FloatVolumeBase f, Vector c, const Vector& s, int xv, int yv, int zv, int p);
         //DensityGrid(const DensityGrid& f);
         ~DensityGrid(){};
-
-        void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
-        //Bake a dot - Used for baking wisps
-        int bakeDot(const Vector& p, const float density);
 
 };
 

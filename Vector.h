@@ -120,6 +120,15 @@ class Vector
 
    const Vector unitvector() const { return *this/magnitude(); }
 
+   void clamp(float min, float max){
+       for (int i = 0; i < 3; i++){
+           if (xyz[i] < min)
+               xyz[i] = min;
+           if (xyz[i] > max)
+               xyz[i] = max;
+       }
+   }
+
    void normalize()
    { double mag = magnitude(); xyz[0] /= mag; xyz[1] /= mag; xyz[2] /= mag; }
 

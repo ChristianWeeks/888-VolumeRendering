@@ -8,8 +8,8 @@ Camera::Camera()
    setEyeViewUp( Vector(0,0,1), Vector(0,0,-1), Vector(0,1,0) );
    setFov( 60.0 );
    setAspectRatio( 16.0/9.0 );
-   setNearPlane(0.0);
-   setFarPlane(1.0e6);
+   setNearPlane(2.0);
+   setFarPlane(20);
 }
 
 void Camera::setEyeViewUp( const Vector& eye, const Vector& view, const Vector& up )
@@ -32,8 +32,8 @@ const Vector Camera::view( const double x, const double y )
 
 void Camera::setFov( const double fov )
 {
-   FOV = fov;
-   htanfov = tan( FOV*0.5*M_PI/180.0 );
+   FOV = fov * M_PI/180.0;
+   htanfov = tan( FOV*0.5);
    vtanfov = htanfov/aspect_ratio;
 }
 

@@ -176,6 +176,10 @@ double SceneManager::rayMarchDSM(const Vector& x, const DeepShadowMap* dsm) cons
 
 void SceneManager::renderImage(int frameNumber){
     boost::timer renderTimer;
+    if (boundingboxes.size() == 0){
+        std::cout << "Warning: No bounding boxes pushed.\n";
+        return;
+    }
     Image img;
     img.reset(width, height, 4);
     std::vector<float> black = {0.5, 0.5, 0.5, 0.0};

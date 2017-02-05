@@ -58,6 +58,7 @@ lux::ColorVolumeBase ColorFromDensity(const lux::FloatVolumeBase& f, const lux::
 // GRIDS
 //-----------------------------------------------------------------------------------------------------------------------------
 lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& c, const lux::Vector& s, int vx, int vy, int vz, int p) { return lux::FloatGridBase(new lux::DensityGrid(f, c, s, vx, vy, vz, p));};
+lux::FloatGridBase FrustumGridf(const lux::FloatVolumeBase& f, const lux::Camera& cam, int vx, int vy, int vz, int p) { return lux::FloatGridBase(new lux::FrustumGrid(f, cam, vx, vy, vz, p));};
 
 lux::FloatVolumeBase GriddedVolf(const lux::FloatGridBase& g)   { 
     lux::FloatVolumeBase gridded(new lux::GriddedVolume(g));

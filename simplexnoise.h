@@ -236,8 +236,8 @@ class SimplexNoiseObject {
             annoVec.push_back(std::to_string(lowBound));
             annoVec.push_back("High Bound");
             annoVec.push_back(std::to_string(highBound));
-            //annoVec.push_back("Offset");
-            //annoVec.push_back(std::to_string(offset));
+            annoVec.push_back("Offset");
+            annoVec.push_back("(" + std::to_string(xOffset) + ", " + std::to_string(yOffset) + ", " + std::to_string(zOffset) + ")");
             return annoVec;
         }
 

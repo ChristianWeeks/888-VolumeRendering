@@ -13,6 +13,7 @@
 *.hip
 *.hipnc
 *.nk
+*.nk~
 *.py
 *.sh
 *.geo
@@ -28,3 +29,4 @@ swig/voyager_wrap.cxx
 .nfs*
 img
 itCatalogSaves
+videos

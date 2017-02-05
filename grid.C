@@ -5,28 +5,11 @@ using namespace lux;
 //-------------------------------------------------------------------------------------------------------------------------------
 //Grid Data Structures
 //-------------------------------------------------------------------------------------------------------------------------------
-SparseGrid::SparseGrid(int xvoxels, int yvoxels, int zvoxels, float xlength, float ylength, float zlength, int p) :
-    Grid(xvoxels, yvoxels, zvoxels, xlength, ylength, zlength, p),
+SparseGrid::SparseGrid(int xvoxels, int yvoxels, int zvoxels, int p) :
+    Grid(xvoxels, yvoxels, zvoxels, p),
     xPartitions(xvoxels / p),
     yPartitions(yvoxels / p),
     zPartitions(zvoxels / p){
-    try{
-        if ((xvoxels) % partitionSize != 0 || (yvoxels) % partitionSize != 0 || (zvoxels) % partitionSize != 0){
-            throw 10;
-        }
-        if (xlength / xvoxels != ylength / yvoxels || xlength / xvoxels != zlength / zvoxels){
-            throw 20;
-        }
-
-    }
-    catch(int e){
-        if (e == 10){
-            std::cout << "Error: Voxels must be evenly divisible by partition size\n";
-        }
-        else if (e == 20){
-            std::cout << "Error: Voxels must be of equal length on every side\n";
-        }
-    }
     setDefaultValue(0.0);
 
     data = new float*[xPartitions*yPartitions*zPartitions];
@@ -95,25 +78,46 @@ FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const Vector& s, const 
     length(s),
     field(f),
     origin(c - (s/2.0)),
-    xVoxels(xv),
-    yVoxels(yv),
-    zVoxels(zv),
     stampXMin(-1),
     stampXMax(1),
     stampYMin(-1),
     stampYMax(1),
     stampZMin(-1),
     stampZMax(1),
+    xVoxels(xv),
+    yVoxels(yv),
+    zVoxels(zv),
     voxelLength(s[0] / (double)xv),
     totalCells(xv*yv*zv){
 
     if (partitionSize > 0){
-        data = new SparseGrid(xv, yv, zv, s[0], s[1], s[2], partitionSize);
+        try{
+            if ((xv) % partitionSize != 0 || (yv) % partitionSize != 0 || (zv) % partitionSize != 0){
+                throw 10;
+            }
+            if (s[0] / xv != s[1] / yv || s[0] / xv != s[2] / zv){
+                throw 20;
+            }
+
+        }
+        catch(int e){
+            if (e == 10){
+                std::cout << "Error: Voxels must be evenly divisible by partition size\n";
+            }
+            else if (e == 20){
+                std::cout << "Error: Voxels must be of equal length on every side\n";
+            }
+        }
+        data = new SparseGrid(xv, yv, zv, partitionSize);
     }
     else{
-        data = new DenseGrid(xv, yv,zv, s[0], s[1], s[2]);
+        data = new DenseGrid(xv, yv, zv);
     }
 };
+
+inline const float FloatGrid::getVoxelLength(const int x, const int y, const int z) const{
+    return voxelLength;
+}
 
 /*FloatGrid::FloatGrid(const FloatGrid& f) :
     center(f.center),
@@ -145,7 +149,7 @@ FloatGrid::~FloatGrid(){
     delete data;
 };
 
-void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength){std::cout << "FloatGrid can't stamp wisps! Use a density grid.\n";};
+//void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength){std::cout << "FloatGrid can't stamp wisps! Use a density grid.\n";};
 
 //Converts a position in 3-D space to an index in our grid
 const Vector FloatGrid::positionToIndex(const Vector& P) const{
@@ -156,7 +160,7 @@ const Vector FloatGrid::positionToIndex(const Vector& P) const{
     if(P2[0] < 0 || P2[0] >= (xVoxels-1) || P2[1] < 0 || P2[1] >= (yVoxels-1) || P2[2] < 0 || P2[2] >= (zVoxels-1)){
         return Vector(-1, -1, -1);
     }
-    return Vector(P2[0], P2[1], P2[2]);
+    return P2;
 }
 
 const Vector FloatGrid::indexToPosition(int i, int j, int k) const{
@@ -177,9 +181,14 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     int x = indices[0];
     int y = indices[1];
     int z = indices[2];
+    Vector worldPos = indexToPosition(x, y, z);
     //now we can actually interpolate
     //d holds values between 0 to 1
-    Vector d = (position - (indices * voxelLength + origin)) / voxelLength;
+    Vector d = (position - worldPos) / getVoxelLength(x, y, z);
+    d.clamp(0, 1);
+    //if(d[0] > 1.0 || d[1] > 1.0 || d[2] > 1.0){
+    //    std::cout << "d: " << d;
+    //}
 
     //Interpolate along x
     float c00, c10, c01, c11;
@@ -219,7 +228,7 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
     int x2 = endPos[0];
     int y2 = endPos[1];
     int z2 = endPos[2];
-    if (x1 < 0)
+    /*if (x1 < 0)
         x1 = 0;
     if (y1 < 0)
         y1 = 0;
@@ -230,7 +239,7 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
     if (y2 > yVoxels)
         y2 = yVoxels;
     if (z2 > zVoxels)
-        z2 = zVoxels;
+        z2 = zVoxels;*/
 
     for (int i = x1; i < x2; i++){
         for (int j = y1; j < y2; j++){
@@ -257,40 +266,10 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
             }
         }
     }
-
 }
-//-------------------------------------------------------------------------------------------------------------------------------
-//DensityGrid
-//-------------------------------------------------------------------------------------------------------------------------------
-DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p)
-    : FloatGrid(f, o, s, vx, vy, vz, p){
-    //stamp the values into our grid
-    std::cout << "Building Grid\n";
-    boost::timer gridTimer;
-    for(int i = 0; i < xVoxels; i++){
-        for(int j = 0; j < yVoxels; j++){
-            for(int k = 0; k < zVoxels; k++){
-
-                //First convert our indices to world space
-                float ii = (float)i * voxelLength + origin[0];
-                float jj = (float)j * voxelLength + origin[1];
-                float kk = (float)k * voxelLength + origin[2];
-                //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
-
-                //now evaluate the field at that point
-                data->set(i, j, k, field.get()->eval(Vector(ii, jj, kk)));
-
-               // std::cout << values.get()[k + j*zVoxels + i*yVoxels*zVoxels] << "\n";
-            }
-        }
-    }
-    std::cout << "Grid Built in: " << gridTimer.elapsed() <<" seconds\n";
-}
-
-//DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
 
 //Wisp algorithm
-void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset, float dBound, const Vector& n, int numSteps, float streakLength){
+void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset, float dBound, const Vector& n, int numSteps, float streakLength){
 
     std::mt19937 rng(20);
     std::uniform_real_distribution<> udistx(stampXMin, stampXMax);
@@ -343,17 +322,21 @@ void DensityGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObje
     }
 }
 
-int DensityGrid::bakeDot(const Vector& P, const float density){
+int FloatGrid::bakeDot(const Vector& P, const float density){
 
     //(-x, -y, -z)
     Vector indices = positionToIndex(P);
     int x = indices[0];
     int y = indices[1];
     int z = indices[2];
+    if (x < 0 || y < 0 || z < 0 || x > xVoxels || y > yVoxels || z > zVoxels)
+        return 0;
+    Vector WorldPos = indexToPosition(x, y, z);
+
     //now we can actually interpolate
-    //d holds values between 0 to 1
-    //Vector d = (P - indexToPosition(x, y, z)) / voxelLength;
-    Vector d = (P - (indices * voxelLength + origin)) / voxelLength;
+    //d is the distance from our position to its closest index, normalized from 0 - 1
+    Vector d = (P - (WorldPos)) / getVoxelLength(x, y, z);
+    d.clamp(0, 1);
     /*//(-x, -y, z)
     c[1] = c[0] + 1;
     //(-x, y, -z)
@@ -369,8 +352,6 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
     //(x, y, z)
     c[7] = c[6] + 1;*/
 
-    if (x < 0 || y < 0 || z < 0 || x > xVoxels || y > yVoxels || z > zVoxels)
-        return 0;
 
     //Weights
     float wx1, wx2, wy1, wy2, wz1, wz2;
@@ -401,6 +382,118 @@ int DensityGrid::bakeDot(const Vector& P, const float density){
 
     return 1;
 }
+//-------------------------------------------------------------------------------------------------------------------------------
+//Frustum Grid
+//-------------------------------------------------------------------------------------------------------------------------------
+FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p) : 
+    camera(cam),
+    zVoxelLength((camera.far - camera.near) / float(vz)),
+    FloatGrid(f, cam.position, Vector(1, 1, 1), vx, vy, vz, p){
+    std::cout << "Building Frustum Grid...\n";
+    float voxelRatio = float(vx) / float(vy);
+    if(voxelRatio != camera.aspect_ratio){
+        std::cerr << "Voxel ratio is not equivalent to aspect ratio; VR: " << voxelRatio << " AR:  " << camera.aspect_ratio << "\n";
+        //return;
+    }
+    boost::timer gridTimer;
+    for(int i = 0; i < xVoxels; i++){
+        for(int j = 0; j < yVoxels; j++){
+            for(int k = 0; k < zVoxels; k++){
+
+                //First convert our indices to world space
+                Vector worldPos = indexToPosition(i, j, k);
+                //std::cout << "Index: " << i << ", " << j << ", " << k << "\n";
+                //std::cout << "Pos: " << worldPos << "\n";
+                //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
+                //now evaluate the field at that point
+                data->set(i, j, k, field.get()->eval(worldPos));
+
+               // std::cout << values.get()[k + j*zVoxels + i*yVoxels*zVoxels] << "\n";
+            }
+        }
+    }
+    std::cout << "Frustum Grid Built in: " << gridTimer.elapsed() <<" seconds\n";
+
+
+}
+
+
+const float FrustumGrid::getVoxelLength(const int x, const int y, const int z) const{
+    float zDepth = camera.near + (float(z) * zVoxelLength);
+    float xylength = sin(camera.FOV / 2.0) * zDepth;
+    return xylength;
+
+    /*Vector worldPos1 = indexToPosition(x, y, z);
+    Vector worldPos2 = indexToPosition(x+1, y, z);
+    float diff =  (worldPos2 - worldPos1).magnitude();
+    //std::cout << diff << "\n";
+    return diff;*/
+}
+
+const Vector FrustumGrid::positionToIndex(const Vector& P) const{
+    //First convert P to UV coordinates on our camera image plane
+    //Map P to a point on our image plane Q
+    Vector normPos = P - camera.position;
+    float dot = camera.axis_view * normPos;
+    if(dot < 0){
+        return Vector(-1, -1, -1);
+    }
+    Vector q = normPos / dot;
+    q = q - camera.axis_view;
+    float u = q * camera.axis_right;
+    float v = q * camera.axis_up;  
+    float x = 0.5 * ((u / tan(camera.FOV / 2.0)) + 1);
+    float y = 0.5 * (((v*camera.aspect_ratio) / tan(camera.FOV / 2.0)) + 1);
+    float z = (normPos.magnitude() - camera.near) / (camera.far - camera.near);
+    Vector P2 = Vector(int(x*xVoxels), int(y*yVoxels), int(z*zVoxels));
+    if(P2[0] < 0 || P2[0] >= (xVoxels-1) || P2[1] < 0 || P2[1] >= (yVoxels-1) || P2[2] < 0 || P2[2] >= (zVoxels-1)){
+        return Vector(-1, -1, -1);
+    }
+    return P2;
+}
+
+
+const Vector FrustumGrid::indexToPosition(const int i, const int j, const int k) const{
+    float u = (2*(float(i)/float(xVoxels)) - 1)*tan(camera.FOV / 2.0);
+    float v = (2*(float(j)/float(yVoxels)) - 1)*tan(camera.FOV / 2.0) / camera.aspect_ratio;
+    float Z = camera.near + (float(k)/float(zVoxels))*(camera.far - camera.near);
+    //std::cout << "u: " << u << ", v: " << v << ", Z: " << Z << "\n";
+    Vector q = u * camera.axis_right + v * camera.axis_up;
+    Vector X = camera.position + Z * (q + camera.axis_view) / ((q + camera.axis_view).magnitude());
+    //std::cout << "X: " << X << "\n";
+    return X;
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------
+//DensityGrid
+//-------------------------------------------------------------------------------------------------------------------------------
+DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p)
+    : FloatGrid(f, o, s, vx, vy, vz, p){
+    //stamp the values into our grid
+    std::cout << "Building Grid\n";
+    boost::timer gridTimer;
+    for(int i = 0; i < xVoxels; i++){
+        for(int j = 0; j < yVoxels; j++){
+            for(int k = 0; k < zVoxels; k++){
+
+                //First convert our indices to world space
+                float ii = (float)i * voxelLength + origin[0];
+                float jj = (float)j * voxelLength + origin[1];
+                float kk = (float)k * voxelLength + origin[2];
+                //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
+
+                //now evaluate the field at that point
+                data->set(i, j, k, field.get()->eval(Vector(ii, jj, kk)));
+
+               // std::cout << values.get()[k + j*zVoxels + i*yVoxels*zVoxels] << "\n";
+            }
+        }
+    }
+    std::cout << "Grid Built in: " << gridTimer.elapsed() <<" seconds\n";
+}
+
+//DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
+
 //-------------------------------------------------------------------------------------------------------------------------------
 //Deep Shadow Map
 //-------------------------------------------------------------------------------------------------------------------------------
