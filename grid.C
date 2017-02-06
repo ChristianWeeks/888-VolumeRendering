@@ -222,13 +222,13 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
     //Add 1 to the returned indices because indices cast to integers will be 1 voxel outside of the grid
     Vector startPos = positionToIndex(AABB.bounds[0]);
     Vector endPos = positionToIndex(AABB.bounds[1]);
-    int x1 = startPos[0] + 1;
-    int y1 = startPos[1] + 1;
-    int z1 = startPos[2] + 1;
-    int x2 = endPos[0];
-    int y2 = endPos[1];
-    int z2 = endPos[2];
-    /*if (x1 < 0)
+    int x1 = std::min(startPos[0], endPos[0]) + 1;
+    int y1 = std::min(startPos[1], endPos[1]) + 1;
+    int z1 = std::min(startPos[2], endPos[2]) + 1;
+    int x2 = std::max(startPos[0], endPos[0]);
+    int y2 = std::max(startPos[1], endPos[1]);
+    int z2 = std::max(startPos[2], endPos[2]);
+    if (x1 < 0)
         x1 = 0;
     if (y1 < 0)
         y1 = 0;
@@ -239,7 +239,9 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
     if (y2 > yVoxels)
         y2 = yVoxels;
     if (z2 > zVoxels)
-        z2 = zVoxels;*/
+        z2 = zVoxels;
+    std::cout << "start: " << x1 << ", " << y1 << ", " << z1 << "\n";
+    std::cout << "end: " << x2 << ", " << y2 << ", " << z2 << "\n";
 
     for (int i = x1; i < x2; i++){
         for (int j = y1; j < y2; j++){
@@ -446,9 +448,9 @@ const Vector FrustumGrid::positionToIndex(const Vector& P) const{
     float y = 0.5 * (((v*camera.aspect_ratio) / tan(camera.FOV / 2.0)) + 1);
     float z = (normPos.magnitude() - camera.near) / (camera.far - camera.near);
     Vector P2 = Vector(int(x*xVoxels), int(y*yVoxels), int(z*zVoxels));
-    if(P2[0] < 0 || P2[0] >= (xVoxels-1) || P2[1] < 0 || P2[1] >= (yVoxels-1) || P2[2] < 0 || P2[2] >= (zVoxels-1)){
+    /*if(P2[0] < 0 || P2[0] >= (xVoxels-1) || P2[1] < 0 || P2[1] >= (yVoxels-1) || P2[2] < 0 || P2[2] >= (zVoxels-1)){
         return Vector(-1, -1, -1);
-    }
+    }*/
     return P2;
 }
 
