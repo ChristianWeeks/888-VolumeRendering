@@ -78,7 +78,7 @@ class FloatGrid{
         virtual const float getVoxelLength(const int x, const int y, const int z) const;
         const float trilinearInterpolate(const Vector& P) const;
         void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
-        void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
+        virtual void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
 
         float stampXMin;
         float stampXMax;
@@ -103,6 +103,8 @@ class FloatGrid{
 
         virtual const Vector positionToIndex(const Vector& P) const;
         virtual const Vector indexToPosition(const int i, const int j, const int k) const;
+        const int isInGrid(int x, int y, int z) const;
+        const int isInGrid(const Vector& x) const;
         int bakeDot(const Vector& p, const float density);
 };
 
@@ -121,6 +123,7 @@ class FrustumGrid: public FloatGrid{
     public:
         FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p);
         ~FrustumGrid(){}
+        void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
 
     protected:
         const float getVoxelLength(const int x, const int y, const int z) const;

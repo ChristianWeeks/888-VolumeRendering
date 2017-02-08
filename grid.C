@@ -165,6 +165,18 @@ const Vector FloatGrid::indexToPosition(int i, int j, int k) const{
     return P * voxelLength + origin;
 }
 
+const int FloatGrid::isInGrid(int x, int y, int z) const{
+    if (x < 0 || y < 0 || z < 0 || x >= (xVoxels - 1) || y >= (yVoxels - 1) || z >= (zVoxels - 1))
+        return 0;
+    return 1;
+}
+
+const int FloatGrid::isInGrid(const Vector& x) const{
+    if (x[0] < 0 || x[1] < 0 || x[2] < 0 || x[0] >= (xVoxels - 1) || x[1] >= (yVoxels - 1) || x[2] >= (zVoxels - 1))
+        return 0;
+    return 1;
+}
+
 const float FloatGrid::trilinearInterpolate(const Vector& position) const{
 
     //First we have to find what grid points are around our given position
@@ -172,8 +184,7 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     //Contains the indices of all the grid points around our position
     Vector indices = positionToIndex(position);
     //If positionToIndex returns a negative value, we are at the border or beyond our grid
-    if (indices[0] < 0 || indices[1] < 0 || indices[2] < 0 || indices[0] >= (xVoxels-1) || indices[1] >= (yVoxels-1) || indices[2] >= (zVoxels-1))
-        return -0.0001;
+    if(!isInGrid(indices)) return -0.0001;
 
     int x = indices[0];
     int y = indices[1];
@@ -225,12 +236,6 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
     int x2 = endPos[0];
     int y2 = endPos[1];
     int z2 = endPos[2];
-    /*int x1 = std::min(startPos[0], endPos[0]) + 1;
-    int y1 = std::min(startPos[1], endPos[1]) + 1;
-    int z1 = std::min(startPos[2], endPos[2]) + 1;
-    int x2 = std::max(startPos[0], endPos[0]);
-    int y2 = std::max(startPos[1], endPos[1]);
-    int z2 = std::max(startPos[2], endPos[2]);*/
     if (x1 < 0)
         x1 = 0;
     if (y1 < 0)
@@ -243,13 +248,7 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
         y2 = yVoxels;
     if (z2 > zVoxels)
         z2 = zVoxels;
-    /*std::cout << "------------------------\n";
-    std::cout << "origin: " << origin << "\n";
-    std::cout << "start: " << AABB.bounds[0] << "\n";
-    std::cout << "end: " << AABB.bounds[1] << "\n";
-    std::cout << "start: " << x1 << ", " << y1 << ", " << z1 << "\n";
-    std::cout << "end: " << x2 << ", " << y2 << ", " << z2 << "\n";
-*/
+
     for (int i = x1; i < x2; i++){
         for (int j = y1; j < y2; j++){
             for (int k = z1; k < z2; k++){
@@ -339,8 +338,7 @@ int FloatGrid::bakeDot(const Vector& P, const float density){
     int x = indices[0];
     int y = indices[1];
     int z = indices[2];
-    if (x < 0 || y < 0 || z < 0 || x >= (xVoxels - 1) || y > (yVoxels - 1) || z > (zVoxels - 1))
-        return 0;
+    if(!isInGrid(indices)) return 0;
     Vector WorldPos = indexToPosition(x, y, z);
 
     //now we can actually interpolate
@@ -453,9 +451,6 @@ const Vector FrustumGrid::positionToIndex(const Vector& P) const{
     float y = 0.5 * (((v*camera.aspect_ratio) / tan(camera.FOV / 2.0)) + 1);
     float z = (normPos.magnitude() - camera.near) / (camera.far - camera.near);
     Vector P2 = Vector(int(x*xVoxels), int(y*yVoxels), int(z*zVoxels));
-    /*if(P2[0] < 0 || P2[0] >= (xVoxels-1) || P2[1] < 0 || P2[1] >= (yVoxels-1) || P2[2] < 0 || P2[2] >= (zVoxels-1)){
-        return Vector(-1, -1, -1);
-    }*/
     return P2;
 }
 
@@ -471,6 +466,97 @@ const Vector FrustumGrid::indexToPosition(const int i, const int j, const int k)
     return X;
 }
 
+//Frustum Grid needs its own StampField method because it needs to make extra calculations to properly
+//generate a bounding box to stamp in
+void FrustumGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand){
+
+    //First we need to get the indices within the bounding box.
+    //Add 1 to the returned indices because indices cast to integers will be 1 voxel outside of the grid
+    Vector start = AABB.bounds[0];
+    Vector end = AABB.bounds[1];
+    Vector gB[8];
+
+    //Get index positions of all world space coordinates for the bounding box
+    gB[0] = positionToIndex(start);
+    gB[1] = positionToIndex(Vector(start[0], start[1], end[2]));
+    gB[2] = positionToIndex(Vector(start[0], end[1], start[2]));
+    gB[3] = positionToIndex(Vector(start[0], end[1], end[2]));
+    gB[4] = positionToIndex(Vector(end[0], start[1], start[2]));
+    gB[5] = positionToIndex(Vector(end[0], start[1], end[2]));
+    gB[6] = positionToIndex(Vector(end[0], end[1], start[2]));
+    gB[7] = positionToIndex(end);
+
+    int x1 = gB[0][0];
+    int y1 = gB[0][1];
+    int z1 = gB[0][2];
+    int x2 = gB[0][0];
+    int y2 = gB[0][1];
+    int z2 = gB[0][2];
+
+    //Find our maximum index bounds
+    for(int i = 0; i < 8; i++){
+        if (x1 > gB[i][0])
+            x1 = gB[i][0];
+        if (y1 > gB[i][1])
+            y1 = gB[i][1];
+        if (z1 > gB[i][2])
+            z1 = gB[i][2];
+
+        if (x2 < gB[i][0])
+            x2 = gB[i][0];
+        if (y2 < gB[i][1])
+            y2 = gB[i][1];
+        if (z2 < gB[i][2])
+            z2 = gB[i][2];
+    }
+
+    //Now make sure those bounds are within the bounds of our grid
+    if (x1 < 0)
+        x1 = 0;
+    if (y1 < 0)
+        y1 = 0;
+    if (z1 < 0)
+        z1 = 0;
+    if (x2 > xVoxels)
+        x2 = xVoxels;
+    if (y2 > yVoxels)
+        y2 = yVoxels;
+    if (z2 > zVoxels)
+        z2 = zVoxels;
+    /*std::cout << "------------------------\n";
+    std::cout << "origin: " << origin << "\n";
+    std::cout << "start: " << AABB.bounds[0] << "\n";
+    std::cout << "end: " << AABB.bounds[1] << "\n";
+    std::cout << "start: " << x1 << ", " << y1 << ", " << z1 << "\n";
+    std::cout << "end: " << x2 << ", " << y2 << ", " << z2 << "\n";
+*/
+    for (int i = x1; i < x2; i++){
+        for (int j = y1; j < y2; j++){
+            for (int k = z1; k < z2; k++){
+
+                Vector worldPos = indexToPosition(i, j, k);
+                float ii = worldPos[0];
+                float jj = worldPos[1];
+                float kk = worldPos[2];
+                //Replace
+                if (operand == 0){
+                    data->set(i, j, k, f.get()->eval(Vector(ii, jj, kk)));
+                }
+                //Max
+                else if(operand == 1){
+                    float value = f.get()->eval(Vector(ii, jj, kk));
+                    if (value > data->get(i, j, k)){
+                        data->set(i, j, k, value);
+                    }
+                }
+                //Add
+                else if(operand == 2){
+                    data->set(i, j, k, f.get()->eval(Vector(ii, jj, kk)) + data->get(i, j, k));
+                }
+            }
+        }
+    }
+}
 //-------------------------------------------------------------------------------------------------------------------------------
 //DensityGrid
 //-------------------------------------------------------------------------------------------------------------------------------
