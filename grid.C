@@ -339,7 +339,7 @@ int FloatGrid::bakeDot(const Vector& P, const float density){
     int x = indices[0];
     int y = indices[1];
     int z = indices[2];
-    if (x < 0 || y < 0 || z < 0 || x > xVoxels || y > yVoxels || z > zVoxels)
+    if (x < 0 || y < 0 || z < 0 || x >= (xVoxels - 1) || y > (yVoxels - 1) || z > (zVoxels - 1))
         return 0;
     Vector WorldPos = indexToPosition(x, y, z);
 
@@ -399,7 +399,8 @@ FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, i
     camera(cam),
     zVoxelLength((camera.far - camera.near) / float(vz)),
     FloatGrid(f, cam.position, Vector(1, 1, 1), vx, vy, vz, p){
-    std::cout << "Building Frustum Grid...\n";
+    std::cout << "------------------------------------------------------\n";
+    std::cout << "Initializing Frustum Grid\n";
     float voxelRatio = float(vx) / float(vy);
     if(voxelRatio != camera.aspect_ratio){
         std::cerr << "Voxel ratio is not equivalent to aspect ratio; VR: " << voxelRatio << " AR:  " << camera.aspect_ratio << "\n";
@@ -422,9 +423,8 @@ FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, i
             }
         }
     }
-    std::cout << "Frustum Grid Built in: " << gridTimer.elapsed() <<" seconds\n";
-
-
+    std::cout << "Frustum Grid Initialized in: " << gridTimer.elapsed() <<" seconds\n";
+    std::cout << "------------------------------------------------------\n";
 }
 
 
@@ -477,7 +477,8 @@ const Vector FrustumGrid::indexToPosition(const int i, const int j, const int k)
 DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p)
     : FloatGrid(f, o, s, vx, vy, vz, p){
     //stamp the values into our grid
-    std::cout << "Building Grid\n";
+    std::cout << "------------------------------------------------------\n";
+    std::cout << "Initializing Dense Grid\n";
     boost::timer gridTimer;
     for(int i = 0; i < xVoxels; i++){
         for(int j = 0; j < yVoxels; j++){
@@ -496,7 +497,8 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, i
             }
         }
     }
-    std::cout << "Grid Built in: " << gridTimer.elapsed() <<" seconds\n";
+    std::cout << "Dense Grid Initialized in: " << gridTimer.elapsed() <<" seconds\n";
+    std::cout << "------------------------------------------------------\n";
 }
 
 //DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
@@ -509,6 +511,7 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, cons
     sourceLight(l),
     marchStep(m){
 
+    std::cout << "------------------------------------------------------\n";
     std::cout << "Building Deep Shadow Map\n";
     boost::timer gridTimer;
     //stamp the values into our grid
@@ -529,7 +532,8 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, cons
             }
         }
     }
-    std::cout << "Grid Built in: " << gridTimer.elapsed() <<" seconds\n";
+    std::cout << "Deep Shadow Map Initialized in: " << gridTimer.elapsed() <<" seconds\n";
+    std::cout << "------------------------------------------------------\n";
 }
 
 //Returns the denisty integral at this position
