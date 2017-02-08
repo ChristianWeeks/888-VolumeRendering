@@ -305,6 +305,10 @@ class NoiseSphere : public FloatVolume{
 
         const float eval(const Vector& P) const{
             float value = simplex.eval(P[0], P[1], P[2]);
+            if(value > 0)
+                value = 1;
+            else if(value < 0)
+                return 0;
             Vector diff = P - position;
             float dist = diff.magnitude();
             if(dist < falloffStart)

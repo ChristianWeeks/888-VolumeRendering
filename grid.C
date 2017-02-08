@@ -157,9 +157,6 @@ const Vector FloatGrid::positionToIndex(const Vector& P) const{
     P2[0] = int(P2[0]);
     P2[1] = int(P2[1]);
     P2[2] = int(P2[2]);
-    if(P2[0] < 0 || P2[0] >= (xVoxels-1) || P2[1] < 0 || P2[1] >= (yVoxels-1) || P2[2] < 0 || P2[2] >= (zVoxels-1)){
-        return Vector(-1, -1, -1);
-    }
     return P2;
 }
 
@@ -175,8 +172,8 @@ const float FloatGrid::trilinearInterpolate(const Vector& position) const{
     //Contains the indices of all the grid points around our position
     Vector indices = positionToIndex(position);
     //If positionToIndex returns a negative value, we are at the border or beyond our grid
-    if (indices[0] == -1)
-        return -0.00001;
+    if (indices[0] < 0 || indices[1] < 0 || indices[2] < 0 || indices[0] >= (xVoxels-1) || indices[1] >= (yVoxels-1) || indices[2] >= (zVoxels-1))
+        return -0.0001;
 
     int x = indices[0];
     int y = indices[1];
@@ -222,12 +219,18 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
     //Add 1 to the returned indices because indices cast to integers will be 1 voxel outside of the grid
     Vector startPos = positionToIndex(AABB.bounds[0]);
     Vector endPos = positionToIndex(AABB.bounds[1]);
-    int x1 = std::min(startPos[0], endPos[0]) + 1;
+    int x1 = startPos[0] + 1;
+    int y1 = startPos[1] + 1;
+    int z1 = startPos[2] + 1;
+    int x2 = endPos[0];
+    int y2 = endPos[1];
+    int z2 = endPos[2];
+    /*int x1 = std::min(startPos[0], endPos[0]) + 1;
     int y1 = std::min(startPos[1], endPos[1]) + 1;
     int z1 = std::min(startPos[2], endPos[2]) + 1;
     int x2 = std::max(startPos[0], endPos[0]);
     int y2 = std::max(startPos[1], endPos[1]);
-    int z2 = std::max(startPos[2], endPos[2]);
+    int z2 = std::max(startPos[2], endPos[2]);*/
     if (x1 < 0)
         x1 = 0;
     if (y1 < 0)
@@ -240,16 +243,21 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
         y2 = yVoxels;
     if (z2 > zVoxels)
         z2 = zVoxels;
+    /*std::cout << "------------------------\n";
+    std::cout << "origin: " << origin << "\n";
+    std::cout << "start: " << AABB.bounds[0] << "\n";
+    std::cout << "end: " << AABB.bounds[1] << "\n";
     std::cout << "start: " << x1 << ", " << y1 << ", " << z1 << "\n";
     std::cout << "end: " << x2 << ", " << y2 << ", " << z2 << "\n";
-
+*/
     for (int i = x1; i < x2; i++){
         for (int j = y1; j < y2; j++){
             for (int k = z1; k < z2; k++){
 
-                float ii = (float)i * voxelLength + origin[0];
-                float jj = (float)j * voxelLength + origin[1];
-                float kk = (float)k * voxelLength + origin[2];
+                Vector worldPos = indexToPosition(i, j, k);
+                float ii = worldPos[0];
+                float jj = worldPos[1];
+                float kk = worldPos[2];
                 //Replace
                 if (operand == 0){
                     data->set(i, j, k, f.get()->eval(Vector(ii, jj, kk)));
@@ -387,7 +395,7 @@ int FloatGrid::bakeDot(const Vector& P, const float density){
 //-------------------------------------------------------------------------------------------------------------------------------
 //Frustum Grid
 //-------------------------------------------------------------------------------------------------------------------------------
-FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p) : 
+FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p) :
     camera(cam),
     zVoxelLength((camera.far - camera.near) / float(vz)),
     FloatGrid(f, cam.position, Vector(1, 1, 1), vx, vy, vz, p){
@@ -437,13 +445,10 @@ const Vector FrustumGrid::positionToIndex(const Vector& P) const{
     //Map P to a point on our image plane Q
     Vector normPos = P - camera.position;
     float dot = camera.axis_view * normPos;
-    if(dot < 0){
-        return Vector(-1, -1, -1);
-    }
     Vector q = normPos / dot;
     q = q - camera.axis_view;
     float u = q * camera.axis_right;
-    float v = q * camera.axis_up;  
+    float v = q * camera.axis_up;
     float x = 0.5 * ((u / tan(camera.FOV / 2.0)) + 1);
     float y = 0.5 * (((v*camera.aspect_ratio) / tan(camera.FOV / 2.0)) + 1);
     float z = (normPos.magnitude() - camera.near) / (camera.far - camera.near);
@@ -512,14 +517,15 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, cons
             for(int k = 0; k < zVoxels; k++){
 
                 //First convert our indices to world space
-                float ii = (float)i * voxelLength + origin[0];
-                float jj = (float)j * voxelLength + origin[1];
-                float kk = (float)k * voxelLength + origin[2];
-                //std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
+                Vector worldPos = indexToPosition(i, j, k);
+                float ii = worldPos[0];
+                float jj = worldPos[1];
+                float kk = worldPos[2];
+//std::cout << "(" << i << ", " << j << ", " << k << "): " << " (" << ii << ", " << jj << ", " << kk << ")\n";
+
 
                 //now evaluate the field at that point
                 data->set(i, j, k, rayMarchLightScatter(Vector(ii, jj, kk)));
-
             }
         }
     }
@@ -532,12 +538,32 @@ double DeepShadowMap::rayMarchLightScatter(const Vector& x){
     double densityInt = 0.0;
     double marchLen = 0.0;
 
-    lux::Vector toLight(sourceLight.pos - x);
+    Vector toLight(sourceLight.pos - x);
     double distanceToLight = toLight.magnitude();
     toLight.normalize();
-    lux::Vector x1(x);
+    Vector x1(x);
     //If density at our grid point is 0, there's no point in calculating the integral, as the point will never be lit
-    if(field.get()->eval(x1) <= 0.0) return 0;
+    //Check all points around our grid point
+    int mustEvaluate = 0;
+    for (float i = -1; i < 2; i++){
+        for (float j = -1; j < 2; j++){
+            for (float k = -1; k < 2; k++){
+                Vector x2(x1[0] + i*voxelLength, x1[1] + j*voxelLength, x1[2] + k*voxelLength);
+                /*std::cout << "------------------------------------\n";
+                std::cout << "i, j, k: " << i << ", " << j << ", " << k << "\n";
+                std::cout << x1 << "\n";
+                std::cout << x2 << "\n";
+                float density = field.get()->eval(x2);
+                std::cout << density << "\n";*/
+                if (field.get()->eval(x2) > 0.0){
+                    mustEvaluate = 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    if(mustEvaluate == 0) return 0.0;
 
     while (marchLen < distanceToLight){
 

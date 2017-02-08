@@ -61,6 +61,10 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
     double increaseMarchCounter = 0.0;
     Vector x = camera.eye() + n*start;
     while (marchLen < totalMarchLength){
+        if (T < 0.0000001){
+            break;
+        }
+
         //Check each volume
         float density = 0.0;
         for(int j = 0; j < volumes.size(); j++){
