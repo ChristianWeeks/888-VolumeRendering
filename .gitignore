@@ -19,6 +19,7 @@
 *.geo
 *.abc
 *.pyc
+feb*
 vdbTests
 output/*
 output*
@@ -30,3 +31,5 @@ swig/voyager_wrap.cxx
 img
 itCatalogSaves
 videos
+pyScenes
+nukeScenes

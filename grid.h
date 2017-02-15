@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include <boost/timer.hpp>
 #include <random>
+#include <omp.h>
 
 namespace lux {
 
@@ -121,6 +122,7 @@ class FloatGridBase :  public FloatGridPtr{
 
 class FrustumGrid: public FloatGrid{
     public:
+        FrustumGrid(float initValue, const Camera& cam, int vx, int vy, int vz, int p);
         FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p);
         ~FrustumGrid(){}
         void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);

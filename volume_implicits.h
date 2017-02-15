@@ -10,6 +10,7 @@
 #include <memory>
 
 namespace lux{
+const double PI = 3.14159265359;
 //-----------------------------------------------------------------------------
 // Setting up logic to be able to determine the data type of the gradient
 template <typename U>
@@ -164,7 +165,7 @@ class SphereDistVolume : public FloatVolume{
 
        const float eval( const Vector& P ) const {
            float d = r - P.magnitude();
-            if (d <= 0) return 0;
+            //if (d <= 0) return 0;
             return d;};
        const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
@@ -448,5 +449,67 @@ class ConeVolume : public FloatVolume{
        //cone angle at peak
        float angle;
 };
+
+class TorusVolume : public FloatVolume{
+    public:
+
+        TorusVolume(Vector normal, float rMaj, float rMin) :
+            n(normal.unitvector()),
+            rMajor2(rMaj*rMaj),
+            rMinor2(rMin*rMin){};
+       ~TorusVolume(){};
+
+       const float eval( const Vector& P ) const {
+           Vector xPerp = P - (P*n)*n;
+           float value = 4*rMajor2 * xPerp.magnitude()*xPerp.magnitude();
+           float radVal = std::pow(P.magnitude() * P.magnitude() + rMajor2 - rMinor2, 2.0);
+           return value - radVal;};
+       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+
+    private:
+       //axis
+       Vector n;
+       //inner radius
+       float rMajor2;
+       //Radius of solid part
+       float rMinor2;
+};
+
+class IcosohedronVolume : public FloatVolume{
+    public:
+        IcosohedronVolume() :
+            T(1.61803399){};
+       ~IcosohedronVolume(){};
+
+       const float eval( const Vector& P ) const {
+           if (P.magnitude() <= PI*1.8)
+               return std::cos(P[0] + T*P[1]) + std::cos(P[0] - T*P[1]) 
+                   + std::cos(P[1] + T*P[2]) + std::cos(P[1] - T*P[2]) 
+                   + std::cos(P[2] + T*P[0]) + std::cos(P[2] - T*P[0]) - 2.0;
+           return 0;};
+
+       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+
+    private:
+       //???
+       float T;
+};
+
+class SteinerPatchVolume : public FloatVolume{
+    public:
+        SteinerPatchVolume(){};
+       ~SteinerPatchVolume(){};
+
+       const float eval( const Vector& P ) const {
+           float x2 = P[0]*P[0];
+           float y2 = P[1]*P[1];
+           float z2 = P[2]*P[2];
+           return -1*(x2*y2 + x2*z2 + y2*z2 - P[0]*P[1]*P[2]);
+           };
+
+       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+};
+
+
 }
 #endif

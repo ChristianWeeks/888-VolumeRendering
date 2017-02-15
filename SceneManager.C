@@ -67,7 +67,7 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
 
         //Check each volume
         float density = 0.0;
-        for(int j = 0; j < volumes.size(); j++){
+        for(unsigned int j = 0; j < volumes.size(); j++){
             if(UNION_COLLISIONS){
                /* if(volumes[j].get()->eval(x) > 5.0){
                     std::cout << "---------------------------\n";
@@ -92,13 +92,13 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
 
             //March to each light
             if(ENABLE_LIGHTS){
-                for (int i = 0; i < lights.size(); i++){
+                for (unsigned int i = 0; i < lights.size(); i++){
                     double lightTransmissivity = rayMarchLightScatter(x, lights[i]);
                     C += lights[i].getColor(lightTransmissivity) * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
                 }
             }
             if(ENABLE_DSM){
-                for (int i = 0; i < lightGrids.size(); i++){
+                for (unsigned int i = 0; i < lightGrids.size(); i++){
                     double lightTransmissivity = rayMarchDSM(x, lightGrids[i].get());
                     if (lightTransmissivity > 0.0){
                         C += lightGrids[i].get()->sourceLight.getColor(lightTransmissivity) * lightTransmissivity * tVal; //colorVolumes[0].get()->eval(x);
@@ -155,7 +155,7 @@ double SceneManager::rayMarchLightScatter(const Vector& x, light l) const {
     while (marchLen < dist){
 
         float density = 0.0;
-        for(int j = 0; j < volumes.size(); j++){
+        for(unsigned int j = 0; j < volumes.size(); j++){
             if(UNION_COLLISIONS)
                 density = std::max(density, volumes[j].get()->eval(x));
             else if(ADD_COLLISIONS)
@@ -190,6 +190,7 @@ void SceneManager::renderImage(int frameNumber){
     //Fire a ray from eye through every pixel
     int progressMod = width / 10;
     for(int i = 0; i < width; i++){
+//#pragma omp parallel for
         for(int j = 0; j < height; j++){
            // std::cout << "3\n";
             img.setPixel(i, j, black);

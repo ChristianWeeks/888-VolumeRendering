@@ -251,6 +251,7 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
 
     for (int i = x1; i < x2; i++){
         for (int j = y1; j < y2; j++){
+#pragma omp parallel for
             for (int k = z1; k < z2; k++){
 
                 Vector worldPos = indexToPosition(i, j, k);
@@ -393,6 +394,30 @@ int FloatGrid::bakeDot(const Vector& P, const float density){
 //-------------------------------------------------------------------------------------------------------------------------------
 //Frustum Grid
 //-------------------------------------------------------------------------------------------------------------------------------
+FrustumGrid::FrustumGrid(float initValue, const Camera& cam, int vx, int vy, int vz, int p) :
+    camera(cam),
+    zVoxelLength((camera.far - camera.near) / float(vz)),
+    FloatGrid(FloatVolumeBase(new ConstantVolumef(initValue)), cam.position, Vector(1, 1, 1), vx, vy, vz, p){
+    std::cout << "------------------------------------------------------\n";
+    std::cout << "Initializing Frustum Grid\n";
+    float voxelRatio = float(vx) / float(vy);
+    if(voxelRatio != camera.aspect_ratio){
+        std::cerr << "Voxel ratio is not equivalent to aspect ratio; VR: " << voxelRatio << " AR:  " << camera.aspect_ratio << "\n";
+        //return;
+    }
+    boost::timer gridTimer;
+    for(int i = 0; i < xVoxels; i++){
+        for(int j = 0; j < yVoxels; j++){
+            for(int k = 0; k < zVoxels; k++){
+
+                data->set(i, j, k, initValue);
+            }
+        }
+    }
+    std::cout << "Frustum Grid Initialized in: " << gridTimer.elapsed() <<" seconds\n";
+    std::cout << "------------------------------------------------------\n";
+}
+
 FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p) :
     camera(cam),
     zVoxelLength((camera.far - camera.near) / float(vz)),

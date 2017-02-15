@@ -12,6 +12,10 @@ lux::FloatVolumeBase Box(const float rad, const float c)        { return lux::Fl
 lux::FloatVolumeBase Cylinder(const lux::Vector& n, const float rad) { return lux::FloatVolumeBase(new lux::CylinderVolume(n, rad));};
 lux::FloatVolumeBase Plane(const lux::Vector& n, const lux::Vector& c)    { return lux::FloatVolumeBase(new lux::PlaneVolume(n, c));};
 lux::FloatVolumeBase Cone(const lux::Vector& n, const float h, const float ang)    { return lux::FloatVolumeBase(new lux::ConeVolume(n, h, ang));};
+lux::FloatVolumeBase Torus(const lux::Vector& n, const float rMaj, const float rMin){return lux::FloatVolumeBase(new lux::TorusVolume(n, rMaj, rMin));};
+lux::FloatVolumeBase Icosohedron(){return lux::FloatVolumeBase(new lux::IcosohedronVolume());};
+lux::FloatVolumeBase SteinerPatch(){return lux::FloatVolumeBase(new lux::SteinerPatchVolume());};
+
 lux::FloatVolumeBase Noisef(SimplexNoiseObject s)               { return lux::FloatVolumeBase(new lux::SimplexNoiseVolume(s));};
 lux::FloatVolumeBase NoiseSpheref(const lux::Vector& pos, const SimplexNoiseObject s, const float rad, const float f) { return lux::FloatVolumeBase(new lux::NoiseSphere(pos, s, rad, f));};
 
@@ -31,6 +35,8 @@ lux::ColorVolumeBase Noisec(SimplexNoiseObject s, const float xO, const float yO
 //------------------------------------------------------------------------------------------------------------------------------
 lux::FloatVolumeBase Translatef( const lux::FloatVolumeBase& f,  const lux::Vector& d)       { return lux::FloatVolumeBase(new lux::TranslateVolumef(f, d));};
 lux::VectorVolumeBase Translatev( const lux::VectorVolumeBase& f,  const lux::Vector& d)       { return lux::VectorVolumeBase(new lux::TranslateVolumev(f, d));};
+lux::FloatVolumeBase Scalef( const lux::FloatVolumeBase& f,  const lux::Vector& p, const float s){return lux::FloatVolumeBase(new lux::Scale_S_Volume(f, p, s));};
+lux::FloatVolumeBase Rotatef(const lux::FloatVolumeBase f, const lux::Vector& p, const lux::Vector axis, float ang){return lux::FloatVolumeBase(new lux::Rotate_S_Volume(f, p, axis, ang));};
 
 //------------------------------------------------------------------------------------------------------------------------------
 // OPERATORS
@@ -58,7 +64,7 @@ lux::ColorVolumeBase ColorFromDensity(const lux::FloatVolumeBase& f, const lux::
 // GRIDS
 //-----------------------------------------------------------------------------------------------------------------------------
 lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& c, const lux::Vector& s, int vx, int vy, int vz, int p) { return lux::FloatGridBase(new lux::DensityGrid(f, c, s, vx, vy, vz, p));};
-lux::FloatGridBase FrustumGridf(const lux::FloatVolumeBase& f, const lux::Camera& cam, int vx, int vy, int vz, int p) { return lux::FloatGridBase(new lux::FrustumGrid(f, cam, vx, vy, vz, p));};
+lux::FloatGridBase FrustumGridf(const float f, const lux::Camera& cam, int vx, int vy, int vz, int p) { return lux::FloatGridBase(new lux::FrustumGrid(f, cam, vx, vy, vz, p));};
 
 lux::FloatVolumeBase GriddedVolf(const lux::FloatGridBase& g)   { 
     lux::FloatVolumeBase gridded(new lux::GriddedVolume(g));
