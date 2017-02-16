@@ -15,8 +15,8 @@ class AddVolumef: public FloatVolume{
             b(g){};
         ~AddVolumef(){};
 
-        const float eval( const Vector& P) const{ return a.get()->eval(P) + b.get()->eval(P);};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P) + b.get()->grad(P);};
+        float eval( const Vector& P) const{ return a.get()->eval(P) + b.get()->eval(P);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P) + b.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -30,8 +30,8 @@ class AddVolumev: public VectorVolume{
             b(g){};
         ~AddVolumev(){};
 
-        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) + b.get()->eval(P);};
-        const Matrix grad( const Vector& P) const{ return a.get()->grad(P) + b.get()->grad(P);};
+        Vector eval( const Vector& P) const{ return a.get()->eval(P) + b.get()->eval(P);};
+        Matrix grad( const Vector& P) const{ return a.get()->grad(P) + b.get()->grad(P);};
 
     private:
         VectorVolumeBase a;
@@ -45,8 +45,8 @@ class SubtractVolumef: public FloatVolume{
             b(g){};
         ~SubtractVolumef(){};
 
-        const float eval( const Vector& P) const{ return a.get()->eval(P) - b.get()->eval(P);};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P) - b.get()->grad(P);};
+        float eval( const Vector& P) const{ return a.get()->eval(P) - b.get()->eval(P);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P) - b.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -60,8 +60,8 @@ class SubtractVolumev: public VectorVolume{
             b(g){};
         ~SubtractVolumev(){};
 
-        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) - b.get()->eval(P);};
-        const Matrix grad( const Vector& P) const{ return a.get()->grad(P) - b.get()->grad(P);};
+        Vector eval( const Vector& P) const{ return a.get()->eval(P) - b.get()->eval(P);};
+        Matrix grad( const Vector& P) const{ return a.get()->grad(P) - b.get()->grad(P);};
 
     private:
         VectorVolumeBase a;
@@ -75,8 +75,8 @@ class MultVolumef: public FloatVolume{
             b(g){};
         ~MultVolumef(){};
 
-        const float eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
-        const Vector grad( const Vector& P) const{ return a.get()->eval(P) * b.get()->grad(P) + a.get()->grad(P) * b.get()->eval(P);};
+        float eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
+        Vector grad( const Vector& P) const{ return a.get()->eval(P) * b.get()->grad(P) + a.get()->grad(P) * b.get()->eval(P);};
 
     private:
         FloatVolumeBase a;
@@ -92,10 +92,10 @@ class ColorVolumeFromDensity: public ColorVolume{
             cMax(max){};
        ~ColorVolumeFromDensity(){}; 
 
-        const Color eval( const Vector& P) const{ 
+        Color eval( const Vector& P) const{ 
             float val = (a.get()->eval(P) - cMin) / (cMax - cMin);
             return c.getColor(val);};
-        const int grad( const Vector& P) const{ return 0;};
+        int grad( const Vector& P) const{ return 0;};
 
     private:
         FloatVolumeBase a;
@@ -111,8 +111,8 @@ class ColorVolumeFromDensity: public ColorVolume{
             b(g){};
         ~MultVolumev(){};
 
-        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
-        const Matrix grad( const Vector& P) const{ return a.get()->eval(P) * b.get()->grad(P) + a.get()->grad(P) * b.get()->eval(P);};
+        Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
+        Matrix grad( const Vector& P) const{ return a.get()->eval(P) * b.get()->grad(P) + a.get()->grad(P) * b.get()->eval(P);};
 
     private:
         VectorVolumeBase a;
@@ -130,8 +130,8 @@ class Mult_SV_Volume: public VectorVolume{
             b(g){};
         ~Mult_SV_Volume(){};
 
-        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
-        const Matrix grad( const Vector& P) const{ return b.get()->grad(P);};
+        Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
+        Matrix grad( const Vector& P) const{ return b.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -151,8 +151,8 @@ class Advect_SL_Volume: public FloatVolume{
             b(g){};
         Advect_SL_Volume(){};
 
-        const float eval( const Vector& P) const{ return a.get()->eval(P - b.get()->eval(P) * advectTime);};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
+        float eval( const Vector& P) const{ return a.get()->eval(P - b.get()->eval(P) * advectTime);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
         float advectTime;
     private:
@@ -174,11 +174,11 @@ class Advect_MMC_Volume: public FloatVolume{
         ~Advect_MMC_Volume(){};
         void setTime(const float newTime){ advectTime = newTime;};
 
-        const float eval( const Vector& P) const{
+        float eval( const Vector& P) const{
             float semiLagrangian = a.get()->eval(P - b.get()->eval(P) * advectTime);
             float errorTerm = a.get()->eval(P) - semiLagrangian;
             return semiLagrangian - errorTerm * 0.5;};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -195,8 +195,8 @@ class Advect_MMC_Volume: public FloatVolume{
             b(g){};
         ~Mult_VM_Volume(){};
 
-        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};//TODO
-        const Matrix grad( const Vector& P) const{ return b.get()->grad(P);};//TODO
+        Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};//TODO
+        Matrix grad( const Vector& P) const{ return b.get()->grad(P);};//TODO
 
     private:
         VectorVolumeBase a;
@@ -210,8 +210,8 @@ class Mult_MV_Volume: public Volume<Matrix>{
             b(g){};
         ~Mult_MV_Volume(){};
 
-        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};//TODO
-        const Matrix grad( const Vector& P) const{ return b.get()->grad(P);};//TODO: Gradient of matrix does not matter
+        Vector eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};//TODO
+        Matrix grad( const Vector& P) const{ return b.get()->grad(P);};//TODO: Gradient of matrix does not matter
 
     private:
         std::shared_ptr<Volume<Matrix> > a;
@@ -225,8 +225,8 @@ class DivideVolume: public FloatVolume{
             b(g){};
         ~DivideVolume(){};
 
-        const float eval( const Vector& P) const{ return a.get()->eval(P) / b.get()->eval(P);};
-        const Vector grad( const Vector& P) const{
+        float eval( const Vector& P) const{ return a.get()->eval(P) / b.get()->eval(P);};
+        Vector grad( const Vector& P) const{
             return (a.get()->grad(P) * b.get()->eval(P) - a.get()->eval(P) * b.get()->grad(P)) /
                 (b.get()->grad(P) * b.get()->grad(P));};
 
@@ -242,8 +242,8 @@ class Divide_SV_Volume: public VectorVolume{
             b(g){};
         ~Divide_SV_Volume(){};
 
-        const  Vector eval( const Vector& P) const{ return b.get()->eval(P) / a.get()->eval(P);};
-        const Matrix grad( const Vector& P) const{ return b.get()->grad(P);};
+        Vector eval( const Vector& P) const{ return b.get()->eval(P) / a.get()->eval(P);};
+        Matrix grad( const Vector& P) const{ return b.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -256,8 +256,8 @@ class ExpVolumef: public FloatVolume{
             a(f){};
         ~ExpVolumef(){};
 
-        const float eval( const Vector& P) const{ return std::exp(a.get()->eval(P));};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P) * eval(P);};
+        float eval( const Vector& P) const{ return std::exp(a.get()->eval(P));};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P) * eval(P);};
 
     private:
         FloatVolumeBase a;
@@ -269,13 +269,13 @@ class ExpVolumev: public VectorVolume{
             a(f){};
         ~ExpVolumev(){};
 
-        const  Vector eval( const Vector& P) const{
+        Vector eval( const Vector& P) const{
             Vector result = a.get()->eval(P);
             result[0] = std::exp(result[0]);
             result[1] = std::exp(result[1]);
             result[2] = std::exp(result[2]);
             return result;};
-        const Matrix grad( const Vector& P) const{ return /*eval(P) * */a.get()->grad(P);};
+        Matrix grad( const Vector& P) const{ return /*eval(P) * */a.get()->grad(P);};
 
     private:
         VectorVolumeBase a;
@@ -291,8 +291,8 @@ class UnionVolumef: public FloatVolume{
             b(g){};
         ~UnionVolumef(){};
 
-        const float eval( const Vector& P) const{ return std::max(a.get()->eval(P), b.get()->eval(P));};
-        const Vector grad( const Vector& P) const{
+        float eval( const Vector& P) const{ return std::max(a.get()->eval(P), b.get()->eval(P));};
+        Vector grad( const Vector& P) const{
             if(a.get()->eval(P) > b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -313,8 +313,8 @@ class UnionVolumev: public VectorVolume{
             b(g){};
         ~UnionVolumev(){};
 
-        const  Vector eval( const Vector& P) const{ return std::max(a.get()->eval(P), b.get()->eval(P));};
-        const Matrix grad( const Vector& P) const{
+        Vector eval( const Vector& P) const{ return std::max(a.get()->eval(P), b.get()->eval(P));};
+        Matrix grad( const Vector& P) const{
             if(a.get()->eval(P) > b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -335,8 +335,8 @@ class IntersectVolumef: public FloatVolume{
             b(g){};
         ~IntersectVolumef(){};
 
-        const float eval( const Vector& P) const{ return std::min(a.get()->eval(P), b.get()->eval(P));};
-        const Vector grad( const Vector& P) const{
+        float eval( const Vector& P) const{ return std::min(a.get()->eval(P), b.get()->eval(P));};
+        Vector grad( const Vector& P) const{
             if(a.get()->eval(P) < b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -357,8 +357,8 @@ class IntersectVolumev: public VectorVolume{
             b(g){};
         ~IntersectVolumev(){};
 
-        const  Vector eval( const Vector& P) const{ return std::min(a.get()->eval(P), b.get()->eval(P));};
-        const Matrix grad( const Vector& P) const{
+        Vector eval( const Vector& P) const{ return std::min(a.get()->eval(P), b.get()->eval(P));};
+        Matrix grad( const Vector& P) const{
             if(a.get()->eval(P) < b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -379,8 +379,8 @@ class CutoutVolumef: public FloatVolume{
             b(g){};
         ~CutoutVolumef(){};
 
-        const float eval( const Vector& P) const{ return std::min(a.get()->eval(P), -b.get()->eval(P));};
-        const Vector grad( const Vector& P) const{
+        float eval( const Vector& P) const{ return std::min(a.get()->eval(P), -b.get()->eval(P));};
+        Vector grad( const Vector& P) const{
             if(a.get()->eval(P) < b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -401,8 +401,8 @@ class CutoutVolumev: public VectorVolume{
             b(g){};
         ~CutoutVolumev(){};
 
-        const  Vector eval( const Vector& P) const{ return std::min(a.get()->eval(P), -b.get()->eval(P));};
-        const Matrix grad( const Vector& P) const{
+        Vector eval( const Vector& P) const{ return std::min(a.get()->eval(P), -b.get()->eval(P));};
+        Matrix grad( const Vector& P) const{
             if(a.get()->eval(P) < b.get()->eval(P)){
                 return a.get()->grad(P);
             }
@@ -423,8 +423,8 @@ class SinVolume: public FloatVolume{
             a(f){};
         ~SinVolume(){};
 
-        const float eval( const Vector& P) const{ return std::sin(a.get()->eval(P));};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P) * std::cos(a.get()->eval(P));};
+        float eval( const Vector& P) const{ return std::sin(a.get()->eval(P));};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P) * std::cos(a.get()->eval(P));};
 
     private:
         FloatVolumeBase a;
@@ -436,8 +436,8 @@ class CosVolume: public FloatVolume{
             a(f){};
         ~CosVolume(){};
 
-        const float eval( const Vector& P) const{ return std::cos(a.get()->eval(P));};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P) * -std::sin(a.get()->eval(P));};
+        float eval( const Vector& P) const{ return std::cos(a.get()->eval(P));};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P) * -std::sin(a.get()->eval(P));};
 
     private:
         FloatVolumeBase a;
@@ -453,8 +453,8 @@ class DotProductVolume: public FloatVolume{
             b(g){};
         ~DotProductVolume(){};
 
-        const float eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
-        const Vector grad( const Vector& P) const{ return Vector(0,0,0);};
+        float eval( const Vector& P) const{ return a.get()->eval(P) * b.get()->eval(P);};
+        Vector grad( const Vector& P) const{ return Vector(0,0,0);};
 
     private:
         VectorVolumeBase a;
@@ -468,8 +468,8 @@ class CrossProductVolume: public VectorVolume{
             b(g){};
         ~CrossProductVolume(){};
 
-        const  Vector eval( const Vector& P) const{ return a.get()->eval(P) ^ b.get()->eval(P);};
-        const Matrix grad( const Vector& P) const{ return a.get()->grad(P);};
+        Vector eval( const Vector& P) const{ return a.get()->eval(P) ^ b.get()->eval(P);};
+        Matrix grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
         VectorVolumeBase a;
@@ -485,8 +485,8 @@ class TranslateVolumef: public FloatVolume{
             delta(d){};
         ~TranslateVolumef(){};
 
-        const float eval( const Vector& P) const{ return a.get()->eval(P - delta);};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P - delta);};
+        float eval( const Vector& P) const{ return a.get()->eval(P - delta);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P - delta);};
 
     private:
         FloatVolumeBase a;
@@ -500,8 +500,8 @@ class TranslateVolumev: public VectorVolume{
             delta(d){};
         ~TranslateVolumev(){};
 
-        const  Vector eval( const Vector& P) const{ return a.get()->eval(P - delta);};
-        const Matrix grad( const Vector& P) const{ return a.get()->grad(P - delta);};
+        Vector eval( const Vector& P) const{ return a.get()->eval(P - delta);};
+        Matrix grad( const Vector& P) const{ return a.get()->grad(P - delta);};
 
     private:
         VectorVolumeBase a;
@@ -516,8 +516,8 @@ class Scale_S_Volume: public FloatVolume{
             scaleFactor(s){};
         ~Scale_S_Volume(){};
 
-        const float eval( const Vector& P) const{ return a.get()->eval(((P - pivot) / scaleFactor) + pivot);};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(((P - pivot) / scaleFactor) + pivot);};
+        float eval( const Vector& P) const{ return a.get()->eval(((P - pivot) / scaleFactor) + pivot);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(((P - pivot) / scaleFactor) + pivot);};
 
     private:
         FloatVolumeBase a;
@@ -533,8 +533,8 @@ class Scale_V_Volume: public VectorVolume{
             scaleFactor(s){};
         ~Scale_V_Volume(){};
 
-        const  Vector eval( const Vector& P) const{ return scaleFactor * a.get()->eval(((P - pivot) / scaleFactor) + pivot);};
-        const Matrix grad( const Vector& P) const{ return a.get()->grad(((P - pivot) / scaleFactor) + pivot);};
+        Vector eval( const Vector& P) const{ return scaleFactor * a.get()->eval(((P - pivot) / scaleFactor) + pivot);};
+        Matrix grad( const Vector& P) const{ return a.get()->grad(((P - pivot) / scaleFactor) + pivot);};
 
     private:
         VectorVolumeBase a;
@@ -568,13 +568,13 @@ class Rotate_S_Volume: public FloatVolume{
             angle(ang){};
         ~Rotate_S_Volume(){};
 
-        const float eval( const Vector& P) const{
+        float eval( const Vector& P) const{
             Vector rotatedPoint = P * std::cos(angle);
             rotatedPoint += rotAxis * (P * rotAxis * (1 - std::cos(angle)));
             rotatedPoint += P ^ (rotAxis * std::sin(angle));
             return a.get()->eval(rotatedPoint);
         };
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -593,9 +593,9 @@ class BlinnBlend_S_Volume: public FloatVolume{
             beta(Beta){};
         ~BlinnBlend_S_Volume(){};
 
-        const float eval( const Vector& P) const{
+        float eval( const Vector& P) const{
             return std::exp(a.get()->eval(P) / sf) + std::exp(b.get()->eval(P) / sg) - beta;}
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -612,10 +612,10 @@ class MaskVolume: public FloatVolume{
             a(f){};
         ~MaskVolume(){};
 
-        const float eval( const Vector& P) const{
+        float eval( const Vector& P) const{
             if (a.get()->eval(P) > 0.0) return 1;
             return 0;};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -628,11 +628,11 @@ class ReduceVolume: public FloatVolume{
             cutoff(c){};
         ~ReduceVolume(){};
 
-        const float eval( const Vector& P) const{
+        float eval( const Vector& P) const{
             float val = a.get()->eval(P);
             if (val < cutoff) return 0;
             return val;};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
         FloatVolumeBase a;
@@ -650,12 +650,12 @@ class ClampVolume: public FloatVolume{
             maxVal(Max){};
         ~ClampVolume(){};
 
-        const float eval( const Vector& P) const{
+        float eval( const Vector& P) const{
             float val = a.get()->eval(P);
             if (val < minVal) return minVal;
             else if (val > maxVal) return maxVal;
             return val;};
-        const Vector grad( const Vector& P) const{ return a.get()->grad(P);};
+        Vector grad( const Vector& P) const{ return a.get()->grad(P);};
 
     private:
         FloatVolumeBase a;

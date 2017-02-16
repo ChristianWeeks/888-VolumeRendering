@@ -19,6 +19,8 @@
 *.geo
 *.abc
 *.pyc
+FastNoise.cpp
+FastNoise.h
 feb*
 vdbTests
 output/*

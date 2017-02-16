@@ -76,14 +76,14 @@ void SparseGrid::set(int i, int j, int k, float value){
 FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const Vector& s, const int& xv, const int& yv, const int& zv, const int& partitionSize) :
     center(c),
     length(s),
-    field(f),
-    origin(c - (s/2.0)),
     stampXMin(-1),
     stampXMax(1),
     stampYMin(-1),
     stampYMax(1),
     stampZMin(-1),
     stampZMax(1),
+    field(f),
+    origin(c - (s/2.0)),
     xVoxels(xv),
     yVoxels(yv),
     zVoxels(zv),
@@ -395,9 +395,9 @@ int FloatGrid::bakeDot(const Vector& P, const float density){
 //Frustum Grid
 //-------------------------------------------------------------------------------------------------------------------------------
 FrustumGrid::FrustumGrid(float initValue, const Camera& cam, int vx, int vy, int vz, int p) :
+    FloatGrid(FloatVolumeBase(new ConstantVolumef(initValue)), cam.position, Vector(1, 1, 1), vx, vy, vz, p),
     camera(cam),
-    zVoxelLength((camera.far - camera.near) / float(vz)),
-    FloatGrid(FloatVolumeBase(new ConstantVolumef(initValue)), cam.position, Vector(1, 1, 1), vx, vy, vz, p){
+    zVoxelLength((camera.far - camera.near) / float(vz)){
     std::cout << "------------------------------------------------------\n";
     std::cout << "Initializing Frustum Grid\n";
     float voxelRatio = float(vx) / float(vy);
@@ -419,9 +419,9 @@ FrustumGrid::FrustumGrid(float initValue, const Camera& cam, int vx, int vy, int
 }
 
 FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p) :
+    FloatGrid(f, cam.position, Vector(1, 1, 1), vx, vy, vz, p),
     camera(cam),
-    zVoxelLength((camera.far - camera.near) / float(vz)),
-    FloatGrid(f, cam.position, Vector(1, 1, 1), vx, vy, vz, p){
+    zVoxelLength((camera.far - camera.near) / float(vz)){
     std::cout << "------------------------------------------------------\n";
     std::cout << "Initializing Frustum Grid\n";
     float voxelRatio = float(vx) / float(vy);
@@ -429,9 +429,11 @@ FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, i
         std::cerr << "Voxel ratio is not equivalent to aspect ratio; VR: " << voxelRatio << " AR:  " << camera.aspect_ratio << "\n";
         //return;
     }
-    boost::timer gridTimer;
+    double startTime, endTime;
+    startTime = omp_get_wtime();
     for(int i = 0; i < xVoxels; i++){
         for(int j = 0; j < yVoxels; j++){
+#pragma omp parallel for
             for(int k = 0; k < zVoxels; k++){
 
                 //First convert our indices to world space
@@ -446,7 +448,8 @@ FrustumGrid::FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, i
             }
         }
     }
-    std::cout << "Frustum Grid Initialized in: " << gridTimer.elapsed() <<" seconds\n";
+    endTime = omp_get_wtime();
+    std::cout << "Frustum Grid Initialized in: " << (startTime - endTime) <<" seconds\n";
     std::cout << "------------------------------------------------------\n";
 }
 
@@ -557,6 +560,7 @@ void FrustumGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, 
 */
     for (int i = x1; i < x2; i++){
         for (int j = y1; j < y2; j++){
+#pragma omp parallel for 
             for (int k = z1; k < z2; k++){
 
                 Vector worldPos = indexToPosition(i, j, k);
@@ -624,10 +628,12 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, cons
 
     std::cout << "------------------------------------------------------\n";
     std::cout << "Building Deep Shadow Map\n";
-    boost::timer gridTimer;
+    double startTime, endTime;
+    startTime = omp_get_wtime();
     //stamp the values into our grid
     for(int i = 0; i < xVoxels; i++){
         for(int j = 0; j < yVoxels; j++){
+#pragma omp parallel for
             for(int k = 0; k < zVoxels; k++){
 
                 //First convert our indices to world space
@@ -643,7 +649,8 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, cons
             }
         }
     }
-    std::cout << "Deep Shadow Map Initialized in: " << gridTimer.elapsed() <<" seconds\n";
+    endTime = omp_get_wtime();
+    std::cout << "Deep Shadow Map Initialized in: " << (endTime - startTime) <<" seconds\n";
     std::cout << "------------------------------------------------------\n";
 }
 

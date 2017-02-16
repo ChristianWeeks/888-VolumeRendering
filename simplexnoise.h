@@ -17,6 +17,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "FastNoise.h"
 
 #ifndef SIMPLEX_H_
 #define SIMPLEX_H_
@@ -206,7 +207,13 @@ class SimplexNoiseObject {
             highBound(max),
             xOffset(ox),
             yOffset(oy),
-            zOffset(oz){};
+            zOffset(oz){
+                fNoise.SetNoiseType(FastNoise::SimplexFractal);
+                fNoise.SetFractalOctaves(o);
+                fNoise.SetFractalGain(p);
+                fNoise.SetFrequency(f);
+                fNoise.SetFractalLacunarity(fj);
+            };
         SimplexNoiseObject(int o, float p, float f, float fj, float min, float max, float of) :
             octaves(o),
             roughness(p),
@@ -216,11 +223,19 @@ class SimplexNoiseObject {
             highBound(max),
             xOffset(of),
             yOffset(of),
-            zOffset(of){};
+            zOffset(of){
+                fNoise.SetNoiseType(FastNoise::SimplexFractal);
+                fNoise.SetInterp(FastNoise::Linear);
+                fNoise.SetFractalOctaves(o);
+                fNoise.SetFractalGain(p);
+                fNoise.SetFrequency(f);
+                fNoise.SetFractalLacunarity(fj);
+            };
         ~SimplexNoiseObject(){};
 
-        const float eval(float x, float y, float z) const{
-            return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x + xOffset, y + yOffset, z + zOffset);};
+        float eval(float x, float y, float z) const {
+            return fNoise.GetSimplexFractal(x, y, z) * (highBound - lowBound) / 2 + (highBound + lowBound) / 2;};
+            //return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x + xOffset, y + yOffset, z + zOffset);};
 
         std::vector<std::string> getAnnotation(){
             std::vector<std::string> annoVec;
@@ -242,6 +257,7 @@ class SimplexNoiseObject {
         }
 
     private:
+        FastNoise fNoise;
         const int octaves;
         const float roughness;
         const float frequency;

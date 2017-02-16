@@ -52,8 +52,8 @@ class FloatVolume{
 
    virtual ~FloatVolume(){};
 
-   virtual const float eval( const Vector& P ) const { float base = 0; return base; };
-   virtual const Vector grad( const Vector& P ) const { Vector G; return G;};
+   virtual float eval( const Vector& P ) const { float base = 0; return base; };
+   virtual Vector grad( const Vector& P ) const { Vector G; return G;};
 };
 
 class VectorVolume{
@@ -63,8 +63,8 @@ class VectorVolume{
 
    virtual ~VectorVolume(){};
 
-   virtual const Vector eval( const Vector& P ) const { Vector base; return base; };
-   virtual const Matrix grad( const Vector& P ) const { Matrix G; return G;};
+   virtual Vector eval( const Vector& P ) const { Vector base; return base; };
+   virtual Matrix grad( const Vector& P ) const { Matrix G; return G;};
 };
 
 class ColorVolume{
@@ -74,8 +74,8 @@ class ColorVolume{
 
    virtual ~ColorVolume(){};
 
-   virtual const Color eval( const Vector& P ) const { Color base; return base; };
-   virtual const int grad( const Vector& P ) const {return 0;};
+   virtual Color eval( const Vector& P ) const { Color base; return base; };
+   virtual int grad( const Vector& P ) const {return 0;};
 };
 
 typedef std::shared_ptr<FloatVolume> FloatVolumePtr;
@@ -137,8 +137,8 @@ class ConstantVolumef : public FloatVolume{
         ConstantVolumef(float val) : value(val){}
        ~ConstantVolumef(){}
 
-       const float eval( const Vector& P ) const { return value;};
-       const Vector grad( const Vector& P ) const { Vector G(0,0,0); return G;};
+       float eval( const Vector& P ) const { return value;};
+       Vector grad( const Vector& P ) const { Vector G(0,0,0); return G;};
 
     private:
        float value;
@@ -150,8 +150,8 @@ class ConstantVolumev : public VectorVolume{
         ConstantVolumev(float x, float y, float z) : value(x, y, z){}
        ~ConstantVolumev(){}
 
-       const Vector eval( const Vector& P ) const { return value;};
-       const Matrix grad( const Vector& P ) const { Matrix G; return G;};
+       Vector eval( const Vector& P ) const { return value;};
+       Matrix grad( const Vector& P ) const { Matrix G; return G;};
 
     private:
        Vector value;
@@ -163,11 +163,11 @@ class SphereDistVolume : public FloatVolume{
         SphereDistVolume(float rad) : r(rad){};
        ~SphereDistVolume(){};
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
            float d = r - P.magnitude();
             //if (d <= 0) return 0;
             return d;};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        float r;
@@ -178,10 +178,10 @@ class SphereVolume : public FloatVolume{
         SphereVolume(float rad) : r(rad){};
        ~SphereVolume(){};
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
             if ((r - P.magnitude()) <= 0) return 0;
             return 1;};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        float r;
@@ -198,7 +198,7 @@ class PyroSphereVolume : public FloatVolume{
             simplex(s){}
        ~PyroSphereVolume(){}
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
             //calculate distance from sphere center. Assume sphere center to be (0, 0, 0)
             float d = P.magnitude();
             //If distance is less than the radius, we are inside there sphere and have full density.
@@ -215,7 +215,7 @@ class PyroSphereVolume : public FloatVolume{
             float f = r - d + dScale * std::pow(std::abs(simplex.eval(n[0], n[1], n[2])), exponent);
             if(f > 0) return 1;
             return 0;};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        float r;
@@ -233,7 +233,7 @@ class RadialVectorVolume : public VectorVolume{
             magnitude(n){};
         ~RadialVectorVolume(){};
 
-        const Vector eval(const Vector& P) const {
+        Vector eval(const Vector& P) const {
             Vector v = P - origin;
             //Magnitude scales our vector, normalized determines if we start with a normalized vector or not.
             //So, to get a unit vector at all points, n = 1, m = 1
@@ -243,7 +243,7 @@ class RadialVectorVolume : public VectorVolume{
                 v = v.unitvector();
             return v * magnitude;
         };
-        const Matrix grad(const Vector& P) const { Matrix G; return G;};
+        Matrix grad(const Vector& P) const { Matrix G; return G;};
 
     private:
         Vector origin;
@@ -256,9 +256,9 @@ class SimplexNoiseVolume : public FloatVolume{
         SimplexNoiseVolume(SimplexNoiseObject s) : simplex(s){};
         ~SimplexNoiseVolume(){};
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
            return simplex.eval(P[0], P[1], P[2]);};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        SimplexNoiseObject simplex;
@@ -275,7 +275,7 @@ class FloatGradientVolume : public FloatVolume{
 
         ~FloatGradientVolume(){};
 
-        const float eval(const Vector& P) const{
+        float eval(const Vector& P) const{
             //find the scalar projection onto our line
             Vector u = (direction*length) + position;
             Vector v = P - position;
@@ -285,7 +285,7 @@ class FloatGradientVolume : public FloatVolume{
             //then interpolate to between the min and max values
             return (scalarProjection / length) * (max - min);
         };
-        const Vector grad(const Vector& P) const { Vector G(0, 0, 0); return G;};
+        Vector grad(const Vector& P) const { Vector G(0, 0, 0); return G;};
 
     private:
         const Vector direction;
@@ -304,7 +304,7 @@ class NoiseSphere : public FloatVolume{
             falloffStart(f){};
         ~NoiseSphere(){};
 
-        const float eval(const Vector& P) const{
+        float eval(const Vector& P) const{
             float value = simplex.eval(P[0], P[1], P[2]);
             if(value > 0)
                 value = 1;
@@ -318,7 +318,7 @@ class NoiseSphere : public FloatVolume{
                 return 0;
             return value * (1 - ((dist - falloffStart) / (r - falloffStart)));
         };
-        const Vector grad(const Vector& P) const {Vector G(0, 0, 0); return G;};
+        Vector grad(const Vector& P) const {Vector G(0, 0, 0); return G;};
 
     private:
         const Vector position;
@@ -336,14 +336,14 @@ class SimplexNoiseVectorVolume : public VectorVolume{
             zOffset(zO){};
         ~SimplexNoiseVectorVolume(){};
 
-       const Vector eval( const Vector& P ) const {
+       Vector eval( const Vector& P ) const {
            Vector v;
            v[0] = simplex.eval(P[0] + xOffset, P[1] + xOffset, P[2] + xOffset);
            v[1] = simplex.eval(P[0] + yOffset, P[1] + yOffset, P[2] + yOffset);
            v[2] = simplex.eval(P[0] + zOffset, P[1] + zOffset, P[2] + zOffset);
 
            return v;};
-       const Matrix grad( const Vector& P ) const { Matrix G; return G;};
+       Matrix grad( const Vector& P ) const { Matrix G; return G;};
 
     private:
        SimplexNoiseObject simplex;
@@ -360,13 +360,13 @@ class SimplexNoiseColorVolume : public ColorVolume{
             bOffset(z){};
         ~SimplexNoiseColorVolume(){};
 
-       const Color eval( const Vector& P ) const {
+       Color eval( const Vector& P ) const {
            Color c;
            c[0] = simplex.eval(P[0] + rOffset, P[1] + rOffset, P[2] + rOffset);
            c[1] = simplex.eval(P[0] + gOffset, P[1] + gOffset, P[2] + gOffset);
            c[2] = simplex.eval(P[0] + bOffset, P[1] + bOffset, P[2] + bOffset);
            return c;};
-       const int grad( const Vector& P ) const {return 0;};
+       int grad( const Vector& P ) const {return 0;};
 
     private:
        SimplexNoiseObject simplex;
@@ -381,10 +381,10 @@ class BoxVolume : public FloatVolume{
         BoxVolume(float rad, float c) : r(rad), cExp(c){}
        ~BoxVolume(){}
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
            float exponent = 2 * cExp;
            return pow(r, exponent) - pow(P[0], exponent) - pow(P[1], exponent) - pow(P[2], exponent);};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        float r;
@@ -399,10 +399,10 @@ class CylinderVolume : public FloatVolume{
             r(rad){};
        ~CylinderVolume(){}
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
             Vector v = P - (P * n)*n;
             return r - v.magnitude();};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        Vector n;
@@ -417,8 +417,8 @@ class PlaneVolume : public FloatVolume{
             c(center){};
        ~PlaneVolume(){}
 
-       const float eval( const Vector& P ) const { return -(P - c) * n;};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       float eval( const Vector& P ) const { return -(P - c) * n;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        Vector n;
@@ -434,12 +434,12 @@ class ConeVolume : public FloatVolume{
             angle(ang){};
        ~ConeVolume(){};
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
             float dot = P * n;
             if(dot < 0) return dot;
             else if (dot > h) return h - dot;
             else return dot - P.magnitude()*std::cos(angle);};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        //axis
@@ -459,12 +459,12 @@ class TorusVolume : public FloatVolume{
             rMinor2(rMin*rMin){};
        ~TorusVolume(){};
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
            Vector xPerp = P - (P*n)*n;
            float value = 4*rMajor2 * xPerp.magnitude()*xPerp.magnitude();
            float radVal = std::pow(P.magnitude() * P.magnitude() + rMajor2 - rMinor2, 2.0);
            return value - radVal;};
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        //axis
@@ -481,14 +481,14 @@ class IcosohedronVolume : public FloatVolume{
             T(1.61803399){};
        ~IcosohedronVolume(){};
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
            if (P.magnitude() <= PI*1.8)
                return std::cos(P[0] + T*P[1]) + std::cos(P[0] - T*P[1]) 
                    + std::cos(P[1] + T*P[2]) + std::cos(P[1] - T*P[2]) 
                    + std::cos(P[2] + T*P[0]) + std::cos(P[2] - T*P[0]) - 2.0;
            return 0;};
 
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
        //???
@@ -500,14 +500,14 @@ class SteinerPatchVolume : public FloatVolume{
         SteinerPatchVolume(){};
        ~SteinerPatchVolume(){};
 
-       const float eval( const Vector& P ) const {
+       float eval( const Vector& P ) const {
            float x2 = P[0]*P[0];
            float y2 = P[1]*P[1];
            float z2 = P[2]*P[2];
            return -1*(x2*y2 + x2*z2 + y2*z2 - P[0]*P[1]*P[2]);
            };
 
-       const Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 };
 
 

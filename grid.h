@@ -81,15 +81,16 @@ class FloatGrid{
         void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
         virtual void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
 
+
+        const Vector center;
+        const Vector length;
+
         float stampXMin;
         float stampXMax;
         float stampYMin;
         float stampYMax;
         float stampZMin;
         float stampZMax;
-
-        const Vector center;
-        const Vector length;
     protected:
 
         FloatVolumeBase field;
@@ -173,8 +174,8 @@ class GriddedVolume: public FloatVolume{
         GriddedVolume(FloatGridBase grid) : g(grid){};
         ~GriddedVolume(){};
 
-        const float eval( const Vector& P) const{ return g.get()->trilinearInterpolate(P);};
-        const Vector grad( const Vector& P) const{ return Vector(0, 0, 0);};
+        float eval( const Vector& P) const{ return g.get()->trilinearInterpolate(P);};
+        Vector grad( const Vector& P) const{ return Vector(0, 0, 0);};
 
     private:
         FloatGridBase g;

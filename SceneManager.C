@@ -180,26 +180,30 @@ double SceneManager::rayMarchDSM(const Vector& x, const DeepShadowMap* dsm) cons
 
 void SceneManager::renderImage(int frameNumber){
     boost::timer renderTimer;
+    double startTime = omp_get_wtime();
     if (boundingboxes.size() == 0){
         std::cout << "Warning: No bounding boxes pushed.\n";
         return;
     }
     Image img;
     img.reset(width, height, 4);
-    std::vector<float> black = {0.5, 0.5, 0.5, 0.0};
     //Fire a ray from eye through every pixel
     int progressMod = width / 10;
     for(int i = 0; i < width; i++){
-//#pragma omp parallel for
+#pragma omp parallel for
         for(int j = 0; j < height; j++){
-           // std::cout << "3\n";
-            img.setPixel(i, j, black);
+
+
+            //Get our pixel coordinates in the range of 0 - 1
             double normalizedPixelCoordX = (double)i / (double)width;
             double normalizedPixelCoordY = (double)j / (double)height;
             Vector r = camera.view(normalizedPixelCoordX, normalizedPixelCoordY);
             Ray ray(camera.eye(), r);
             float startMarch = 1000.0;
             float endMarch = -1.0;
+
+            //Test for intersections with every bounding box in the scene, and then march from the closest to the farthest intersection point
+            //This method will not skip gaps between bounding boxes
             for(int k = 0; k < boundingboxes.size(); k++){
                 std::vector<float> intersects = boundingboxes[k].intersect(ray, 0, 50);
                 if(intersects.size() == 2){
@@ -211,9 +215,10 @@ void SceneManager::renderImage(int frameNumber){
             }
 
             if(endMarch != -1.0){
-                Color C = rayMarch(r, startMarch, endMarch);
-                std::vector<float> colorVector= {static_cast<float>(C[0]), static_cast<float>(C[1]), static_cast<float>(C[2]), static_cast<float>(C[3])};
-                img.setPixel( i, j, colorVector);
+              Color C = rayMarch(r, startMarch, endMarch);
+              //Color C(1.0, 0.0, 0.0, 1.0);
+              std::vector<float> colorVector= {static_cast<float>(C[0]), static_cast<float>(C[1]), static_cast<float>(C[2]), static_cast<float>(C[3])};
+              img.setPixel( i, j, colorVector);
             }
 
         }
@@ -244,7 +249,7 @@ void SceneManager::renderImage(int frameNumber){
     if(WRITE_RENDER_ANNOTATION){
         std::ostringstream ss1;
         renderlog.addLine("Render Time");
-        ss1 << renderTimer.elapsed();
+        ss1 << (omp_get_wtime() - startTime);
         renderlog.addLine(ss1.str());
         renderlog.writeToImage(filename);
     }

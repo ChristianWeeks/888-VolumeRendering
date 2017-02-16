@@ -9,6 +9,7 @@
 //#include "ColorSlider.h"
 
 #include <boost/timer.hpp>
+#include <omp.h>
 #include <vector>
 #include <stdio.h>
 #include <iomanip>

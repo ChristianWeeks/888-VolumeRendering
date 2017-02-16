@@ -23,7 +23,7 @@ void Camera::setEyeViewUp( const Vector& eye, const Vector& view, const Vector& 
 // view direction of a pixel at the fractional position x,y.
 // Nominally 0 <= x <= 1 and 0 <= y <= 1 for the primary fov,
 // but the values can extend beyond that
-const Vector Camera::view( const double x, const double y )
+const Vector Camera::view( const double x, const double y ) const
 {
    double xx = (2.0*x-1.0)*htanfov;
    double yy = (2.0*y-1.0)*vtanfov;
