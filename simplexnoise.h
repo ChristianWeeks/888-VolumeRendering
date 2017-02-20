@@ -234,7 +234,7 @@ class SimplexNoiseObject {
         ~SimplexNoiseObject(){};
 
         float eval(float x, float y, float z) const {
-            return fNoise.GetSimplexFractal(x, y, z) * (highBound - lowBound) / 2 + (highBound + lowBound) / 2;};
+            return fNoise.GetSimplexFractal(x + xOffset, y + yOffset, z + zOffset) * (highBound - lowBound) / 2 + (highBound + lowBound) / 2;};
             //return scaled_octave_noise_3d(octaves, roughness, frequency, fjump, lowBound, highBound, x + xOffset, y + yOffset, z + zOffset);};
 
         std::vector<std::string> getAnnotation(){
