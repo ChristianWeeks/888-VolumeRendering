@@ -3,6 +3,7 @@
 #include "volume_operators.h"
 #include "light.h"
 #include "Camera.h"
+#include "boundingbox.h"
 #include <boost/timer.hpp>
 #include <random>
 #include <omp.h>
@@ -26,6 +27,7 @@ class Grid{
         //virtual void init() = 0;
         virtual const float get(int i, int j, int k) const = 0;
         virtual void set(int i, int j, int k, float value) = 0;
+        virtual int isAllocated(int i) const{return 1;};
 
         const int partitionSize;
 
@@ -58,11 +60,16 @@ class SparseGrid : public Grid{
 
         const float get(int i, int j, int k) const;
         void set(int i, int j, int k, float value);
+        int isAllocated(int i) const{
+            if(data[i] == NULL)
+                return 0;
+            return 1;
+        }
 
-    private:
         const int xPartitions;
         const int yPartitions;
         const int zPartitions;
+    private:
         float **data;
 
 };
@@ -80,7 +87,7 @@ class FloatGrid{
         const float trilinearInterpolate(const Vector& P) const;
         void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
         virtual void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
-
+        virtual void createBoundingBoxes();
 
         const Vector center;
         const Vector length;
@@ -91,6 +98,7 @@ class FloatGrid{
         float stampYMax;
         float stampZMin;
         float stampZMax;
+        std::vector<BoundingBox> gridBBs;
     protected:
 
         FloatVolumeBase field;
@@ -100,7 +108,6 @@ class FloatGrid{
         const int zVoxels;
         const float voxelLength;
         const int totalCells;
-
         Grid *data;
 
         virtual const Vector positionToIndex(const Vector& P) const;
@@ -127,6 +134,7 @@ class FrustumGrid: public FloatGrid{
         FrustumGrid(FloatVolumeBase f, const Camera& cam, int vx, int vy, int vz, int p);
         ~FrustumGrid(){}
         void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
+        void createBoundingBoxes(){};
 
     protected:
         const float getVoxelLength(const int x, const int y, const int z) const;
@@ -141,7 +149,6 @@ class DensityGrid: public FloatGrid{
         DensityGrid(FloatVolumeBase f, Vector c, const Vector& s, int xv, int yv, int zv, int p);
         //DensityGrid(const DensityGrid& f);
         ~DensityGrid(){};
-
 };
 
 class DeepShadowMap: public FloatGrid{

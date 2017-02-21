@@ -43,9 +43,6 @@ class SceneManager{
         std::vector<FloatVolumeBase> volumes;
         void pushFloatVolume(FloatVolumeBase f){ 
             volumes.push_back(f);
-            boundingboxes.push_back(f.BB);
-            std::cout << "center: " << f.BB.center << "\n";
-            std::cout << "len: " << f.BB.len << "\n";
             };
         void clearFloatVolumes(){ 
             volumes.clear();
@@ -56,7 +53,8 @@ class SceneManager{
         std::vector<ColorVolumeBase> colorVolumes;
         void pushColorVolume(ColorVolumeBase f){ colorVolumes.push_back(f);};
         void clearColorVolumes(){ colorVolumes.clear();};
-
+        
+        void pushBoundingBoxes(std::vector<BoundingBox> b){boundingboxes.insert(boundingboxes.end(), b.begin(), b.end());};
         std::vector<BoundingBox> boundingboxes;
 
         Camera camera;

@@ -62,6 +62,7 @@ void SparseGrid::set(int i, int j, int k, float value){
                 }
             }
         }
+        //After creating block, instantiate a bounding box around the new grid cells
     }
     //Set value now that block definitely exists
     int iii = (i % partitionSize);
@@ -315,7 +316,13 @@ void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject
         dot += d2;
 
         lux::Vector diff = dot - P;
-        lux::Vector normal = diff.unitvector();
+        lux::Vector normal;
+        if (n.magnitude() == 0){
+            normal = diff.unitvector();
+        }
+        else{
+            normal = n.unitvector();
+        }
         //Only bake out dot if it is within the boundaries
         if (sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]) < dBound){
 
@@ -324,7 +331,7 @@ void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject
                 for (int j = 1; j < numSteps; j++){
                     float stepLength = streakLength / float(numSteps);
                     float stampValue = value * (float((numSteps - j)) / float(numSteps));
-                    lux::Vector newPosition = diff + normal*j*stepLength;
+                    lux::Vector newPosition = dot + normal*j*stepLength;
                     bakeDot(newPosition, stampValue);
                 }
             }
@@ -391,6 +398,33 @@ int FloatGrid::bakeDot(const Vector& P, const float density){
 
     return 1;
 }
+
+void FloatGrid::createBoundingBoxes(){
+    //Double check that we are actually using a sparse grid
+    int p = data->partitionSize;
+    if(p > 0){
+        int xPartitions = xVoxels / p;
+        int yPartitions = yVoxels / p;
+        int zPartitions = zVoxels / p;
+
+        //The real world size of partitions should always be cubic because they are the same length on every side
+        float partitionLength = p*voxelLength;
+
+        //Go through every partition.  If it exists, build a bounding box around it
+        for (int i = 0; i < xPartitions*yPartitions*zPartitions; i++){
+            if (data->isAllocated(i)){
+                //Get the real world coordinates of the first voxel in the block partition
+                int zIndex = (i % zPartitions)*p;
+                int yIndex = ((i / zPartitions) % (yPartitions)) *p;
+                int xIndex = (i / (zPartitions*yPartitions))*p;
+
+                Vector partitionBegin = indexToPosition(xIndex, yIndex, zIndex);
+                Vector bbCenter = partitionBegin + (partitionLength/2.0);
+                gridBBs.push_back(BoundingBox(bbCenter, Vector(partitionLength, partitionLength, partitionLength)));
+            }
+        }
+    }
+}
 //-------------------------------------------------------------------------------------------------------------------------------
 //Frustum Grid
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -405,11 +439,11 @@ FrustumGrid::FrustumGrid(float initValue, const Camera& cam, int vx, int vy, int
         std::cerr << "Voxel ratio is not equivalent to aspect ratio; VR: " << voxelRatio << " AR:  " << camera.aspect_ratio << "\n";
         //return;
     }
+
     boost::timer gridTimer;
     for(int i = 0; i < xVoxels; i++){
         for(int j = 0; j < yVoxels; j++){
             for(int k = 0; k < zVoxels; k++){
-
                 data->set(i, j, k, initValue);
             }
         }
@@ -586,6 +620,7 @@ void FrustumGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, 
         }
     }
 }
+//void FrustumGrid::createBoundingBoxes(){};
 //-------------------------------------------------------------------------------------------------------------------------------
 //DensityGrid
 //-------------------------------------------------------------------------------------------------------------------------------
