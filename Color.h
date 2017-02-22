@@ -51,7 +51,7 @@ class Color
    void clamp(){
         for (int i = 0; i < 4; i++){
             if (xyzw[i] < 0) xyzw[i] = 0;
-            if (xyzw[i] < 0) xyzw[i] = 0;
+            if (xyzw[i] > 1) xyzw[i] = 1;
         }
     }
    //! Add two colors together

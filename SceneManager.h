@@ -58,12 +58,13 @@ class SceneManager{
         std::vector<BoundingBox> boundingboxes;
 
         Camera camera;
-        int WRITE_RENDER_LOG;
-        int WRITE_RENDER_ANNOTATION;
-        int ENABLE_LIGHTS;
-        int ENABLE_DSM;
-        int UNION_COLLISIONS;
-        int ADD_COLLISIONS;
+        unsigned short WRITE_RENDER_LOG;
+        unsigned short WRITE_RENDER_ANNOTATION;
+        unsigned short ENABLE_LIGHTS;
+        unsigned short ENABLE_DSM;
+        unsigned short UNION_COLLISIONS;
+        unsigned short ADD_COLLISIONS;
+        unsigned short raysPerPixel;
         double K;
         double emissive;
         light smokeColor;

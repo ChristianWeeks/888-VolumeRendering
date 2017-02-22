@@ -9,6 +9,7 @@ SceneManager::SceneManager(std::string filepath) :
     ENABLE_DSM(0),
     UNION_COLLISIONS(1),
     ADD_COLLISIONS(0),
+    raysPerPixel(1),
     K(1.0),
     emissive(0.05),
     smokeColor(Color(1.0, 1.0, 1.0, 1.0), Vector(1.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1.0),
@@ -179,6 +180,10 @@ double SceneManager::rayMarchDSM(const Vector& x, const DeepShadowMap* dsm) cons
 }
 
 void SceneManager::renderImage(int frameNumber){
+
+    std::mt19937 rng(20);
+    std::uniform_real_distribution<> udist(-0.9, 0.9);
+    //Generate our random point within the bounding box of our sphere
     boost::timer renderTimer;
     double startTime = omp_get_wtime();
     if (boundingboxes.size() == 0){
@@ -192,13 +197,25 @@ void SceneManager::renderImage(int frameNumber){
     for(int i = 0; i < width; i++){
 #pragma omp parallel for
         for(int j = 0; j < height; j++){
+            std::vector<Vector> rayVectors;
+
+            //Our first ray should always shoot through the center of the pixel
+            double normalizedPixelCoordX = (double)i / (double)width;
+            double normalizedPixelCoordY = (double)j / (double)height;
+            Vector centerVec = camera.view(normalizedPixelCoordX, normalizedPixelCoordY);
+            Ray ray(camera.eye(), centerVec);
+            rayVectors.push_back(centerVec);
+
+            //Subsequent rays jitter
+            for(int AA = 1; AA < raysPerPixel; AA++){
+                double AACoordX = normalizedPixelCoordX + (udist(rng) / (double)width);
+                double AACoordY = normalizedPixelCoordY + (udist(rng) / (double)height);
+                Vector AAvec = camera.view(AACoordX, AACoordY);
+                rayVectors.push_back(AAvec);
+            }
 
 
             //Get our pixel coordinates in the range of 0 - 1
-            double normalizedPixelCoordX = (double)i / (double)width;
-            double normalizedPixelCoordY = (double)j / (double)height;
-            Vector r = camera.view(normalizedPixelCoordX, normalizedPixelCoordY);
-            Ray ray(camera.eye(), r);
             float startMarch = 1000.0;
             float endMarch = -1.0;
 
@@ -215,10 +232,13 @@ void SceneManager::renderImage(int frameNumber){
             }
 
             if(endMarch != -1.0){
-              Color C = rayMarch(r, startMarch, endMarch);
-              //Color C(1.0, 0.0, 0.0, 1.0);
-              std::vector<float> colorVector= {static_cast<float>(C[0]), static_cast<float>(C[1]), static_cast<float>(C[2]), static_cast<float>(C[3])};
-              img.setPixel( i, j, colorVector);
+                Color C;
+                for(int AA = 0; AA < raysPerPixel; AA++)
+                    C += rayMarch(rayVectors[AA], startMarch, endMarch);
+                C /= raysPerPixel;
+                //Color C(1.0, 0.0, 0.0, 1.0);
+                std::vector<float> colorVector= {static_cast<float>(C[0]), static_cast<float>(C[1]), static_cast<float>(C[2]), static_cast<float>(C[3])};
+                img.setPixel( i, j, colorVector);
             }
 
         }
