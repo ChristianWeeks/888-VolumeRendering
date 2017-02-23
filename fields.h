@@ -54,8 +54,9 @@ lux::ColorVolumeBase ColorFromDensity(const lux::FloatVolumeBase& f, const lux::
 // GRIDS
 //------------------------------------------------------------------------------------------------------------------------------
 lux::FloatGridBase Gridf(const lux::FloatVolumeBase& f, const lux::Vector& c, const lux::Vector& s, int vx, int vy, int vz, int partitionSize);
+lux::FloatGridBase GridConstf(float initValue, const lux::Vector& c, const lux::Vector& s, int vx, int vy, int vz, int partitionSize);
 lux::FloatGridBase FrustumGridf(const float f, const lux::Camera& cam, int vx, int vy, int vz, int partitionSize);
 lux::FloatVolumeBase GriddedVolf(const lux::FloatGridBase& g); 
 lux::FloatVolumeBase AutoGriddedf(const lux::FloatVolumeBase& f, const lux::Vector& c, const lux::Vector& s, int vx, int vy, int vz, int partitionSize);
-lux::DSMBase DSM(const lux::light& l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, const lux::Vector& s, int vx, int vy, int vz, int partitionSize);
+lux::DSMBase DSM(const lux::light& l, float m, const lux::FloatVolumeBase& f, const lux::Vector& c, const lux::Vector& s, int vx, int vy, int vz, int partitionSize, std::vector<BoundingBox> BBs);
 #endif

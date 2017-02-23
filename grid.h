@@ -147,18 +147,20 @@ class FrustumGrid: public FloatGrid{
 class DensityGrid: public FloatGrid{
     public:
         DensityGrid(FloatVolumeBase f, Vector c, const Vector& s, int xv, int yv, int zv, int p);
+        DensityGrid(float f, Vector c, const Vector& s, int xv, int yv, int zv, int p);
         //DensityGrid(const DensityGrid& f);
         ~DensityGrid(){};
 };
 
 class DeepShadowMap: public FloatGrid{
     public:
-        DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p);
+        DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p, std::vector<BoundingBox> bbs);
         ~DeepShadowMap(){};
         light sourceLight;
 
     private:
         const float marchStep;
+        std::vector<BoundingBox> boundingboxes;
 
         //Raymarch from position x to the light, return the integrated density
         double rayMarchLightScatter(const Vector& x);

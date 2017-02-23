@@ -651,13 +651,33 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, i
     std::cout << "------------------------------------------------------\n";
 }
 
+DensityGrid::DensityGrid(float initValue, Vector o, const Vector& s, int vx, int vy, int vz, int p)
+    : FloatGrid(FloatVolumeBase(new ConstantVolumef(initValue)), o, s, vx, vy, vz, p){
+    //stamp the values into our grid
+    std::cout << "------------------------------------------------------\n";
+    std::cout << "Initializing Dense Grid\n";
+    boost::timer gridTimer;
+    for(int i = 0; i < xVoxels; i++){
+        for(int j = 0; j < yVoxels; j++){
+            for(int k = 0; k < zVoxels; k++){
+                //now evaluate the field at that point
+                data->set(i, j, k, initValue);
+               // std::cout << values.get()[k + j*zVoxels + i*yVoxels*zVoxels] << "\n";
+            }
+        }
+    }
+    std::cout << "Dense Grid Initialized in: " << gridTimer.elapsed() <<" seconds\n";
+    std::cout << "------------------------------------------------------\n";
+}
+
 //DensityGrid::DensityGrid(const DensityGrid& f) : FloatGrid(f.field, f.origin, f.length, f.voxels, f.data->partitionSize){std::cout << "Density Grid Copy Constructor!\n";};
 
 //-------------------------------------------------------------------------------------------------------------------------------
 //Deep Shadow Map
 //-------------------------------------------------------------------------------------------------------------------------------
-DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p)
+DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p, std::vector<BoundingBox> bbs)
     : FloatGrid(f, o, s, vx, vy, vz, p),
+    boundingboxes(bbs),
     sourceLight(l),
     marchStep(m){
 
@@ -695,9 +715,6 @@ double DeepShadowMap::rayMarchLightScatter(const Vector& x){
     double densityInt = 0.0;
     double marchLen = 0.0;
 
-    Vector toLight(sourceLight.pos - x);
-    double distanceToLight = toLight.magnitude();
-    toLight.normalize();
     Vector x1(x);
     //If density at our grid point is 0, there's no point in calculating the integral, as the point will never be lit
     //Check all points around our grid point
@@ -722,7 +739,25 @@ double DeepShadowMap::rayMarchLightScatter(const Vector& x){
 
     if(mustEvaluate == 0) return 0.0;
 
-    while (marchLen < distanceToLight){
+    Vector toLight(sourceLight.pos - x);
+    toLight.normalize();
+    Ray lightRay(x, toLight);
+    //Now we get the march length
+    //Test for intersections with every bounding box in the scene, and then march from the closest to the farthest intersection point
+    //This method will not skip gaps between bounding boxes
+    float startMarch = 100000;
+    float endMarch = -1;
+    for(int k = 0; k < boundingboxes.size(); k++){
+        std::vector<float> intersects = boundingboxes[k].intersect(lightRay, 0, 50);
+        if(intersects.size() == 2){
+            startMarch = std::min(startMarch, intersects[0]);
+            endMarch = std::max(endMarch, intersects[1]);
+            if (startMarch < 0)
+                startMarch = 0;
+        }
+    }
+
+    while (marchLen < endMarch){
 
         double density = field.get()->eval(x1);
         //Do not add density if it is negative
