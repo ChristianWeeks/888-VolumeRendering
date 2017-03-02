@@ -19,6 +19,7 @@
 *.geo
 *.abc
 *.pyc
+*.vdb
 FastNoise.cpp
 FastNoise.h
 feb*

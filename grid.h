@@ -4,6 +4,9 @@
 #include "light.h"
 #include "Camera.h"
 #include "boundingbox.h"
+#include "vdbTypes.h"
+#include <openvdb/openvdb.h>
+#include <string>
 #include <boost/timer.hpp>
 #include <random>
 #include <omp.h>
@@ -87,6 +90,7 @@ class FloatGrid{
         const float trilinearInterpolate(const Vector& P) const;
         void StampWisp(float value, const Vector& P, const SimplexNoiseObject& n1, const SimplexNoiseObject& n2, float clump, float radius, float numDots, float offset, float dBound, const Vector& normal, int numSteps, float streakLength);
         virtual void StampField(const FloatVolumeBase& f, const BoundingBox& AABB, int operand);
+        virtual void StampvdbLevelSet(const std::string filename, const std::string levelsetName, const BoundingBox& AABB, int operand);
         virtual void createBoundingBoxes();
 
         const Vector center;

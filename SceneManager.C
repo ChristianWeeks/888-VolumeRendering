@@ -222,7 +222,7 @@ void SceneManager::renderImage(int frameNumber){
             //Test for intersections with every bounding box in the scene, and then march from the closest to the farthest intersection point
             //This method will not skip gaps between bounding boxes
             for(int k = 0; k < boundingboxes.size(); k++){
-                std::vector<float> intersects = boundingboxes[k].intersect(ray, 0, 50);
+                std::vector<float> intersects = boundingboxes[k].intersect(ray, 0, 5000);
                 if(intersects.size() == 2){
                     startMarch = std::min(startMarch, intersects[0]);
                     endMarch = std::max(endMarch, intersects[1]);

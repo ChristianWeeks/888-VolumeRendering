@@ -279,6 +279,79 @@ void FloatGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, in
     }
 }
 
+void FloatGrid::StampvdbLevelSet(const std::string filename,  const std::string levelsetName, const BoundingBox& AABB, int operand){
+
+    //First we need to get the indices within the bounding box.
+    //Add 1 to the returned indices because indices cast to integers will be 1 voxel outside of the grid
+    Vector startPos = positionToIndex(AABB.bounds[0]);
+    Vector endPos = positionToIndex(AABB.bounds[1]);
+    int x1 = startPos[0] + 1;
+    int y1 = startPos[1] + 1;
+    int z1 = startPos[2] + 1;
+    int x2 = endPos[0];
+    int y2 = endPos[1];
+    int z2 = endPos[2];
+    if (x1 < 0)
+        x1 = 0;
+    if (y1 < 0)
+        y1 = 0;
+    if (z1 < 0)
+        z1 = 0;
+    if (x2 > xVoxels)
+        x2 = xVoxels;
+    if (y2 > yVoxels)
+        y2 = yVoxels;
+    if (z2 > zVoxels)
+        z2 = zVoxels;
+
+    openvdb::initialize();
+    openvdb::io::File vdbFile(filename);
+    vdbFile.open();
+
+    openvdb::GridBase::Ptr base;
+    for(openvdb::io::File::NameIterator iter = vdbFile.beginName(); iter != vdbFile.endName(); ++iter){
+        std::cout << "Grid Name (iterator): " << iter.gridName()  << std::endl;
+        if(iter.gridName() == levelsetName) base = vdbFile.readGrid(iter.gridName());
+    }
+
+    vdbFile.close();
+
+    vdb_FloatGrid::Ptr grid = openvdb::gridPtrCast<vdb_FloatGrid>(base);
+    vdb_Transform::Ptr transform = grid->transformPtr();
+    vdb_FloatGrid::Accessor accessor = grid->getAccessor();
+    for (int i = x1; i < x2; i++){
+        for (int j = y1; j < y2; j++){
+            for (int k = z1; k < z2; k++){
+
+                Vector worldPos = indexToPosition(i, j, k);
+                float ii = worldPos[0];
+                float jj = worldPos[1];
+                float kk = worldPos[2];
+                Vec3f vdbVec(ii, jj, kk);
+                Coord coordinate = transform->worldToIndexNodeCentered(vdbVec);
+                //Invert the value- VDB stores inside values as negative and outside values positive, while our code does the opposite
+                float vdbValue = accessor.getValue(coordinate);
+                //Replace
+                if (operand == 0){
+                    data->set(i, j, k, vdbValue);
+                }
+                //Max
+                else if(operand == 1){
+                    if (vdbValue > data->get(i, j, k)){
+                        data->set(i, j, k, vdbValue);
+                        //std::cout << "Vdb Val: " << vdbValue << "\n";
+                    }
+                }
+                //Add
+                else if(operand == 2){
+                    data->set(i, j, k, vdbValue + data->get(i, j, k));
+                }
+            }
+        }
+    }
+    openvdb::uninitialize();
+}
+
 //Wisp algorithm
 void FloatGrid::StampWisp(float value, const Vector& P, const SimplexNoiseObject& noise1, const SimplexNoiseObject& noise2, float clump, float radius, float numDots, float offset, float dBound, const Vector& n, int numSteps, float streakLength){
 
@@ -632,6 +705,7 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, i
     boost::timer gridTimer;
     for(int i = 0; i < xVoxels; i++){
         for(int j = 0; j < yVoxels; j++){
+#pragma omp parallel for
             for(int k = 0; k < zVoxels; k++){
 
                 //First convert our indices to world space
@@ -657,12 +731,14 @@ DensityGrid::DensityGrid(float initValue, Vector o, const Vector& s, int vx, int
     std::cout << "------------------------------------------------------\n";
     std::cout << "Initializing Dense Grid\n";
     boost::timer gridTimer;
-    for(int i = 0; i < xVoxels; i++){
-        for(int j = 0; j < yVoxels; j++){
-            for(int k = 0; k < zVoxels; k++){
-                //now evaluate the field at that point
-                data->set(i, j, k, initValue);
-               // std::cout << values.get()[k + j*zVoxels + i*yVoxels*zVoxels] << "\n";
+    if(initValue > 1){
+        for(int i = 0; i < xVoxels; i++){
+            for(int j = 0; j < yVoxels; j++){
+                for(int k = 0; k < zVoxels; k++){
+                    //now evaluate the field at that point
+                    data->set(i, j, k, initValue);
+                   // std::cout << values.get()[k + j*zVoxels + i*yVoxels*zVoxels] << "\n";
+                }
             }
         }
     }

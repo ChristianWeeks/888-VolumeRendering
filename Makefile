@@ -10,11 +10,13 @@ SWIGEXEC = swig
 SWIGLD = $(CXX) -shared -DINCLUDE_TEMPLATES -DDEBUG
 OIIOLIB = -L/group/dpa/lib -lOpenImageIO
 CHROMELIB = -ldl
+VDBLIB = -L/group/dpa/local/openvdb/lib -lHalf -ltbb -lopenvdb
 
 PYTHONINCLUDE = -I/usr/include/python2.7 -I/usr/lib/python2.7/config
 MAGICKINCLUDE = `Magick++-config  --cppflags --cxxflags --ldflags`
 OIIOINCLUDE = -I/group/dpa/include
-INCLUDES = -I ./ $(PYTHONINCLUDE) $(MAGICKINCLUDE) $(OIIOINCLUDE)
+VDBINCLUDE = -I/group/dpa/local/openvdb/include
+INCLUDES = -I ./ $(VDBINCLUDE) $(PYTHONINCLUDE) $(MAGICKINCLUDE) $(OIIOINCLUDE)
 
 LN_VOYAGER = -L$(ROOTDIR) -lVoyager
 #INCLUDES = -I /usr/local/include/ -I /opt/local/include/ $(PYTHONINCLUDE)
@@ -31,7 +33,7 @@ $(LIB): $(OFILES)
 genswig:	swig/voyager.i $(OFILES)
 	$(SWIGEXEC) -c++ -python -shadow -I./ swig/voyager.i
 	$(CXX) -c swig/voyager_wrap.cxx  $(INCLUDES) -o swig/voyager_wrap.o
-	$(SWIGLD) swig/voyager_wrap.o $(MAGICKINCLUDE) $(CHROMELIB) -lfftw3 -Wl,-rpath,. -L. -Wl,--whole-archive -lVoyager -Wl,--no-whole-archive $(OIIOLIB) -o swig/_voyager.so
+	$(SWIGLD) swig/voyager_wrap.o $(VDBLIB) $(MAGICKINCLUDE) $(CHROMELIB) -lfftw3 -Wl,-rpath,. -L. -Wl,--whole-archive -lVoyager -Wl,--no-whole-archive $(OIIOLIB) -o swig/_voyager.so
 #-Wl,-rpath,. -L. -Wl,--whole-archive -lVoyager -Wl,--no-whole-archive 
 clean:
 	rm -rf *.o swig/*.so swig/*~ swig/*.cxx swig/voyager.py*
