@@ -65,6 +65,8 @@ class SceneManager{
         unsigned short UNION_COLLISIONS;
         unsigned short ADD_COLLISIONS;
         unsigned short raysPerPixel;
+        float MARCH_INCREASE_DIST;
+        float MARCH_MULTIPLIER;
         double K;
         double emissive;
         light smokeColor;

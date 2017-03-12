@@ -92,22 +92,9 @@ FloatGrid::FloatGrid(FloatVolumeBase f, const Vector& c, const Vector& s, const 
     totalCells(xv*yv*zv){
 
     if (partitionSize > 0){
-        try{
-            if ((xv) % partitionSize != 0 || (yv) % partitionSize != 0 || (zv) % partitionSize != 0){
-                throw 10;
-            }
-            if (s[0] / xv != s[1] / yv || s[0] / xv != s[2] / zv){
-                throw 20;
-            }
-
-        }
-        catch(int e){
-            if (e == 10){
-                std::cout << "Error: Voxels must be evenly divisible by partition size\n";
-            }
-            else if (e == 20){
-                std::cout << "Error: Voxels must be of equal length on every side\n";
-            }
+        if ((xv) % partitionSize != 0 || (yv) % partitionSize != 0 || (zv) % partitionSize != 0){
+            std::cout << "\033[1;31mError: Voxels must be evenly divisible by partition size\033[0m\n";
+            return;
         }
         data = new SparseGrid(xv, yv, zv, partitionSize);
     }
@@ -584,7 +571,12 @@ const Vector FrustumGrid::positionToIndex(const Vector& P) const{
     float v = q * camera.axis_up;
     float x = 0.5 * ((u / tan(camera.FOV / 2.0)) + 1);
     float y = 0.5 * (((v*camera.aspect_ratio) / tan(camera.FOV / 2.0)) + 1);
-    float z = (normPos.magnitude() - camera.near) / (camera.far - camera.near);
+    float z = (dot - camera.near) / (camera.far - camera.near);
+
+    //If dot < 0, point is behind the camera, so z must be set to 0
+    if(dot < 0){
+        z = 0;
+    }
     Vector P2 = Vector(int(x*xVoxels), int(y*yVoxels), int(z*zVoxels));
     return P2;
 }
@@ -610,6 +602,8 @@ void FrustumGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, 
     Vector start = AABB.bounds[0];
     Vector end = AABB.bounds[1];
     Vector gB[8];
+    //std::cout << "bounds start: " << start << "\n";
+    //std::cout << "bounds end: " << end << "\n";
 
     //Get index positions of all world space coordinates for the bounding box
     gB[0] = positionToIndex(start);
@@ -624,12 +618,15 @@ void FrustumGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, 
     int x1 = gB[0][0];
     int y1 = gB[0][1];
     int z1 = gB[0][2];
+
     int x2 = gB[0][0];
     int y2 = gB[0][1];
     int z2 = gB[0][2];
 
     //Find our maximum index bounds
     for(int i = 0; i < 8; i++){
+        std::cout << "gB" << i << ": " << gB[i] << "\n";
+        //Get minimum
         if (x1 > gB[i][0])
             x1 = gB[i][0];
         if (y1 > gB[i][1])
@@ -637,6 +634,7 @@ void FrustumGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, 
         if (z1 > gB[i][2])
             z1 = gB[i][2];
 
+        //Get maximum
         if (x2 < gB[i][0])
             x2 = gB[i][0];
         if (y2 < gB[i][1])
@@ -658,13 +656,13 @@ void FrustumGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, 
         y2 = yVoxels;
     if (z2 > zVoxels)
         z2 = zVoxels;
-    /*std::cout << "------------------------\n";
+    std::cout << "------------------------\n";
     std::cout << "origin: " << origin << "\n";
-    std::cout << "start: " << AABB.bounds[0] << "\n";
-    std::cout << "end: " << AABB.bounds[1] << "\n";
+    std::cout << "Bounds start: " << AABB.bounds[0] << "\n";
+    std::cout << "Bounds end: " << AABB.bounds[1] << "\n";
     std::cout << "start: " << x1 << ", " << y1 << ", " << z1 << "\n";
     std::cout << "end: " << x2 << ", " << y2 << ", " << z2 << "\n";
-*/
+
     for (int i = x1; i < x2; i++){
         for (int j = y1; j < y2; j++){
 #pragma omp parallel for 
@@ -699,6 +697,12 @@ void FrustumGrid::StampField(const FloatVolumeBase& f, const BoundingBox& AABB, 
 //-------------------------------------------------------------------------------------------------------------------------------
 DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, int vy, int vz, int p)
     : FloatGrid(f, o, s, vx, vy, vz, p){
+
+    //Make sure voxels are the same size;
+    if (s[0] / vx != s[1] / vy || s[0] / vx != s[2] / vz){
+        std::cout << "\033[1;31mError: Voxels must be of equal length on every side\033[0m\n";
+        return;
+    }
     //stamp the values into our grid
     std::cout << "------------------------------------------------------\n";
     std::cout << "Initializing Dense Grid\n";
@@ -727,6 +731,11 @@ DensityGrid::DensityGrid(FloatVolumeBase f, Vector o, const Vector& s, int vx, i
 
 DensityGrid::DensityGrid(float initValue, Vector o, const Vector& s, int vx, int vy, int vz, int p)
     : FloatGrid(FloatVolumeBase(new ConstantVolumef(initValue)), o, s, vx, vy, vz, p){
+    //Make sure voxels are the same size;
+    if (s[0] / vx != s[1] / vy || s[0] / vx != s[2] / vz){
+        std::cout << "\033[1;31mError: Voxels must be of equal length on every side\033[0m\n";
+        return;
+    }
     //stamp the values into our grid
     std::cout << "------------------------------------------------------\n";
     std::cout << "Initializing Dense Grid\n";
@@ -756,6 +765,10 @@ DeepShadowMap::DeepShadowMap(light l, float m, FloatVolumeBase f, Vector o, cons
     boundingboxes(bbs),
     sourceLight(l),
     marchStep(m){
+    if (s[0] / vx != s[1] / vy || s[0] / vx != s[2] / vz){
+        std::cout << "\033[1;31mError: Voxels must be of equal length on every side\033[0m\n";
+        return;
+    }
 
     std::cout << "------------------------------------------------------\n";
     std::cout << "Building Deep Shadow Map\n";

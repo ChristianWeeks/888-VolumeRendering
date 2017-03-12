@@ -10,6 +10,8 @@ SceneManager::SceneManager(std::string filepath) :
     UNION_COLLISIONS(1),
     ADD_COLLISIONS(0),
     raysPerPixel(1),
+    MARCH_INCREASE_DIST(100),
+    MARCH_MULTIPLIER(1.1),
     K(1.0),
     emissive(0.05),
     smokeColor(Color(1.0, 1.0, 1.0, 1.0), Vector(1.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1.0),
@@ -135,8 +137,8 @@ Color SceneManager::rayMarch(const Vector& n, float start, float end)  {
         marchLen += activeMarchStep;
         increaseMarchCounter += activeMarchStep;
         //Increase march length as we get further away from the camera
-        if(increaseMarchCounter > 12.0){
-            activeMarchStep *= 1.5;
+        if(increaseMarchCounter > MARCH_INCREASE_DIST){
+            activeMarchStep *= MARCH_MULTIPLIER;
             increaseMarchCounter = 0.0;
         }
     }
@@ -187,7 +189,7 @@ void SceneManager::renderImage(int frameNumber){
     boost::timer renderTimer;
     double startTime = omp_get_wtime();
     if (boundingboxes.size() == 0){
-        std::cout << "Warning: No bounding boxes pushed.\n";
+        std::cout << "\033[1;31mError: No bounding boxes pushed.\033[0m\n";
         return;
     }
     Image img;
@@ -216,13 +218,13 @@ void SceneManager::renderImage(int frameNumber){
 
 
             //Get our pixel coordinates in the range of 0 - 1
-            float startMarch = 1000.0;
+            float startMarch = 9999999999.0;
             float endMarch = -1.0;
 
             //Test for intersections with every bounding box in the scene, and then march from the closest to the farthest intersection point
             //This method will not skip gaps between bounding boxes
             for(int k = 0; k < boundingboxes.size(); k++){
-                std::vector<float> intersects = boundingboxes[k].intersect(ray, 0, 5000);
+                std::vector<float> intersects = boundingboxes[k].intersect(ray, 0, 99999999999.0);
                 if(intersects.size() == 2){
                     startMarch = std::min(startMarch, intersects[0]);
                     endMarch = std::max(endMarch, intersects[1]);
