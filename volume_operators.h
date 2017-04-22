@@ -394,6 +394,25 @@ class CutoutVolumef: public FloatVolume{
         FloatVolumeBase b;
 };
 
+class ShellVolumef: public FloatVolume{
+    public:
+        ShellVolumef(FloatVolumeBase f, float w) :
+            a(f),
+            width(w){};
+        ~ShellVolumef(){};
+
+        float eval( const Vector& P) const{ 
+            float val = a.get()->eval(P); 
+            return std::min(val + (width / 2.0), -1 * (val - (width / 2.0)));};
+
+        //Probably best to not grab the gradient of this
+        Vector grad( const Vector& P) const{return a.get()->grad(P);};
+
+    private:
+        FloatVolumeBase a;
+        float width;
+};
+
 class CutoutVolumev: public VectorVolume{
     public:
         CutoutVolumev(VectorVolumeBase f, VectorVolumeBase g) :
@@ -639,9 +658,6 @@ class ReduceVolume: public FloatVolume{
         float cutoff;
 };
 
-
-
-
 class ClampVolume: public FloatVolume{
     public:
         ClampVolume(FloatVolumeBase f, float Min, float Max) :
@@ -661,6 +677,38 @@ class ClampVolume: public FloatVolume{
         FloatVolumeBase a;
         float minVal;
         float maxVal;
+};
+
+class AdvectSLVectorVolume: public VectorVolume{
+    public:
+        AdvectSLVectorVolume(VectorVolumeBase f, VectorVolumeBase g, float t) :
+            a(f),
+            b(g),
+            advectTime(t){};
+        ~AdvectSLVectorVolume(){};
+
+        Vector eval( const Vector& P) const{ return a.get()->eval(P) -  b.get()->eval(P) * advectTime;};
+        Matrix grad( const Vector& P) const{ return a.get()->grad(P);};
+
+        float advectTime;
+    private:
+        VectorVolumeBase a;
+        VectorVolumeBase b;
+};
+
+class WarpVolume: public FloatVolume{
+    public:
+        WarpVolume(FloatVolumeBase f, VectorVolumeBase g) :
+            a(f),
+            b(g){};
+        ~WarpVolume(){};
+
+        float eval( const Vector& P) const{ return a.get()->eval(b.get()->eval(P));};
+        Vector grad( const Vector& P) const{ return a.get()->grad(b.get()->eval(P));};
+
+    private:
+        FloatVolumeBase a;
+        VectorVolumeBase b;
 };
 
 //End namespace lux

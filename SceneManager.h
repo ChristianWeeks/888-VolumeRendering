@@ -27,7 +27,6 @@ class SceneManager{
         double rayMarchLightScatter(const Vector& x, light l) const;
         double rayMarchDSM(const Vector& x, const DeepShadowMap* dsm) const;
         void renderImage(int frameNumber);
-        
 
         std::vector<std::string> getAnnotation();
 
@@ -41,19 +40,19 @@ class SceneManager{
         void clearDSMs(){ lightGrids.clear();};
 
         std::vector<FloatVolumeBase> volumes;
-        void pushFloatVolume(FloatVolumeBase f){ 
+        void pushFloatVolume(FloatVolumeBase f){
             volumes.push_back(f);
             };
-        void clearFloatVolumes(){ 
+        void clearFloatVolumes(){
             volumes.clear();
             boundingboxes.clear();
-        
+
         };
 
         std::vector<ColorVolumeBase> colorVolumes;
         void pushColorVolume(ColorVolumeBase f){ colorVolumes.push_back(f);};
         void clearColorVolumes(){ colorVolumes.clear();};
-        
+
         void pushBoundingBoxes(std::vector<BoundingBox> b){boundingboxes.insert(boundingboxes.end(), b.begin(), b.end());};
         std::vector<BoundingBox> boundingboxes;
 

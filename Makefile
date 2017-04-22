@@ -1,6 +1,6 @@
 
 
-OFILES = Matrix.o OIIOFiles.o Camera.o boundingbox.o simplexnoise.o Vector.o Color.o grid.o fields.o SceneManager.o FastNoise.o
+OFILES = Matrix.o OIIOFiles.o Camera.o boundingbox.o simplexnoise.o Vector.o Color.o FloatGrid.o VectorGrid.o fields.o SceneManager.o FastNoise.o DataGrid.o
 
 ROOTDIR = .
 LIB = $(ROOTDIR)/libVoyager.a

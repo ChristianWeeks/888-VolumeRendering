@@ -209,12 +209,14 @@ class PyroSphereVolume : public FloatVolume{
             else if(d < r){
                 return 1;
             }
-            lux::Vector n(P.unitvector());
+            Vector n(P.unitvector());
             //float f = r - d + octave_noise_3d(1, 0.5, 1.0, n[0], n[1], n[2]);
             //float f = r - d + std::pow(std::abs(octave_noise_3d(1, 0.5, 1.0, n[0], n[1], n[2])), 2)
             float f = r - d + dScale * std::pow(std::abs(simplex.eval(n[0], n[1], n[2])), exponent);
-            if(f > 0) return 1;
-            return 0;};
+            return f;
+            //if(f > 0) return 1;
+            //return 0;};
+            };
        Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
 
     private:
@@ -223,6 +225,39 @@ class PyroSphereVolume : public FloatVolume{
        float dBound;
        float dScale;
        SimplexNoiseObject simplex;
+};
+
+class PyroLevelSetVolume : public FloatVolume{
+    public:
+
+        PyroLevelSetVolume(FloatVolumeBase f, VectorVolumeBase g, float e, float ds, SimplexNoiseObject s) : 
+            levelset(f),
+            gradient(g),
+            exponent(e),
+            dScale(ds),
+            simplex(s){}
+       ~PyroLevelSetVolume(){}
+
+       float eval( const Vector& P ) const {
+            //calculate distance from sphere center. Assume sphere center to be (0, 0, 0)
+            float d = P.magnitude();
+            float fieldVal = levelset.get()->eval(P);
+            //Calculate Closest Point Transform using SDF and gradient of SDF
+            Vector CPT = P - fieldVal * gradient.get()->eval(P);
+
+            float val = fieldVal + dScale * std::pow(std::abs(simplex.eval(CPT[0], CPT[1], CPT[2])), exponent);
+            return val;
+            //if(f > 0) return 1;
+            //return 0;};
+            };
+       Vector grad( const Vector& P ) const {  Vector G(0, 0, 0); return G;};
+
+    private:
+        FloatVolumeBase levelset;
+        VectorVolumeBase gradient;
+        float exponent;
+        float dScale;
+        SimplexNoiseObject simplex;
 };
 
 class RadialVectorVolume : public VectorVolume{
@@ -301,7 +336,7 @@ class NoiseSphere : public FloatVolume{
             position(pos),
             simplex(s),
             r(rad),
-            falloffStart(f){};
+            falloffStart(rad * f){};
         ~NoiseSphere(){};
 
         float eval(const Vector& P) const{
@@ -347,6 +382,15 @@ class SimplexNoiseVectorVolume : public VectorVolume{
        SimplexNoiseObject simplex;
        float xOffset, yOffset, zOffset;
 
+};
+
+class IdentityVectorVolume : public VectorVolume{
+    public:
+        IdentityVectorVolume(){};
+        ~IdentityVectorVolume(){};
+
+       Vector eval( const Vector& P ) const { return P;};
+       Matrix grad( const Vector& P ) const { Matrix G; return G;};
 };
 
 class SimplexNoiseColorVolume : public ColorVolume{
